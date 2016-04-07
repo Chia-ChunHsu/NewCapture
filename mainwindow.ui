@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -88,6 +88,19 @@
       </property>
       <property name="text">
        <string>Load Ref</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>316</x>
+        <y>70</y>
+        <width>131</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
       </property>
      </widget>
     </widget>
@@ -359,11 +372,27 @@
    <widget class="QDateTimeEdit" name="dateTimeEdit">
     <property name="geometry">
      <rect>
-      <x>323</x>
+      <x>240</x>
       <y>0</y>
       <width>141</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="displayFormat">
+     <string>yyyy/M/d AP hh:mm::ss</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ApplyButton">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>0</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Apply</string>
     </property>
    </widget>
   </widget>
@@ -373,7 +402,7 @@
      <x>0</x>
      <y>0</y>
      <width>480</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

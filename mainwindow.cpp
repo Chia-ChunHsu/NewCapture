@@ -6,6 +6,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QTimer *timer = new QTimer(this);
+    connect(timer,SIGNAL(timeout()),this,SLOT(update()));
+    timer->setInterval(1000);
+    timer->start();
+
 }
 
 MainWindow::~MainWindow()
@@ -330,15 +335,20 @@ void MainWindow::on_PredictButton_clicked()
     }
     //cv::imshow("Result Predict",predict);
     ShowOnLabel(predict,ui->FalseColorLabel);
-    QString saveResultFile = QFileDialog::getSaveFileName(this, tr("Save File"),
+    QString saveResultFile;
+    if(FirstFile.isEmpty())
+        saveResultFile = QFileDialog::getSaveFileName(this, tr("Save File"),
                                                           "untitled.jpg",
                                                           tr("Images (*.jpg)"));
+    else
+        saveResultFile = FirstFile;
     if(saveResultFile.isEmpty())
     {
         return;
     }
     else
     {
+        //cv::imwrite()
         cv::imwrite(saveResultFile.toStdString(),predict);
     }
 }
@@ -420,4 +430,49 @@ void MainWindow::on_ThresholdSlider1_sliderMoved(int position)
 void MainWindow::on_ThresholdSlider2_sliderMoved(int position)
 {
     ui->spinBox_2->setValue(position);
+}
+
+void MainWindow::on_ApplyButton_clicked()
+{
+    QDateTime ctime = ui->dateTimeEdit->dateTime();
+    //Dtime = ui->dateTimeEdit->dateTime();
+    QString year = QString::number(ctime.date().year());
+    QString month = QString::number(ctime.date().month());
+    QString day = QString::number(ctime.date().day());
+    QString time = ctime.time().toString();
+//    QString hour = QString::number(Dtime.time().hour());
+//    QString min = QString::number(Dtime.time().minute());
+//    QString sec = QString::number(Dtime.time().second());
+    ui->label->setText(year+"/"+month+"/"+day+" "+time);
+
+    //currentTime = Dtime.time();
+    Dtime = ctime;
+    currentFile = year+"/"+month+"/"+day+" "+time;
+
+
+}
+
+void MainWindow::update()
+{
+
+    //qDebug() << "update";
+   ui->dateTimeEdit->setDate(Dtime.date());
+   Dtime = Dtime.addSecs(1);
+   QString year = QString::number(Dtime.date().year());
+   QString month = QString::number(Dtime.date().month());
+   QString day = QString::number(Dtime.date().day());
+   QString time = Dtime.time().toString();
+   ui->label->setText(year+"/"+month+"/"+day+" "+time);
+   //ui->dateTimeEdit->setTime(currentTime);
+
+}
+
+void MainWindow::on_CaptureRefButton_clicked()
+{
+
+}
+
+void MainWindow::on_CapturePicButton_clicked()
+{
+    FirstFile = currentFile;
 }

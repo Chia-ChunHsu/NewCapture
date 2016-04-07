@@ -39,6 +39,7 @@ public:
     QSpinBox *spinBoxRef;
     QPushButton *CaptureRefButton;
     QPushButton *LoadRefButton;
+    QLabel *label;
     QWidget *tab_2;
     QLabel *PicLabel;
     QPushButton *CapturePicButton;
@@ -59,6 +60,7 @@ public:
     QLabel *FalseColorLabel;
     QPushButton *PredictButton;
     QDateTimeEdit *dateTimeEdit;
+    QPushButton *ApplyButton;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -92,6 +94,9 @@ public:
         LoadRefButton = new QPushButton(tab);
         LoadRefButton->setObjectName(QStringLiteral("LoadRefButton"));
         LoadRefButton->setGeometry(QRect(310, 102, 141, 51));
+        label = new QLabel(tab);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(316, 70, 131, 20));
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
@@ -172,11 +177,14 @@ public:
         tabWidget->addTab(tab_3, QString());
         dateTimeEdit = new QDateTimeEdit(centralWidget);
         dateTimeEdit->setObjectName(QStringLiteral("dateTimeEdit"));
-        dateTimeEdit->setGeometry(QRect(323, 0, 141, 22));
+        dateTimeEdit->setGeometry(QRect(240, 0, 141, 22));
+        ApplyButton = new QPushButton(centralWidget);
+        ApplyButton->setObjectName(QStringLiteral("ApplyButton"));
+        ApplyButton->setGeometry(QRect(390, 0, 75, 23));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 480, 22));
+        menuBar->setGeometry(QRect(0, 0, 480, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -187,7 +195,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -199,6 +207,7 @@ public:
         RefLabel->setText(QApplication::translate("MainWindow", "TextLabel", 0));
         CaptureRefButton->setText(QApplication::translate("MainWindow", "Capture Reference", 0));
         LoadRefButton->setText(QApplication::translate("MainWindow", "Load Ref", 0));
+        label->setText(QApplication::translate("MainWindow", "TextLabel", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "Step 1", 0));
         PicLabel->setText(QApplication::translate("MainWindow", "TextLabel", 0));
         CapturePicButton->setText(QApplication::translate("MainWindow", "Capture Pictures", 0));
@@ -212,6 +221,8 @@ public:
         FalseColorLabel->setText(QApplication::translate("MainWindow", "TextLabel", 0));
         PredictButton->setText(QApplication::translate("MainWindow", "Predict", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("MainWindow", "Step 4", 0));
+        dateTimeEdit->setDisplayFormat(QApplication::translate("MainWindow", "yyyy/M/d AP hh:mm::ss", 0));
+        ApplyButton->setText(QApplication::translate("MainWindow", "Apply", 0));
     } // retranslateUi
 
 };

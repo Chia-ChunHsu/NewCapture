@@ -6,6 +6,10 @@
 #include <QFileDialog>
 #include "opencv.hpp"
 #include "thread_stitch.h"
+#include <QTime>
+#include <string>
+#include <QTimer>
+#include <QDate>
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +29,7 @@ public:
     int TransferWarp(std::vector<cv::Mat> &Pic,std::vector<cv::Mat> &WarpPic);
     void CutMask(int one,int two,cv::Mat &MaskResult);
     float predictresult(int y,int x);
+
 
 private slots:
     void on_LoadRefButton_clicked();
@@ -47,6 +52,14 @@ private slots:
 
     void on_ThresholdSlider2_sliderMoved(int position);
 
+    void on_ApplyButton_clicked();
+
+    void update();
+
+    void on_CaptureRefButton_clicked();
+
+    void on_CapturePicButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     std::vector<cv::Mat> refPic;
@@ -60,6 +73,13 @@ private:
     cv::Mat maskResult;
 
     CvSVM svm;
+    QDateTime Dtime;
+    //QDate currentDate;
+    QTime currentTime;
+    int time;
+
+    QString currentFile;
+    QString FirstFile;
 };
 
 #endif // MAINWINDOW_H
