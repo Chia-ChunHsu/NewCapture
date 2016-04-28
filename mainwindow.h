@@ -10,6 +10,7 @@
 #include <string>
 #include <QTimer>
 #include <QDate>
+#include <dialog.h>
 
 namespace Ui {
 class MainWindow;
@@ -60,6 +61,10 @@ private slots:
 
     void on_CapturePicButton_clicked();
 
+    void on_ChooseButton_clicked();
+
+    void on_SaveButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     std::vector<cv::Mat> refPic;
@@ -80,6 +85,9 @@ private:
 
     QString currentFile;
     QString FirstFile;
+
+
+    Dialog picdialog;
 };
 
 #endif // MAINWINDOW_H

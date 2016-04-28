@@ -22,7 +22,7 @@ void MainWindow::ShowOnLabel(cv::Mat mat, QLabel *k)
 {
     if(mat.channels()==3)
     {
-        cv::cvtColor(mat,mat,CV_BGR2RGB);
+        //cv::cvtColor(mat,mat,CV_BGR2RGB);
         QImage qtemp = QImage((const unsigned char*)(mat.data),mat.cols,mat.rows,mat.step,QImage::Format_RGB888);
         k->clear();
         k->setPixmap(QPixmap::fromImage(qtemp.scaled(k->width(),k->height(),Qt::KeepAspectRatio)));
@@ -261,10 +261,15 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
 
 void MainWindow::on_LoadRefButton_clicked()
 {
+    refPic.clear();
     LoadFromFile(refPic);
+    if(refPic.size()==0)
+        return;
     ui->LoadPicButton->setEnabled(true);
     LoadPic(refPic,ui->RefLabel);
     std::vector<cv::Mat> WRef;
+    RefCorPoint.clear();
+
 
     StitchMethod(refPic,WRef,WRefMask,Refresult,RefCorPoint);
 }
@@ -276,7 +281,10 @@ void MainWindow::on_spinBoxRef_valueChanged(int arg1)
 
 void MainWindow::on_LoadPicButton_clicked()
 {
+    Pic.clear();
     LoadFromFile(Pic);
+    if(Pic.size()==0)
+        return;
     LoadPic(Pic,ui->PicLabel);
     WarpPic.clear();
     if(TransferWarp(Pic,WarpPic)!=1)
@@ -297,6 +305,8 @@ void MainWindow::on_CutButton_clicked()
 {
     CutMask(ui->spinBoxT1->value(),ui->spinBoxT2->value(),maskResult);
     ShowOnLabel(maskResult,ui->CutLabel);
+
+    ui->ChooseButton->setEnabled(true);
 }
 
 void MainWindow::on_PredictButton_clicked()
@@ -475,4 +485,18 @@ void MainWindow::on_CaptureRefButton_clicked()
 void MainWindow::on_CapturePicButton_clicked()
 {
     FirstFile = currentFile;
+}
+
+void MainWindow::on_ChooseButton_clicked()
+{
+    if(!CutPic.empty())
+    {
+        picdialog.initial(CutPic,RefCorPoint);
+    }
+    return;
+}
+
+void MainWindow::on_SaveButton_clicked()
+{
+
 }

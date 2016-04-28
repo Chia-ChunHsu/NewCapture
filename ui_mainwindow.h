@@ -61,6 +61,7 @@ public:
     QPushButton *PredictButton;
     QDateTimeEdit *dateTimeEdit;
     QPushButton *ApplyButton;
+    QPushButton *ChooseButton;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -69,7 +70,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(480, 320);
+        MainWindow->resize(480, 371);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
@@ -181,6 +182,10 @@ public:
         ApplyButton = new QPushButton(centralWidget);
         ApplyButton->setObjectName(QStringLiteral("ApplyButton"));
         ApplyButton->setGeometry(QRect(390, 0, 75, 23));
+        ChooseButton = new QPushButton(centralWidget);
+        ChooseButton->setObjectName(QStringLiteral("ChooseButton"));
+        ChooseButton->setEnabled(false);
+        ChooseButton->setGeometry(QRect(10, 270, 461, 41));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -195,7 +200,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -223,6 +228,7 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("MainWindow", "Step 4", 0));
         dateTimeEdit->setDisplayFormat(QApplication::translate("MainWindow", "yyyy/M/d AP hh:mm::ss", 0));
         ApplyButton->setText(QApplication::translate("MainWindow", "Apply", 0));
+        ChooseButton->setText(QApplication::translate("MainWindow", "Choose Point", 0));
     } // retranslateUi
 
 };
