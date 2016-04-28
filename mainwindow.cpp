@@ -51,7 +51,10 @@ void MainWindow::LoadFromFile(std::vector<cv::Mat> &Ref)
                                                       "/home",
                                                       "Images (*.jpg)");
     if(names.size()!=4)
+    {
+        Ref.clear();
         return;
+    }
     Ref.clear();
     for(int i=0;i<4;i++)
     {
@@ -261,7 +264,7 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
 
 void MainWindow::on_LoadRefButton_clicked()
 {
-    refPic.clear();
+
     LoadFromFile(refPic);
     if(refPic.size()==0)
         return;
@@ -272,6 +275,7 @@ void MainWindow::on_LoadRefButton_clicked()
 
 
     StitchMethod(refPic,WRef,WRefMask,Refresult,RefCorPoint);
+    qDebug()<<"REF "<<refPic.size()<<"RefCorPoint "<<RefCorPoint.size();
 }
 
 void MainWindow::on_spinBoxRef_valueChanged(int arg1)
@@ -289,6 +293,7 @@ void MainWindow::on_LoadPicButton_clicked()
     WarpPic.clear();
     if(TransferWarp(Pic,WarpPic)!=1)
         return;
+    qDebug()<<"pic size"<<Pic.size();
     ui->CutButton->setEnabled(true);
     ui->CutRadioButton->setEnabled(true);
     ui->OriginalRadioButton->setEnabled(true);

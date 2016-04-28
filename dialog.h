@@ -19,7 +19,7 @@ class Dialog : public QDialog
 public:
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
-    void initial(std::vector<cv::Mat> cutPic,std::vector<cv::Point> RefCorPoint );
+    void initial(std::vector<cv::Mat> &cutPic,std::vector<cv::Point> &RefCorPoint );
 private slots:
     bool eventFilter(QObject *obj,QEvent *event);//事件偵測(滑鼠)
     void on_spinBox_valueChanged(int arg1);
@@ -29,8 +29,8 @@ private slots:
 private:
     Ui::Dialog *ui;
     void ShowOnLabel(cv::Mat mat,QLabel *k);
-    void draw(std::vector<cv::Mat> mat, int x, int y, QLabel *k);
-    void show(std::vector<cv::Mat> mat, int x, int y, QLabel *k);
+    void draw(std::vector<cv::Mat> &mat, int x, int y, QLabel *k);
+    void show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k);
     std::vector<cv::Mat> mat;
     std::vector<cv::Point> CorPoint;
     std::vector<std::vector<int>> data;
