@@ -52,15 +52,17 @@ void MainWindow::LoadFromFile(std::vector<cv::Mat> &Ref)
                                                       "Images (*.jpg)");
     if(names.size()!=4)
     {
-        Ref.clear();
+        //Ref.clear();
         return;
     }
+
     Ref.clear();
     for(int i=0;i<4;i++)
     {
         cv::Mat temp = cv::imread(names[i].toStdString().c_str());
         Ref.push_back(temp);
     }
+    //ui->fileLabel->setText(name[0]);
 }
 
 void MainWindow::LoadPic(std::vector<cv::Mat> &Ref,QLabel *k)
@@ -349,7 +351,9 @@ void MainWindow::on_PredictButton_clicked()
         }
     }
     //cv::imshow("Result Predict",predict);
-    ShowOnLabel(predict,ui->FalseColorLabel);
+    cv::Mat k ;
+    cv::cvtColor(predict,k,CV_BGR2RGB);
+    ShowOnLabel(k,ui->FalseColorLabel);
     QString saveResultFile;
     if(FirstFile.isEmpty())
         saveResultFile = QFileDialog::getSaveFileName(this, tr("Save File"),

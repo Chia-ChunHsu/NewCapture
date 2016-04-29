@@ -21,7 +21,8 @@ void Dialog::initial(std::vector<cv::Mat> &cutPic, std::vector<cv::Point> &RefCo
     ShowOnLabel(cutPic[0],ui->labelall);
     mat.clear();
     CorPoint.clear();
-    //temp.clear();
+    temp.clear();
+    data.clear();
     for(int i=0;i<cutPic.size();i++)
     {
         cv::Mat t = cutPic[i].clone();
