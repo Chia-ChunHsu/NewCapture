@@ -151,9 +151,9 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
         else if(i==3)
             ui->label4->setText(QString::number(n));
         cv::Point p(x-dx[i],y-dy[i]);
-        cv::Point textp(x-dx[i],y-10-dy[i]);
+        //cv::Point textp(x-dx[i],y-10-dy[i]);
         cv::circle(temp[i],p,1,cv::Scalar(255,0,0),-1,8);
-        cv::putText(temp[i],QString::number(data.size()+1).toStdString(),textp,cv::FONT_HERSHEY_COMPLEX,0.4,cv::Scalar(255,0,0));
+        //cv::putText(temp[i],QString::number(data.size()+1).toStdString(),textp,cv::FONT_HERSHEY_COMPLEX,0.4,cv::Scalar(255,0,0));
 
     }
     //cv::imshow("temp",temp[0]);

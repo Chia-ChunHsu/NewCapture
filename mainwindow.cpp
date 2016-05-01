@@ -354,6 +354,7 @@ void MainWindow::on_PredictButton_clicked()
     cv::Mat k ;
     cv::cvtColor(predict,k,CV_BGR2RGB);
     ShowOnLabel(k,ui->FalseColorLabel);
+    cv::imshow("pre",predict);
     QString saveResultFile;
     if(FirstFile.isEmpty())
         saveResultFile = QFileDialog::getSaveFileName(this, tr("Save File"),
@@ -508,4 +509,204 @@ void MainWindow::on_ChooseButton_clicked()
 void MainWindow::on_SaveButton_clicked()
 {
 
+}
+
+void MainWindow::on_KnnPredictButtom_clicked()
+{
+    cv::Mat predict;
+    predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
+    predict = cv::Scalar::all(0);
+    //svm.load("SVM.txt");//_______________________________
+
+    QString hel_file = QFileDialog::getOpenFileName(this,tr("Train Data"),".",tr("Data File(*.txt)"));
+    if(hel_file.isEmpty())
+        return;
+
+
+    std::vector<float> s;
+    std::vector<float> l;
+
+    QFile file1(hel_file);
+    file1.open(QIODevice::ReadOnly);
+    QTextStream in1(&file1);
+    while(!in1.atEnd())
+    {
+        for(int j=0;j<5;j++)
+        {
+            QString str;
+            in1>>str;
+
+            if(!str.isNull())
+            {
+                if(j==4)
+                    l.push_back(str.toFloat());
+                else
+                    s.push_back(str.toFloat());
+            }
+        }
+
+    }
+    file1.close();
+
+    if(l.size()*4!=s.size())
+        return;
+    cv::Mat trainingData(l.size(),4,CV_32FC1);
+    cv::Mat label(l.size(),1,CV_32FC1);
+
+
+    for(int i=0;i<s.size();i++)
+    {
+        trainingData.at<float>(i/4,i%4)=s[i];
+    }
+    for(int i=0;i<l.size();i++)
+    {
+        label.at<float>(i,0)=l[i];
+    }
+
+    //cv::Mat test(l.size(),4,CV_32FC1);
+    cv::Mat *nearest;
+    nearest = new cv::Mat(1,3,CV_32FC1);
+    CvKNearest *knn;
+    knn = new CvKNearest(trainingData,label,cv::Mat(),false,3);
+
+//    for(int i=0;i<s.size()/4;i++)
+//    {
+//        cv::Mat test(1,4,CV_32FC1);
+//        for(int j=0;j<4;j++)
+//        {
+//            test.at<float>(0,j) = s[i*4+j];
+//        }
+//        float resultclass = knn->find_nearest(test,3,0,0,nearest,0);
+
+//        if(l[i] == 0)
+//        {
+//            a_hel++;
+//            if(resultclass==l[i])
+//                hel++;
+//        }
+//        else if(l[i] == 1)
+//        {
+//            a_icu++;
+//            if(resultclass==l[i])
+//                icu++;
+//        }
+//        else if(l[i] == 2)
+//        {
+//            a_sym++;
+//            if(resultclass==l[i])
+//                sym++;
+//        }
+//    }
+//    qDebug()<<"4";
+
+//    float ah=float(hel/a_hel);
+//    float ai=float(icu/a_icu);
+//    float as=float(sym/a_sym);
+//    qDebug()<<"hel "<<hel<<" "<<a_hel<<" "<<ah;
+//    qDebug()<<"icu "<<icu<<" "<<a_icu<<" "<<ai;
+//    qDebug()<<"sym "<<sym<<" "<<a_sym<<" "<<as;
+
+
+
+    //_________________________
+    for(int i=0;i<Refresult.cols;i++)
+    {
+        for(int j=0;j<Refresult.rows;j++)
+        {
+            if(maskResult.at<cv::Vec3b>(j,i)[0] != 0)
+            {
+                //===============================
+                cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
+                for(int i=0;i<RefCorPoint.size();i++)
+                {
+                    t1.x = std::min(t1.x,RefCorPoint[i].x);
+                    t1.y = std::min(t1.y,RefCorPoint[i].y);
+                }
+
+                int dy0 = -t1.y+RefCorPoint[0].y;
+                int dx0 = -t1.x+RefCorPoint[0].x;
+                int dy1 = -t1.y+RefCorPoint[1].y;
+                int dx1 = -t1.x+RefCorPoint[1].x;
+                int dy2 = -t1.y+RefCorPoint[2].y;
+                int dx2 = -t1.x+RefCorPoint[2].x;
+                int dy3 = -t1.y+RefCorPoint[3].y;
+                int dx3 = -t1.x+RefCorPoint[3].x;
+
+
+                int cutsize = 1;
+                std::vector<QString> result;
+                if(i-dx0-cutsize>1 && i-dx0+cutsize <CutPic[0].cols-1 && j-dy0-cutsize >1 && j-dy0+cutsize<CutPic[0].rows-1)
+                {
+                    int n = CutPic[0].at<cv::Vec3b>(j-dy0,i-dx0)[0];
+                    result.push_back(QString::number(n));
+                }
+                if(i-dx1-cutsize>1 && i-dx1+cutsize <CutPic[1].cols-1 && j-dy1-cutsize >1 && j-dy1+cutsize<CutPic[1].rows-1)
+                {
+                    int n = CutPic[1].at<cv::Vec3b>(j-dy1,i-dx1)[0];
+                    result.push_back(QString::number(n));
+                }
+                if(i-dx2-cutsize>1 && i-dx2+cutsize <CutPic[2].cols-1 && j-dy2-cutsize >1 && j-dy2+cutsize<CutPic[2].rows-1)
+                {
+                    int n = CutPic[2].at<cv::Vec3b>(j-dy2,i-dx2)[0];
+                    result.push_back(QString::number(n));
+                }
+                if(i-dx3-cutsize>1 && i-dx3+cutsize <CutPic[3].cols-1 && j-dy3-cutsize >1 && j-dy3+cutsize<CutPic[3].rows-1)
+                {
+                    int n = CutPic[3].at<cv::Vec3b>(j-dy3,i-dx3)[0];
+                    result.push_back(QString::number(n));
+                }
+                cv::Mat test(1,4,CV_32FC1);
+                if(result.size()!=4)
+                    return;
+
+                for(int j=0;j<4;j++)
+                {
+                    test.at<float>(0,j) = result[j].toFloat();
+                }
+
+                //====================
+                float value = knn->find_nearest(test,3,0,0,nearest,0);
+                //float value = predictresult(j,i);
+                if(value ==0)
+                {
+                    predict.at<cv::Vec3b>(j,i)[0] = 0;
+                    predict.at<cv::Vec3b>(j,i)[1] = 255;
+                    predict.at<cv::Vec3b>(j,i)[2] = 0;
+                }
+                else if(value == 1)
+                {
+                    predict.at<cv::Vec3b>(j,i)[0] = 0;
+                    predict.at<cv::Vec3b>(j,i)[1] = 255;
+                    predict.at<cv::Vec3b>(j,i)[2] = 255;
+                }
+                else
+                {
+                    predict.at<cv::Vec3b>(j,i)[0] = 0;
+                    predict.at<cv::Vec3b>(j,i)[1] = 0;
+                    predict.at<cv::Vec3b>(j,i)[2] = 255;
+                }
+            }
+        }
+    }
+    //cv::imshow("Result Predict",predict);
+    cv::Mat k ;
+    cv::cvtColor(predict,k,CV_BGR2RGB);
+    ShowOnLabel(k,ui->FalseColorLabel);
+    cv::imshow("predict",predict);
+    QString saveResultFile;
+    if(FirstFile.isEmpty())
+        saveResultFile = QFileDialog::getSaveFileName(this, tr("Save File"),
+                                                          "untitled.jpg",
+                                                          tr("Images (*.jpg)"));
+    else
+        saveResultFile = FirstFile;
+    if(saveResultFile.isEmpty())
+    {
+        return;
+    }
+    else
+    {
+        //cv::imwrite()
+        cv::imwrite(saveResultFile.toStdString(),predict);
+    }
 }
