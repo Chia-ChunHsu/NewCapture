@@ -20,11 +20,16 @@ public:
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
     void initial(std::vector<cv::Mat> &cutPic,std::vector<cv::Point> &RefCorPoint );
+    void Threshold(std::vector<cv::Mat> &Input, cv::Mat Result,int upper,int lower);
 private slots:
     bool eventFilter(QObject *obj,QEvent *event);//事件偵測(滑鼠)
     void on_spinBox_valueChanged(int arg1);
 
     void on_saveButton_clicked();
+
+    void on_UpperSlider_sliderMoved(int position);
+
+    void on_LowerSlider_sliderMoved(int position);
 
 private:
     Ui::Dialog *ui;
@@ -35,6 +40,8 @@ private:
     std::vector<cv::Point> CorPoint;
     std::vector<std::vector<int>> data;
     std::vector<cv::Mat> temp;
+
+    cv::Mat res;
 };
 
 #endif // DIALOG_H

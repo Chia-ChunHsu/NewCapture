@@ -518,15 +518,20 @@ void MainWindow::on_KnnPredictButtom_clicked()
     predict = cv::Scalar::all(0);
     //svm.load("SVM.txt");//_______________________________
 
-    QString hel_file = QFileDialog::getOpenFileName(this,tr("Train Data"),".",tr("Data File(*.txt)"));
-    if(hel_file.isEmpty())
+    QString test_file = QFileDialog::getOpenFileName(this,tr("Train Data"),".",tr("Data File(*.txt)"));
+    if(test_file.isEmpty())
+    {
+        qDebug()<<"test_file is empty!";
         return;
+    }
 
 
     std::vector<float> s;
     std::vector<float> l;
 
-    QFile file1(hel_file);
+    s.clear();
+    l.clear();
+    QFile file1(test_file);
     file1.open(QIODevice::ReadOnly);
     QTextStream in1(&file1);
     while(!in1.atEnd())
@@ -549,7 +554,10 @@ void MainWindow::on_KnnPredictButtom_clicked()
     file1.close();
 
     if(l.size()*4!=s.size())
+    {
+        qDebug()<<"label and features problem!";
         return;
+    }
     cv::Mat trainingData(l.size(),4,CV_32FC1);
     cv::Mat label(l.size(),1,CV_32FC1);
 
@@ -567,60 +575,20 @@ void MainWindow::on_KnnPredictButtom_clicked()
     cv::Mat *nearest;
     nearest = new cv::Mat(1,3,CV_32FC1);
     CvKNearest *knn;
-    knn = new CvKNearest(trainingData,label,cv::Mat(),false,3);
+    knn = new CvKNearest(trainingData,label,cv::Mat(),false,10);
 
-//    for(int i=0;i<s.size()/4;i++)
-//    {
-//        cv::Mat test(1,4,CV_32FC1);
-//        for(int j=0;j<4;j++)
-//        {
-//            test.at<float>(0,j) = s[i*4+j];
-//        }
-//        float resultclass = knn->find_nearest(test,3,0,0,nearest,0);
-
-//        if(l[i] == 0)
-//        {
-//            a_hel++;
-//            if(resultclass==l[i])
-//                hel++;
-//        }
-//        else if(l[i] == 1)
-//        {
-//            a_icu++;
-//            if(resultclass==l[i])
-//                icu++;
-//        }
-//        else if(l[i] == 2)
-//        {
-//            a_sym++;
-//            if(resultclass==l[i])
-//                sym++;
-//        }
-//    }
-//    qDebug()<<"4";
-
-//    float ah=float(hel/a_hel);
-//    float ai=float(icu/a_icu);
-//    float as=float(sym/a_sym);
-//    qDebug()<<"hel "<<hel<<" "<<a_hel<<" "<<ah;
-//    qDebug()<<"icu "<<icu<<" "<<a_icu<<" "<<ai;
-//    qDebug()<<"sym "<<sym<<" "<<a_sym<<" "<<as;
-
-
-
-    //_________________________
+    qDebug()<<"hello";
     for(int i=0;i<Refresult.cols;i++)
     {
         for(int j=0;j<Refresult.rows;j++)
         {
             if(maskResult.at<cv::Vec3b>(j,i)[0] != 0)
             {
-                //===============================
                 cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-                for(int i=0;i<RefCorPoint.size();i++)
+                for(int f=0;f<RefCorPoint.size();f++)
                 {
-                    t1.x = std::min(t1.x,RefCorPoint[i].x);
-                    t1.y = std::min(t1.y,RefCorPoint[i].y);
+                    t1.x = std::min(t1.x,RefCorPoint[f].x);
+                    t1.y = std::min(t1.y,RefCorPoint[f].y);
                 }
 
                 int dy0 = -t1.y+RefCorPoint[0].y;
@@ -656,34 +624,34 @@ void MainWindow::on_KnnPredictButtom_clicked()
                     result.push_back(QString::number(n));
                 }
                 cv::Mat test(1,4,CV_32FC1);
-                if(result.size()!=4)
-                    return;
+                if(result.size()==4)
+                {
+                    for(int k=0;k<4;k++)
+                    {
+                        test.at<float>(0,k) = result[k].toFloat();
+                    }
 
-                for(int j=0;j<4;j++)
-                {
-                    test.at<float>(0,j) = result[j].toFloat();
-                }
-
-                //====================
-                float value = knn->find_nearest(test,3,0,0,nearest,0);
-                //float value = predictresult(j,i);
-                if(value ==0)
-                {
-                    predict.at<cv::Vec3b>(j,i)[0] = 0;
-                    predict.at<cv::Vec3b>(j,i)[1] = 255;
-                    predict.at<cv::Vec3b>(j,i)[2] = 0;
-                }
-                else if(value == 1)
-                {
-                    predict.at<cv::Vec3b>(j,i)[0] = 0;
-                    predict.at<cv::Vec3b>(j,i)[1] = 255;
-                    predict.at<cv::Vec3b>(j,i)[2] = 255;
-                }
-                else
-                {
-                    predict.at<cv::Vec3b>(j,i)[0] = 0;
-                    predict.at<cv::Vec3b>(j,i)[1] = 0;
-                    predict.at<cv::Vec3b>(j,i)[2] = 255;
+                    //====================
+                    float value = knn->find_nearest(test,3,0,0,nearest,0);
+                    //float value = predictresult(j,i);
+                    if(value ==0)
+                    {
+                        predict.at<cv::Vec3b>(j,i)[0] = 0;
+                        predict.at<cv::Vec3b>(j,i)[1] = 255;
+                        predict.at<cv::Vec3b>(j,i)[2] = 0;
+                    }
+                    else if(value == 1)
+                    {
+                        predict.at<cv::Vec3b>(j,i)[0] = 0;
+                        predict.at<cv::Vec3b>(j,i)[1] = 255;
+                        predict.at<cv::Vec3b>(j,i)[2] = 255;
+                    }
+                    else
+                    {
+                        predict.at<cv::Vec3b>(j,i)[0] = 0;
+                        predict.at<cv::Vec3b>(j,i)[1] = 0;
+                        predict.at<cv::Vec3b>(j,i)[2] = 255;
+                    }
                 }
             }
         }
@@ -693,20 +661,23 @@ void MainWindow::on_KnnPredictButtom_clicked()
     cv::cvtColor(predict,k,CV_BGR2RGB);
     ShowOnLabel(k,ui->FalseColorLabel);
     cv::imshow("predict",predict);
-    QString saveResultFile;
-    if(FirstFile.isEmpty())
-        saveResultFile = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                          "untitled.jpg",
-                                                          tr("Images (*.jpg)"));
-    else
-        saveResultFile = FirstFile;
-    if(saveResultFile.isEmpty())
-    {
-        return;
-    }
-    else
-    {
-        //cv::imwrite()
-        cv::imwrite(saveResultFile.toStdString(),predict);
-    }
+    qDebug()<<"O.K.";
+//    QString saveResultFile;
+//    if(FirstFile.isEmpty())
+//        saveResultFile = QFileDialog::getSaveFileName(this, tr("Save File"),
+//                                                          "untitled.jpg",
+//                                                          tr("Images (*.jpg)"));
+//    else
+//        saveResultFile = FirstFile;
+//    if(saveResultFile.isEmpty())
+//    {
+//        return;
+//    }
+//    else
+//    {
+//        //cv::imwrite()
+//        cv::imwrite(saveResultFile.toStdString(),predict);
+//    }
 }
+
+

@@ -186,7 +186,7 @@ public:
         PredictButton->setGeometry(QRect(310, 180, 141, 51));
         KnnPredictButtom = new QPushButton(tab_3);
         KnnPredictButtom->setObjectName(QStringLiteral("KnnPredictButtom"));
-        KnnPredictButtom->setGeometry(QRect(310, 90, 141, 61));
+        KnnPredictButtom->setGeometry(QRect(310, 110, 141, 61));
         tabWidget->addTab(tab_3, QString());
         dateTimeEdit = new QDateTimeEdit(centralWidget);
         dateTimeEdit->setObjectName(QStringLiteral("dateTimeEdit"));
@@ -201,7 +201,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 480, 22));
+        menuBar->setGeometry(QRect(0, 0, 480, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -212,7 +212,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

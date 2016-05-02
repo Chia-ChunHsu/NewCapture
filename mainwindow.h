@@ -67,6 +67,7 @@ private slots:
 
     void on_KnnPredictButtom_clicked();
 
+
 private:
     Ui::MainWindow *ui;
     std::vector<cv::Mat> refPic;

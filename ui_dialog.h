@@ -19,6 +19,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QScrollArea>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QWidget>
 
@@ -38,12 +39,14 @@ public:
     QLabel *label2;
     QLabel *label3;
     QLabel *label4;
+    QSlider *UpperSlider;
+    QSlider *LowerSlider;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("Dialog"));
-        Dialog->resize(983, 438);
+        Dialog->resize(983, 516);
         labelScale = new QLabel(Dialog);
         labelScale->setObjectName(QStringLiteral("labelScale"));
         labelScale->setGeometry(QRect(720, 10, 250, 250));
@@ -93,6 +96,18 @@ public:
         label4 = new QLabel(Dialog);
         label4->setObjectName(QStringLiteral("label4"));
         label4->setGeometry(QRect(930, 310, 41, 21));
+        UpperSlider = new QSlider(Dialog);
+        UpperSlider->setObjectName(QStringLiteral("UpperSlider"));
+        UpperSlider->setGeometry(QRect(10, 430, 701, 22));
+        UpperSlider->setMaximum(255);
+        UpperSlider->setValue(200);
+        UpperSlider->setOrientation(Qt::Horizontal);
+        LowerSlider = new QSlider(Dialog);
+        LowerSlider->setObjectName(QStringLiteral("LowerSlider"));
+        LowerSlider->setGeometry(QRect(10, 470, 701, 22));
+        LowerSlider->setMaximum(255);
+        LowerSlider->setValue(50);
+        LowerSlider->setOrientation(Qt::Horizontal);
 
         retranslateUi(Dialog);
 

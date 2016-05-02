@@ -31,10 +31,74 @@ void Dialog::initial(std::vector<cv::Mat> &cutPic, std::vector<cv::Point> &RefCo
         //temp.push_back(t);
     }
 
-//    std::copy(cutPic.begin(),cutPic.end(),mat.begin());
-//    std::copy(RefCorPoint.begin(),RefCorPoint.end(),CorPoint.begin());
-//    std::copy(cutPic.begin(),cutPic.end(),temp.begin());
     qApp->installEventFilter(this);
+}
+
+
+void Dialog::Threshold(std::vector<cv::Mat> &Input, cv::Mat Result, int upper, int lower)
+{
+    cv::Mat m= Input[2].clone();
+    cv::Mat m830 = Input[3].clone();
+    cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
+    for(int i=0;i<CorPoint.size();i++)
+    {
+        t1.x = std::min(t1.x,CorPoint[i].x);
+        t1.y = std::min(t1.y,CorPoint[i].y);
+    }
+    std::vector<int> dy;
+    std::vector<int> dx;
+    for(int i=0;i<Input.size();i++)
+    {
+        if(ui->spinBox->value()==1)
+        {
+            dy.push_back(-t1.y+CorPoint[i].y);
+            dx.push_back(-t1.x+CorPoint[i].x);
+        }
+        else if(ui->spinBox->value()==2)
+        {
+            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[1].y-CorPoint[0].y));
+            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[1].x-CorPoint[0].x));
+        }
+        else if(ui->spinBox->value()==3)
+        {
+            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[2].y-CorPoint[0].y));
+            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[2].x-CorPoint[0].x));
+        }
+        else if(ui->spinBox->value()==4)
+        {
+            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[3].y-CorPoint[0].y));
+            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[3].x-CorPoint[0].x));
+        }
+
+    }
+
+    for(int i=0;i<m.cols;i++)
+    {
+        for(int j=0;j<m.rows;j++)
+        {
+            if(j+dy[3]-dy[2]<0 || j+dy[3]-dy[2]>m830.rows || i+dx[3]-dx[2]<0 || i+dx[3]-dx[2]>m830.cols || m830.at<cv::Vec3b>(j+dy[3]-dy[2],i+dx[3]-dx[2])[0] == 0)
+            {
+
+            }
+            else if(m830.at<cv::Vec3b>(j+dy[3]-dy[2],i+dx[3]-dx[2])[0]-m.at<cv::Vec3b>(j,i)[0]<upper && m830.at<cv::Vec3b>(j+dy[3]-dy[2],i+dx[3]-dx[2])[0]-m.at<cv::Vec3b>(j,i)[0]>lower)
+            {
+                m.at<cv::Vec3b>(j,i)[0] = 0;
+                m.at<cv::Vec3b>(j,i)[1] = 0;
+                m.at<cv::Vec3b>(j,i)[2] = 255;
+            }
+            else
+            {
+                m.at<cv::Vec3b>(j,i)[0] = 0;
+                m.at<cv::Vec3b>(j,i)[1] = 0;
+                m.at<cv::Vec3b>(j,i)[2] = 0;
+            }
+        }
+    }
+
+    Result = m.clone();
+    cv::imshow("Res",Result);
+
+
 }
 
 void Dialog::ShowOnLabel(cv::Mat mat, QLabel *k)
@@ -133,9 +197,7 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
 
     std::vector<int> tempdata;
     tempdata.clear();
-    //std::vector<cv::Mat> t;
-//    for(int i=0;i<temp.size();i++)
-//        temp[i]
+
     for(int i=0;i<m.size();i++)
     {
        // cv::Mat kt = mat[i].clone();
@@ -151,9 +213,7 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
         else if(i==3)
             ui->label4->setText(QString::number(n));
         cv::Point p(x-dx[i],y-dy[i]);
-        //cv::Point textp(x-dx[i],y-10-dy[i]);
         cv::circle(temp[i],p,1,cv::Scalar(255,0,0),-1,8);
-        //cv::putText(temp[i],QString::number(data.size()+1).toStdString(),textp,cv::FONT_HERSHEY_COMPLEX,0.4,cv::Scalar(255,0,0));
 
     }
     //cv::imshow("temp",temp[0]);
@@ -257,4 +317,17 @@ void Dialog::on_saveButton_clicked()
         out<< "\n";
     }
     file.close();
+}
+
+void Dialog::on_UpperSlider_sliderMoved(int position)
+{
+
+    Threshold(temp,res,position,ui->LowerSlider->value());
+
+}
+
+void Dialog::on_LowerSlider_sliderMoved(int position)
+{
+    Threshold(temp,res,ui->UpperSlider->value(),position);
+
 }
