@@ -149,6 +149,7 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
         {
             bool bool1 = false;
             bool bool2 = false;
+            bool bool3 = false;
             if(j>=y2 && i >=x2 && j <tempWarp[two].rows+y2 && i <tempWarp[two].cols+x2)
             {
                 bool1 = ( tempWarp[two].at<cv::Vec3b>(j-y2,i-x2)[0]+tempWarp[two].at<cv::Vec3b>(j-y2,i-x2)[1]+tempWarp[two].at<cv::Vec3b>(j-y2,i-x2)[2])/3 > threv1;
@@ -157,7 +158,11 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
             {
                 bool2 = ( tempWarp[one].at<cv::Vec3b>(j-y1,i-x1)[0]+tempWarp[one].at<cv::Vec3b>(j-y1,i-x1)[1]+tempWarp[one].at<cv::Vec3b>(j-y1,i-x1)[2])/3 < threv2;
             }
-            if(bool1==true  && bool2 == true )
+            if(j-y1-30>0 && j-y2-30>0 && i-x1-30>0 && i-x2-30>0 && j-y1+30 <tempWarp[one].rows && i-x1+30<tempWarp[one].cols && j-y2+30 <tempWarp[two].rows && i-x2+30<tempWarp[two].cols )
+            {
+                bool3 = true;
+            }
+            if(bool1==true  && bool2 == true && bool3 == true )
             {
                 shadow.at<cv::Vec3b>(j,i)[0] = 255;
                 shadow.at<cv::Vec3b>(j,i)[1] = 255;
@@ -266,17 +271,23 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
 
 void MainWindow::on_LoadRefButton_clicked()
 {
-
     LoadFromFile(refPic);
     if(refPic.size()==0)
         return;
     ui->LoadPicButton->setEnabled(true);
+
+
     LoadPic(refPic,ui->RefLabel);
     std::vector<cv::Mat> WRef;
     RefCorPoint.clear();
 
 
     StitchMethod(refPic,WRef,WRefMask,Refresult,RefCorPoint);
+    for(int i=0;i<WRef.size();i++)
+    {
+        //cv::imshow(QString::number(i).toStdString(),WRef[i]);
+        cv::imwrite(QString::number(i).toStdString()+"_warp.jpg",WRef[i]);
+    }
     qDebug()<<"REF "<<refPic.size()<<"RefCorPoint "<<RefCorPoint.size();
 }
 
@@ -287,11 +298,70 @@ void MainWindow::on_spinBoxRef_valueChanged(int arg1)
 
 void MainWindow::on_LoadPicButton_clicked()
 {
-    Pic.clear();
-    LoadFromFile(Pic);
-    if(Pic.size()==0)
+    OPic.clear();
+    LoadFromFile(OPic);
+    if(OPic.size()==0)
         return;
+
+    //=========================Normailize
+    std::vector<int> DNm;
+    DNm.clear();
+    for(int n=0;n<OPic.size();n++)
+    {
+        int total = 0;
+        for(int i=0;i<OPic[n].cols;i++)
+        {
+            for(int j=0;j<OPic[n].rows;j++)
+            {
+                total = total + OPic[n].at<cv::Vec3b>(j,i)[0];
+            }
+        }
+        DNm.push_back(total/(OPic[n].cols * OPic[n].rows));
+    }
+
+
+    for(int n=0;n<OPic.size();n++)
+    {
+        Pic.push_back(OPic[n]);
+        for(int i=0;i<OPic[n].cols;i++)
+        {
+            for(int j=0;j<OPic[n].rows;j++)
+            {
+                Pic[n].at<cv::Vec3b>(j,i)[0] = OPic[n].at<cv::Vec3b>(j,i)[0] + (128 - DNm[n]);
+                Pic[n].at<cv::Vec3b>(j,i)[1] = OPic[n].at<cv::Vec3b>(j,i)[1] + (128 - DNm[n]);
+                Pic[n].at<cv::Vec3b>(j,i)[2] = OPic[n].at<cv::Vec3b>(j,i)[2] + (128 - DNm[n]);
+            }
+        }
+    }
+    //=================================
+    //=======================Cut
+    std::vector<cv::Mat> showMat;
+    showMat.clear();
+    for(int n=0;n<Pic.size();n++)
+    {
+        cv::Mat m = Pic[n];
+        for(int i=0;i<Pic[n].cols;i++)
+        {
+            for(int j=0;j<Pic[n].rows;j++)
+            {
+                int k = m.at<cv::Vec3b>(j,i)[0]+(128-WrefPic[n].at<cv::Vec3b>(j,i)[0]);
+                m.at<cv::Vec3b>(j,i)[0] = k;
+                m.at<cv::Vec3b>(j,i)[1] = k;
+                m.at<cv::Vec3b>(j,i)[2] = k;
+            }
+        }
+
+        showMat.push_back(m);
+        Pic[n] = m.clone();
+    }
+    //======================================
+
+
+
+
     LoadPic(Pic,ui->PicLabel);
+    for(int i=0;i<Pic.size();i++)
+        cv::imwrite(QString::number(i).toStdString()+"_white.jpg",Pic[i]);
     WarpPic.clear();
     if(TransferWarp(Pic,WarpPic)!=1)
         return;
@@ -321,7 +391,7 @@ void MainWindow::on_PredictButton_clicked()
     cv::Mat predict;
     predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
     predict = cv::Scalar::all(0);
-    svm.load("SVM.txt");
+    //svm.load("SVM.txt");
     for(int i=0;i<Refresult.cols;i++)
     {
         for(int j=0;j<Refresult.rows;j++)
@@ -329,7 +399,7 @@ void MainWindow::on_PredictButton_clicked()
             if(maskResult.at<cv::Vec3b>(j,i)[0] != 0)
             {
                 float value = predictresult(j,i);
-                if(value ==0)
+                if(value == 0)
                 {
                     predict.at<cv::Vec3b>(j,i)[0] = 0;
                     predict.at<cv::Vec3b>(j,i)[1] = 255;
@@ -371,6 +441,7 @@ void MainWindow::on_PredictButton_clicked()
         //cv::imwrite()
         cv::imwrite(saveResultFile.toStdString(),predict);
     }
+
 }
 
 float MainWindow::predictresult(int y,int x)
@@ -425,7 +496,9 @@ float MainWindow::predictresult(int y,int x)
 
     svm.load("SVM.txt");
     float resultclass = svm.predict(test);
+
     float finalresult = resultclass;
+
 
 
     return finalresult;
@@ -678,6 +751,31 @@ void MainWindow::on_KnnPredictButtom_clicked()
 //        //cv::imwrite()
 //        cv::imwrite(saveResultFile.toStdString(),predict);
 //    }
+}
+
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    cv::VideoCapture cap(0);
+    cap.open(0);
+    cv::Mat m;
+    for(int i=0;i<10000;i++)
+    {
+        cap>>m;
+
+    }
+    cv::imshow("m",m);
+    cap.release();
+
+}
+
+void MainWindow::on_LoadWRefButton_clicked()
+{
+    LoadFromFile(WrefPic);
+    if(WrefPic.size()==0)
+        return;
+    ui->LoadRefButton->setEnabled(true);
 }
 
 

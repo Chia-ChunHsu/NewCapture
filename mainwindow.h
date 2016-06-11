@@ -68,10 +68,17 @@ private slots:
     void on_KnnPredictButtom_clicked();
 
 
+    void on_pushButton_clicked();
+
+
+    void on_LoadWRefButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     std::vector<cv::Mat> refPic;
+    std::vector<cv::Mat> WrefPic;
     std::vector<cv::Mat> Pic;
+    std::vector<cv::Mat> OPic;
     std::vector<cv::Mat> WRefMask;
     cv::Mat Refresult;
     std::vector<cv::Mat> WarpPic;

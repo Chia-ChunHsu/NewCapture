@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>480</width>
-    <height>371</height>
+    <width>511</width>
+    <height>426</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -78,10 +78,13 @@
       </property>
      </widget>
      <widget class="QPushButton" name="LoadRefButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>310</x>
-        <y>130</y>
+        <y>120</y>
         <width>141</width>
         <height>51</height>
        </rect>
@@ -94,7 +97,7 @@
       <property name="geometry">
        <rect>
         <x>316</x>
-        <y>70</y>
+        <y>60</y>
         <width>131</width>
         <height>20</height>
        </rect>
@@ -103,17 +106,17 @@
        <string>TextLabel</string>
       </property>
      </widget>
-     <widget class="QLabel" name="fileLabel">
+     <widget class="QPushButton" name="LoadWRefButton">
       <property name="geometry">
        <rect>
         <x>310</x>
-        <y>110</y>
+        <y>80</y>
         <width>141</width>
-        <height>16</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>TextLabel</string>
+       <string>Load White Ref</string>
       </property>
      </widget>
     </widget>
@@ -184,19 +187,6 @@
        <string>Load Pic</string>
       </property>
      </widget>
-     <widget class="QLabel" name="fileLabelPic">
-      <property name="geometry">
-       <rect>
-        <x>310</x>
-        <y>80</y>
-        <width>141</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
@@ -249,6 +239,9 @@
       <property name="maximum">
        <number>255</number>
       </property>
+      <property name="value">
+       <number>96</number>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -280,6 +273,9 @@
       </property>
       <property name="maximum">
        <number>255</number>
+      </property>
+      <property name="value">
+       <number>175</number>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -450,13 +446,26 @@
      <string>Choose Point</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>340</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>480</width>
+     <width>511</width>
      <height>21</height>
     </rect>
    </property>
