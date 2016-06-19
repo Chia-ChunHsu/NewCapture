@@ -104,6 +104,7 @@ int MainWindow::TransferWarp(std::vector<cv::Mat> &Pic, std::vector<cv::Mat> &Wa
             }
         }
     }
+
     return 1;
 }
 
@@ -121,7 +122,7 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
         m1.x = std::max(m1.x,RefCorPoint[i].x);
         m1.y = std::max(m1.y,RefCorPoint[i].y);
     }
-
+    cv::imwrite("ref.jpg",Refresult);
     cv::Size size(Refresult.cols,Refresult.rows);
 
     shadow.create(size,CV_MAKETYPE(Refresult.type(),3));
@@ -177,9 +178,9 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
         }
     }
     int erosion_elem = 0;
-    int erosion_size = 10;
+    int erosion_size = 5;
     int dilation_elem = 0;
-    int dilation_size = 10;
+    int dilation_size = 5;//10
 
     int erosion_type;
     if( erosion_elem == 0 ){ erosion_type = cv::MORPH_RECT; }
@@ -201,6 +202,10 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
                                                 cv::Point( dilation_size, dilation_size ) );
     cv::erode(shadow,eroMat,eroelement);
     cv::dilate(eroMat,dilMat,dilelement);
+    cv::imwrite("shadow.jpg",shadow);
+    cv::imwrite("eroMat.jpg",eroMat);
+    cv::imwrite("dilMat.jpg",dilMat);
+
 
     MaskResult = dilMat.clone();
 
@@ -261,9 +266,15 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
 
         }
     }
+    for(int i=0;i<temp.size();i++)
+    {
+        cv::imwrite("temp"+QString::number(i+1).toStdString()+".jpg",temp[i]);
+    }
     CutPic.clear();
     for(int i=0;i<temp.size();i++)
         CutPic.push_back(temp[i]);
+
+    ui->RGBButtom->setEnabled(true);
 
 
 
@@ -276,10 +287,86 @@ void MainWindow::on_LoadRefButton_clicked()
         return;
     ui->LoadPicButton->setEnabled(true);
 
+//    //=========================Normailize
+//    std::vector<int> DNm;
+//    DNm.clear();
+//    for(int n=0;n<refPic.size();n++)
+//    {
+//        int total = 0;
+//        for(int i=0;i<refPic[n].cols;i++)
+//        {
+//            for(int j=0;j<refPic[n].rows;j++)
+//            {
+//                total = total + refPic[n].at<cv::Vec3b>(j,i)[0];
+//            }
+//        }
+//        DNm.push_back(total/(refPic[n].cols * refPic[n].rows));
+//    }
+
+//    std::vector<cv::Mat> temp;
+//    temp.clear();
+//    for(int n=0;n<refPic.size();n++)
+//    {
+//        temp.push_back(refPic[n]);
+//        for(int i=0;i<refPic[n].cols;i++)
+//        {
+//            for(int j=0;j<refPic[n].rows;j++)
+//            {
+//                temp[n].at<cv::Vec3b>(j,i)[0] = refPic[n].at<cv::Vec3b>(j,i)[0] + (128 - DNm[n]);
+//                temp[n].at<cv::Vec3b>(j,i)[1] = refPic[n].at<cv::Vec3b>(j,i)[1] + (128 - DNm[n]);
+//                temp[n].at<cv::Vec3b>(j,i)[2] = refPic[n].at<cv::Vec3b>(j,i)[2] + (128 - DNm[n]);
+//            }
+//        }
+//    }
+//    //=================================
+//    //=======================Cut
+//    std::vector<cv::Mat> showMat;
+//    showMat.clear();
+//    for(int n=0;n<temp.size();n++)
+//    {
+//        cv::Mat m = temp[n];
+//        for(int i=0;i<temp[n].cols;i++)
+//        {
+//            for(int j=0;j<temp[n].rows;j++)
+//            {
+//                int k = m.at<cv::Vec3b>(j,i)[0]+(128-WrefPic[n].at<cv::Vec3b>(j,i)[0]);
+//                m.at<cv::Vec3b>(j,i)[0] = k;
+//                m.at<cv::Vec3b>(j,i)[1] = k;
+//                m.at<cv::Vec3b>(j,i)[2] = k;
+//            }
+//        }
+
+//        showMat.push_back(m);
+//        refPic[n] = m.clone();
+//    }
+//    //======================================
+
+//    for(int n=0;n<refPic.size();n++)
+//    {
+//        for(int i=0;i<refPic[n].cols;i++)
+//        {
+//            for(int j=0;j<refPic[n].rows;j++)
+//            {
+//                if(refPic[n].at<cv::Vec3b>(j,i)[0]<130)
+//                {
+//                    refPic[n].at<cv::Vec3b>(j,i)[0] = 0;
+//                    refPic[n].at<cv::Vec3b>(j,i)[1] = 0;
+//                    refPic[n].at<cv::Vec3b>(j,i)[2] = 0;
+//                }
+//                else
+//                {
+//                    refPic[n].at<cv::Vec3b>(j,i)[0] = 255;
+//                    refPic[n].at<cv::Vec3b>(j,i)[1] = 255;
+//                    refPic[n].at<cv::Vec3b>(j,i)[2] = 255;
+//                }
+//            }
+//        }
+//    }
 
     LoadPic(refPic,ui->RefLabel);
     std::vector<cv::Mat> WRef;
     RefCorPoint.clear();
+
 
 
     StitchMethod(refPic,WRef,WRefMask,Refresult,RefCorPoint);
@@ -319,7 +406,7 @@ void MainWindow::on_LoadPicButton_clicked()
         DNm.push_back(total/(OPic[n].cols * OPic[n].rows));
     }
 
-
+    Pic.clear();
     for(int n=0;n<OPic.size();n++)
     {
         Pic.push_back(OPic[n]);
@@ -365,6 +452,10 @@ void MainWindow::on_LoadPicButton_clicked()
     WarpPic.clear();
     if(TransferWarp(Pic,WarpPic)!=1)
         return;
+    for(int i=0;i<WarpPic.size();i++)
+    {
+        cv::imwrite(QString::number(i).toStdString()+"_wwarp.jpg",WarpPic[i]);
+    }
     qDebug()<<"pic size"<<Pic.size();
     ui->CutButton->setEnabled(true);
     ui->CutRadioButton->setEnabled(true);
@@ -779,3 +870,51 @@ void MainWindow::on_LoadWRefButton_clicked()
 }
 
 
+
+void MainWindow::on_RGBButtom_clicked()
+{
+    QString Rgbname = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                   "/home",
+                                                   tr("Images (*.png *.xpm *.jpg)"));
+    if(Rgbname.isEmpty())
+        return;
+    RGB = cv::imread(Rgbname.toStdString());
+
+    Thread_Stitch Ts;
+    std::vector<cv::Mat> change;
+    for(int i=0;i<Pic.size();i++)
+    {
+        if(i==2)
+            change.push_back(RGB);
+        else
+            change.push_back(Pic[i]);
+    }
+    std::vector<cv::Mat> warptemp;
+    if(Ts.StLike(refPic,change,warptemp,TS.getK(),TS.getCam())!=1)
+        return;
+    for(int i=0;i<4;i++)
+    {
+        cv::Size s = WRefMask[i].size();
+        cv::resize(warptemp[i],warptemp[i],s);
+    }
+
+        //cv::Mat temp = WarpPic[n].clone();
+        for(int i=0;i<warptemp[2].cols;i++)
+        {
+            for(int j=0;j<warptemp[2].rows;j++)
+            {
+                if(WRefMask[2].at<uchar>(j,i)!=255)
+                {
+                    warptemp[2].at<cv::Vec3b>(j,i)[0]=0;
+                    warptemp[2].at<cv::Vec3b>(j,i)[1]=0;
+                    warptemp[2].at<cv::Vec3b>(j,i)[2]=0;
+                }
+            }
+        }
+        if(CutPic.size() == 5)
+            CutPic.pop_back();
+        CutPic.push_back(warptemp[2]);
+        qDebug()<<CutPic.size();
+        cv::imshow("test",CutPic[4]);
+
+}

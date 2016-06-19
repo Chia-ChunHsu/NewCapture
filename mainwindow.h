@@ -73,6 +73,8 @@ private slots:
 
     void on_LoadWRefButton_clicked();
 
+    void on_RGBButtom_clicked();
+
 private:
     Ui::MainWindow *ui;
     std::vector<cv::Mat> refPic;
@@ -98,6 +100,11 @@ private:
 
 
     Dialog picdialog;
+
+
+    cv::Mat RGB;
+
+
 };
 
 #endif // MAINWINDOW_H

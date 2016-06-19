@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>511</width>
-    <height>426</height>
+    <width>478</width>
+    <height>323</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -43,7 +43,7 @@
        <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
-       <string>TextLabel</string>
+       <string>Reference</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBoxRef">
@@ -90,7 +90,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Load Ref</string>
+       <string>Load Reference</string>
       </property>
      </widget>
      <widget class="QLabel" name="label">
@@ -103,7 +103,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>TextLabel</string>
+       <string>Time</string>
       </property>
      </widget>
      <widget class="QPushButton" name="LoadWRefButton">
@@ -137,7 +137,7 @@
        <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
-       <string>TextLabel</string>
+       <string>Sample Pictures</string>
       </property>
      </widget>
      <widget class="QPushButton" name="CapturePicButton">
@@ -184,7 +184,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Load Pic</string>
+       <string>Load Pictures</string>
       </property>
      </widget>
     </widget>
@@ -205,7 +205,7 @@
        <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
-       <string>TextLabel</string>
+       <string>Leaf Mask</string>
       </property>
      </widget>
      <widget class="QPushButton" name="CutButton">
@@ -294,38 +294,6 @@
        <number>255</number>
       </property>
      </widget>
-     <widget class="QRadioButton" name="CutRadioButton">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>310</x>
-        <y>150</y>
-        <width>141</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Cut Picture</string>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="OriginalRadioButton">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>310</x>
-        <y>130</y>
-        <width>141</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Original Picture</string>
-      </property>
-     </widget>
      <widget class="QSpinBox" name="spinBoxT1">
       <property name="geometry">
        <rect>
@@ -373,7 +341,7 @@
        <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
-       <string>TextLabel</string>
+       <string>Prediction</string>
       </property>
      </widget>
      <widget class="QPushButton" name="PredictButton">
@@ -389,29 +357,21 @@
        <string>Predict</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="KnnPredictButtom">
-      <property name="geometry">
-       <rect>
-        <x>310</x>
-        <y>110</y>
-        <width>141</width>
-        <height>61</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Predict by KNN</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QDateTimeEdit" name="dateTimeEdit">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>220</x>
       <y>0</y>
-      <width>141</width>
+      <width>171</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
     </property>
     <property name="displayFormat">
      <string>yyyy/M/d AP hh:mm::ss</string>
@@ -422,9 +382,14 @@
      <rect>
       <x>390</x>
       <y>0</y>
-      <width>75</width>
+      <width>81</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>Apply</string>
@@ -437,8 +402,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>270</y>
-      <width>461</width>
+      <y>320</y>
+      <width>301</width>
       <height>41</height>
      </rect>
     </property>
@@ -449,8 +414,8 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>340</y>
+      <x>50</x>
+      <y>390</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -459,13 +424,79 @@
      <string>PushButton</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="RGBButtom">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>320</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Open RGB</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="OriginalRadioButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>160</y>
+      <width>141</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Original Picture</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="CutRadioButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>200</y>
+      <width>141</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cut Picture</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="KnnPredictButtom">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>290</y>
+      <width>141</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Predict by KNN</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>511</width>
+     <width>478</width>
      <height>21</height>
     </rect>
    </property>

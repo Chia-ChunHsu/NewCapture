@@ -29,6 +29,8 @@ private slots:
     void on_saveButton_clicked();
 
 
+    void on_RGBButton_clicked();
+
 private:
     Ui::Dialog *ui;
     void ShowOnLabel(cv::Mat mat,QLabel *k);
@@ -42,6 +44,8 @@ private:
     //std::vector<cv::Mat> labelmat;
 
     cv::Mat res;
+
+
 };
 
 #endif // DIALOG_H

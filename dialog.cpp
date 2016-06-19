@@ -25,7 +25,7 @@ void Dialog::initial(std::vector<cv::Mat> cutPic, std::vector<cv::Point> RefCorP
     temp.clear();
     //labelmat.clear();
     data.clear();
-    for(int i=0;i<cutPic.size();i++)
+    for(int i=0;i<cutPic.size()-1;i++)
     {
         //cv::Mat t = cutPic[i].clone();
         temp.push_back(cutPic[i]);
@@ -33,6 +33,9 @@ void Dialog::initial(std::vector<cv::Mat> cutPic, std::vector<cv::Point> RefCorP
         CorPoint.push_back(RefCorPoint[i]);
 
     }
+    temp.push_back(cutPic[4]);
+    Omat.push_back(cutPic[4]);
+    CorPoint.push_back(RefCorPoint[2]);
     qApp->installEventFilter(this);
 }
 
@@ -40,7 +43,9 @@ void Dialog::ShowOnLabel(cv::Mat mat, QLabel *k)
 {
     if(mat.channels()==3)
     {
-        QImage qtemp = QImage((const unsigned char*)(mat.data),mat.cols,mat.rows,mat.step,QImage::Format_RGB888);
+        cv::Mat t;
+        cv::cvtColor(mat,t,CV_BGR2RGB);
+        QImage qtemp = QImage((const unsigned char*)(t.data),t.cols,t.rows,t.step,QImage::Format_RGB888);
         k->clear();
         k->setPixmap(QPixmap::fromImage(qtemp.scaled(k->width(),k->height(),Qt::KeepAspectRatio)));
         k->show();
@@ -83,6 +88,7 @@ bool Dialog::eventFilter(QObject *obj, QEvent *event)
       int y = pt.ry();
 
       draw(temp,x,y,ui->labelall);
+      //draw(temp,pt.x(),pt.y(),ui->labelall);
       show(temp,pt.x(),pt.y(),ui->labelScale);
   }
 
@@ -112,7 +118,7 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
             dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[1].y-CorPoint[0].y));
             dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[1].x-CorPoint[0].x));
         }
-        else if(ui->spinBox->value()==3)
+        else if(ui->spinBox->value()==3 )
         {
             dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[2].y-CorPoint[0].y));
             dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[2].x-CorPoint[0].x));
@@ -122,9 +128,13 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
             dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[3].y-CorPoint[0].y));
             dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[3].x-CorPoint[0].x));
         }
-
+        else if(ui->spinBox->value()==5)
+        {
+            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[4].y-CorPoint[0].y));
+            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[4].x-CorPoint[0].x));
+        }
     }
-    //temp = m;
+
 
     std::vector<int> tempdata;
     tempdata.clear();
@@ -132,19 +142,26 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
 
     for(int i=0;i<m.size();i++)
     {
-        int n = Omat[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
-        tempdata.push_back(n);
-        if(i==0)
-            ui->label1->setText(QString::number(n));
-        else if(i==1)
-            ui->label2->setText(QString::number(n));
-        else if(i==2)
-            ui->label3->setText(QString::number(n));
-        else if(i==3)
-            ui->label4->setText(QString::number(n));
-        cv::Point p(x-dx[i],y-dy[i]);
-        cv::circle(m[i],p,1,cv::Scalar(255,0,0),-1,8);
+        if(i!=4)
+        {
+            int n = Omat[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
+            tempdata.push_back(n);
+            if(i==0)
+                ui->label1->setText(QString::number(n));
+            else if(i==1)
+                ui->label2->setText(QString::number(n));
+            else if(i==2)
+                ui->label3->setText(QString::number(n));
+            else if(i==3)
+                ui->label4->setText(QString::number(n));
+        }
 
+
+        cv::Point p(x-dx[i],y-dy[i]);
+        cv::circle(m[i],p,1,cv::Scalar(0,0,255),-1,8);
+        //cv::Mat t;
+        //cv::cvtColor(m[i],t,CV_BGR2RGB);
+        cv::imwrite(QString::number(i).toStdString()+"point.jpg",m[i]);
 
     }
 
@@ -156,7 +173,7 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
 void Dialog::show(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
 {
     cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-    for(int i=0;i<CorPoint.size();i++)
+    for(int i=0;i<CorPoint.size()-1;i++)
     {
         t1.x = std::min(t1.x,CorPoint[i].x);
         t1.y = std::min(t1.y,CorPoint[i].y);
@@ -175,7 +192,7 @@ void Dialog::show(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
             dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[1].y-CorPoint[0].y));
             dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[1].x-CorPoint[0].x));
         }
-        else if(ui->spinBox->value()==3)
+        else if(ui->spinBox->value()==3 ||   ui->spinBox->value()==5)
         {
             dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[2].y-CorPoint[0].y));
             dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[2].x-CorPoint[0].x));
@@ -189,7 +206,7 @@ void Dialog::show(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
 
     }
     int gap = 30;
-    for(int i=0;i<m.size();i++)
+    for(int i=0;i<m.size()-1;i++)
     {
         if(x-gap-dx[i]<0 || x+gap-dx[i]>m[i].cols || y-gap-dy[i]<0 || y+gap-dy[i]>m[i].rows)
             return;
@@ -207,7 +224,7 @@ void Dialog::show(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
             ui->label1->setText(QString::number(n));
         else if(i==1)
             ui->label2->setText(QString::number(n));
-        else if(i==2)
+        else if(i==2 )
             ui->label3->setText(QString::number(n));
         else if(i==3)
             ui->label4->setText(QString::number(n));
@@ -215,7 +232,7 @@ void Dialog::show(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
         cv::Rect r = cv::Rect(x-gap-dx[i],y-gap-dy[i],2*gap,2*gap);
         cv::Mat troi = tmp(r);
         roi.push_back(troi);
-        cv::circle(roi[i],cv::Point(gap,gap),1,cv::Scalar(255,0,0),-1,8);
+        cv::circle(roi[i],cv::Point(gap,gap),1,cv::Scalar(0,0,255),-1,8);
     }
 
     ShowOnLabel(roi[ui->spinBox->value()-1],k);
@@ -253,3 +270,8 @@ void Dialog::on_saveButton_clicked()
 }
 
 
+
+void Dialog::on_RGBButton_clicked()
+{
+
+}
