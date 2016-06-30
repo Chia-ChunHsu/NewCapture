@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer,SIGNAL(timeout()),this,SLOT(update()));
     timer->setInterval(1000);
     timer->start();
+    FileAd= "";
 
 }
 
@@ -43,18 +44,31 @@ void MainWindow::ShowOnLabel(cv::Mat mat, QLabel *k)
     }
 }
 
-void MainWindow::LoadFromFile(std::vector<cv::Mat> &Ref)
+void MainWindow::LoadFromFile(std::vector<cv::Mat> &Ref ,QString &File)
 {
+    if(FileAd=="")
+    {
+
+    }
 
     QStringList names = QFileDialog::getOpenFileNames(this,
                                                       "Select one or more files to open",
-                                                      "/home",
+                                                      FileAd,
                                                       "Images (*.jpg)");
+
+
     if(names.size()!=4)
     {
         //Ref.clear();
         return;
     }
+    File = names[0];
+    QStringList f = names[0].split("/");
+    for(int i=0;i<f.size()-1;i++)
+    {
+        FileAd=FileAd+f[i]+"/";
+    }
+    ui->FileName->setText(FileAd);
 
     Ref.clear();
     for(int i=0;i<4;i++)
@@ -282,94 +296,23 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
 
 void MainWindow::on_LoadRefButton_clicked()
 {
-    LoadFromFile(refPic);
+    QString refName;
+    LoadFromFile(refPic ,refName);
     if(refPic.size()==0)
         return;
     ui->LoadPicButton->setEnabled(true);
-
-//    //=========================Normailize
-//    std::vector<int> DNm;
-//    DNm.clear();
-//    for(int n=0;n<refPic.size();n++)
-//    {
-//        int total = 0;
-//        for(int i=0;i<refPic[n].cols;i++)
-//        {
-//            for(int j=0;j<refPic[n].rows;j++)
-//            {
-//                total = total + refPic[n].at<cv::Vec3b>(j,i)[0];
-//            }
-//        }
-//        DNm.push_back(total/(refPic[n].cols * refPic[n].rows));
-//    }
-
-//    std::vector<cv::Mat> temp;
-//    temp.clear();
-//    for(int n=0;n<refPic.size();n++)
-//    {
-//        temp.push_back(refPic[n]);
-//        for(int i=0;i<refPic[n].cols;i++)
-//        {
-//            for(int j=0;j<refPic[n].rows;j++)
-//            {
-//                temp[n].at<cv::Vec3b>(j,i)[0] = refPic[n].at<cv::Vec3b>(j,i)[0] + (128 - DNm[n]);
-//                temp[n].at<cv::Vec3b>(j,i)[1] = refPic[n].at<cv::Vec3b>(j,i)[1] + (128 - DNm[n]);
-//                temp[n].at<cv::Vec3b>(j,i)[2] = refPic[n].at<cv::Vec3b>(j,i)[2] + (128 - DNm[n]);
-//            }
-//        }
-//    }
-//    //=================================
-//    //=======================Cut
-//    std::vector<cv::Mat> showMat;
-//    showMat.clear();
-//    for(int n=0;n<temp.size();n++)
-//    {
-//        cv::Mat m = temp[n];
-//        for(int i=0;i<temp[n].cols;i++)
-//        {
-//            for(int j=0;j<temp[n].rows;j++)
-//            {
-//                int k = m.at<cv::Vec3b>(j,i)[0]+(128-WrefPic[n].at<cv::Vec3b>(j,i)[0]);
-//                m.at<cv::Vec3b>(j,i)[0] = k;
-//                m.at<cv::Vec3b>(j,i)[1] = k;
-//                m.at<cv::Vec3b>(j,i)[2] = k;
-//            }
-//        }
-
-//        showMat.push_back(m);
-//        refPic[n] = m.clone();
-//    }
-//    //======================================
-
-//    for(int n=0;n<refPic.size();n++)
-//    {
-//        for(int i=0;i<refPic[n].cols;i++)
-//        {
-//            for(int j=0;j<refPic[n].rows;j++)
-//            {
-//                if(refPic[n].at<cv::Vec3b>(j,i)[0]<130)
-//                {
-//                    refPic[n].at<cv::Vec3b>(j,i)[0] = 0;
-//                    refPic[n].at<cv::Vec3b>(j,i)[1] = 0;
-//                    refPic[n].at<cv::Vec3b>(j,i)[2] = 0;
-//                }
-//                else
-//                {
-//                    refPic[n].at<cv::Vec3b>(j,i)[0] = 255;
-//                    refPic[n].at<cv::Vec3b>(j,i)[1] = 255;
-//                    refPic[n].at<cv::Vec3b>(j,i)[2] = 255;
-//                }
-//            }
-//        }
-//    }
 
     LoadPic(refPic,ui->RefLabel);
     std::vector<cv::Mat> WRef;
     RefCorPoint.clear();
 
 
+    WRefMask.clear();
 
     StitchMethod(refPic,WRef,WRefMask,Refresult,RefCorPoint);
+    RefCorPoint[3].x = RefCorPoint[3].x+ui->xSpinBox->value();
+    RefCorPoint[3].y = RefCorPoint[3].y+ui->ySpinBox->value();
+    //RefCorPoint[2].y = RefCorPoint[2].y-ui->ySpinBox->value();
     for(int i=0;i<WRef.size();i++)
     {
         //cv::imshow(QString::number(i).toStdString(),WRef[i]);
@@ -385,62 +328,124 @@ void MainWindow::on_spinBoxRef_valueChanged(int arg1)
 
 void MainWindow::on_LoadPicButton_clicked()
 {
+    QString PicName;
     OPic.clear();
-    LoadFromFile(OPic);
+    LoadFromFile(OPic,PicName);
     if(OPic.size()==0)
         return;
-
+    ui->FileName->setText(PicName);
     //=========================Normailize
     std::vector<int> DNm;
     DNm.clear();
+    qDebug()<<"OPic_type "<<OPic[1].type();
     for(int n=0;n<OPic.size();n++)
     {
-        int total = 0;
-        for(int i=0;i<OPic[n].cols;i++)
-        {
-            for(int j=0;j<OPic[n].rows;j++)
-            {
-                total = total + OPic[n].at<cv::Vec3b>(j,i)[0];
-            }
-        }
-        DNm.push_back(total/(OPic[n].cols * OPic[n].rows));
+//        int total = 0;
+//        int c = 0;
+//        for(int i=0;i<OPic[n].cols;i++)
+//        {
+//            for(int j=0;j<OPic[n].rows;j++)
+//            {
+
+//                        //total = total + OPic[n].at<cv::Vec3b>(j,i)[0];
+//                        if(OPic[n].at<cv::Vec3b>(j,i)[0] != 0)
+//                        {
+//                            total = total + OPic[n].at<cv::Vec3b>(j,i)[0];
+//                            c++;
+//                        }
+//                    }
+//                }
+//                DNm.push_back(total/c);
+//                DNm.push_back(total/(OPic[n].cols * OPic[n].rows));
+        DNm.push_back(127);
+//        qDebug()<< n<<" "<<DNm[n];
     }
 
     Pic.clear();
+    int ***f;
+    f = new int**[OPic.size()];
     for(int n=0;n<OPic.size();n++)
     {
-        Pic.push_back(OPic[n]);
+        f[n] = new int*[OPic[n].cols];
+        for(int i=0;i<OPic[n].cols;i++)
+        {
+            f[n][i] = new int[OPic[n].rows];
+        }
+    }
+    qDebug()<<"1";
+
+    for(int n=0;n<OPic.size();n++)
+    {
+        //Pic.push_back(OPic[n]);
         for(int i=0;i<OPic[n].cols;i++)
         {
             for(int j=0;j<OPic[n].rows;j++)
             {
-                Pic[n].at<cv::Vec3b>(j,i)[0] = OPic[n].at<cv::Vec3b>(j,i)[0] + (128 - DNm[n]);
-                Pic[n].at<cv::Vec3b>(j,i)[1] = OPic[n].at<cv::Vec3b>(j,i)[1] + (128 - DNm[n]);
-                Pic[n].at<cv::Vec3b>(j,i)[2] = OPic[n].at<cv::Vec3b>(j,i)[2] + (128 - DNm[n]);
+                if(OPic[n].at<cv::Vec3b>(j,i)[0] == 0)
+                {
+                    f[n][i][j]=0;
+                }
+                else
+                {
+                    f[n][i][j] = abs(OPic[n].at<cv::Vec3b>(j,i)[0] + (128 - DNm[n]));
+                    //                    Pic[n].at<cv::Vec3b>(j,i)[1] = OPic[n].at<cv::Vec3b>(j,i)[1] + (128 - DNm[n]);
+                    //                    Pic[n].at<cv::Vec3b>(j,i)[2] = OPic[n].at<cv::Vec3b>(j,i)[2] + (128 - DNm[n]);
+                }
             }
         }
     }
+    qDebug()<<"2";
     //=================================
     //=======================Cut
     std::vector<cv::Mat> showMat;
     showMat.clear();
-    for(int n=0;n<Pic.size();n++)
+    for(int n=0;n<OPic.size();n++)
     {
-        cv::Mat m = Pic[n];
-        for(int i=0;i<Pic[n].cols;i++)
+        cv::Mat m = OPic[n];
+        for(int i=0;i<OPic[n].cols;i++)
         {
-            for(int j=0;j<Pic[n].rows;j++)
+            for(int j=0;j<OPic[n].rows;j++)
             {
-                int k = m.at<cv::Vec3b>(j,i)[0]+(128-WrefPic[n].at<cv::Vec3b>(j,i)[0]);
-                m.at<cv::Vec3b>(j,i)[0] = k;
-                m.at<cv::Vec3b>(j,i)[1] = k;
-                m.at<cv::Vec3b>(j,i)[2] = k;
+                if(OPic[n].at<cv::Vec3b>(j,i)[0]==0)
+                {
+
+                }
+                else
+                {
+                    int k = f[n][i][j]+(128-WrefPic[n].at<cv::Vec3b>(j,i)[0]);
+                    //                    if(k<0)
+                    //                    {
+                    //                        m.at<cv::Vec3b>(j,i)[0] = 0;
+                    //                        m.at<cv::Vec3b>(j,i)[1] = 0;
+                    //                        m.at<cv::Vec3b>(j,i)[2] = 0;
+                    //                    }
+                    //                    else
+                    //                    {
+                    m.at<cv::Vec3b>(j,i)[0] = abs(k);
+                    m.at<cv::Vec3b>(j,i)[1] = abs(k);
+                    m.at<cv::Vec3b>(j,i)[2] = abs(k);
+                    //                    }
+                }
             }
         }
 
+
         showMat.push_back(m);
-        Pic[n] = m.clone();
+        Pic.push_back(m);
     }
+    qDebug()<<"20";
+    for(int n=0;n<OPic.size();n++)
+    {
+        for(int i=0;i<OPic[n].cols;i++)
+        {
+            delete [] f[n][i];
+        }
+        delete [] f[n];
+
+    }
+    delete [] f;
+    qDebug()<<"21";
+    qDebug()<<"3";
     //======================================
 
 
@@ -519,8 +524,8 @@ void MainWindow::on_PredictButton_clicked()
     QString saveResultFile;
     if(FirstFile.isEmpty())
         saveResultFile = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                          "untitled.jpg",
-                                                          tr("Images (*.jpg)"));
+                                                      "untitled.jpg",
+                                                      tr("Images (*.jpg)"));
     else
         saveResultFile = FirstFile;
     if(saveResultFile.isEmpty())
@@ -624,9 +629,9 @@ void MainWindow::on_ApplyButton_clicked()
     QString month = QString::number(ctime.date().month());
     QString day = QString::number(ctime.date().day());
     QString time = ctime.time().toString();
-//    QString hour = QString::number(Dtime.time().hour());
-//    QString min = QString::number(Dtime.time().minute());
-//    QString sec = QString::number(Dtime.time().second());
+    //    QString hour = QString::number(Dtime.time().hour());
+    //    QString min = QString::number(Dtime.time().minute());
+    //    QString sec = QString::number(Dtime.time().second());
     ui->label->setText(year+"/"+month+"/"+day+" "+time);
 
     //currentTime = Dtime.time();
@@ -640,14 +645,14 @@ void MainWindow::update()
 {
 
     //qDebug() << "update";
-   ui->dateTimeEdit->setDate(Dtime.date());
-   Dtime = Dtime.addSecs(1);
-   QString year = QString::number(Dtime.date().year());
-   QString month = QString::number(Dtime.date().month());
-   QString day = QString::number(Dtime.date().day());
-   QString time = Dtime.time().toString();
-   ui->label->setText(year+"/"+month+"/"+day+" "+time);
-   //ui->dateTimeEdit->setTime(currentTime);
+    ui->dateTimeEdit->setDate(Dtime.date());
+    Dtime = Dtime.addSecs(1);
+    QString year = QString::number(Dtime.date().year());
+    QString month = QString::number(Dtime.date().month());
+    QString day = QString::number(Dtime.date().day());
+    QString time = Dtime.time().toString();
+    ui->label->setText(year+"/"+month+"/"+day+" "+time);
+    //ui->dateTimeEdit->setTime(currentTime);
 
 }
 
@@ -665,6 +670,8 @@ void MainWindow::on_ChooseButton_clicked()
 {
     if(!CutPic.empty())
     {
+        //RefCorPoint[0].x = RefCorPoint[0].x+10;
+        //RefCorPoint[0].y = RefCorPoint[0].y-10;
         picdialog.initial(CutPic,RefCorPoint);
     }
     return;
@@ -826,22 +833,22 @@ void MainWindow::on_KnnPredictButtom_clicked()
     ShowOnLabel(k,ui->FalseColorLabel);
     cv::imshow("predict",predict);
     qDebug()<<"O.K.";
-//    QString saveResultFile;
-//    if(FirstFile.isEmpty())
-//        saveResultFile = QFileDialog::getSaveFileName(this, tr("Save File"),
-//                                                          "untitled.jpg",
-//                                                          tr("Images (*.jpg)"));
-//    else
-//        saveResultFile = FirstFile;
-//    if(saveResultFile.isEmpty())
-//    {
-//        return;
-//    }
-//    else
-//    {
-//        //cv::imwrite()
-//        cv::imwrite(saveResultFile.toStdString(),predict);
-//    }
+    //    QString saveResultFile;
+    //    if(FirstFile.isEmpty())
+    //        saveResultFile = QFileDialog::getSaveFileName(this, tr("Save File"),
+    //                                                          "untitled.jpg",
+    //                                                          tr("Images (*.jpg)"));
+    //    else
+    //        saveResultFile = FirstFile;
+    //    if(saveResultFile.isEmpty())
+    //    {
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        //cv::imwrite()
+    //        cv::imwrite(saveResultFile.toStdString(),predict);
+    //    }
 }
 
 
@@ -863,7 +870,8 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_LoadWRefButton_clicked()
 {
-    LoadFromFile(WrefPic);
+    QString WName;
+    LoadFromFile(WrefPic ,WName);
     if(WrefPic.size()==0)
         return;
     ui->LoadRefButton->setEnabled(true);
@@ -874,7 +882,7 @@ void MainWindow::on_LoadWRefButton_clicked()
 void MainWindow::on_RGBButtom_clicked()
 {
     QString Rgbname = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                   "/home",
+                                                   FileAd,
                                                    tr("Images (*.png *.xpm *.jpg)"));
     if(Rgbname.isEmpty())
         return;
@@ -884,7 +892,7 @@ void MainWindow::on_RGBButtom_clicked()
     std::vector<cv::Mat> change;
     for(int i=0;i<Pic.size();i++)
     {
-        if(i==2)
+        if(i==0)
             change.push_back(RGB);
         else
             change.push_back(Pic[i]);
@@ -892,29 +900,118 @@ void MainWindow::on_RGBButtom_clicked()
     std::vector<cv::Mat> warptemp;
     if(Ts.StLike(refPic,change,warptemp,TS.getK(),TS.getCam())!=1)
         return;
-    for(int i=0;i<4;i++)
-    {
-        cv::Size s = WRefMask[i].size();
-        cv::resize(warptemp[i],warptemp[i],s);
-    }
 
-        //cv::Mat temp = WarpPic[n].clone();
-        for(int i=0;i<warptemp[2].cols;i++)
+    cv::Size s = WRefMask[0].size();
+    cv::resize(warptemp[0],warptemp[0],s);
+
+
+    for(int i=0;i<warptemp[0].cols;i++)
+    {
+        for(int j=0;j<warptemp[0].rows;j++)
         {
-            for(int j=0;j<warptemp[2].rows;j++)
+            if(WRefMask[0].at<uchar>(j,i)!=255)
             {
-                if(WRefMask[2].at<uchar>(j,i)!=255)
+                warptemp[0].at<cv::Vec3b>(j,i)[0]=0;
+                warptemp[0].at<cv::Vec3b>(j,i)[1]=0;
+                warptemp[0].at<cv::Vec3b>(j,i)[2]=0;
+            }
+        }
+    }
+    if(CutPic.size() == 5)
+        CutPic.pop_back();
+    CutPic.push_back(warptemp[0]);
+    qDebug()<<CutPic.size();
+    cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
+    cv::Point m1(std::numeric_limits<int>::min(), std::numeric_limits<int>::min());
+    for(int i=0;i<RefCorPoint.size();i++)
+    {
+        t1.x = std::min(t1.x,RefCorPoint[i].x);
+        t1.y = std::min(t1.y,RefCorPoint[i].y);
+        m1.x = std::max(m1.x,RefCorPoint[i].x);
+        m1.y = std::max(m1.y,RefCorPoint[i].y);
+    }
+    int dy0 = -t1.y+RefCorPoint[0].y;
+    int dx0 = -t1.x+RefCorPoint[0].x;
+
+    for(int i=0;i<maskResult.cols;i++)
+    {
+        for(int j=0;j<maskResult.rows;j++)
+        {
+            if(maskResult.at<cv::Vec3b>(j,i)[0] != 255 && j-dy0>=0 && j-dy0<CutPic[4].rows && i-dx0>=0 && i-dx0<CutPic[4].cols)
+            {
+                CutPic[4].at<cv::Vec3b>(j-dy0,i-dx0)[0]=0;
+                CutPic[4].at<cv::Vec3b>(j-dy0,i-dx0)[1]=0;
+                CutPic[4].at<cv::Vec3b>(j-dy0,i-dx0)[2]=0;
+            }
+
+        }
+    }
+    cv::imshow("test",CutPic[4]);
+
+}
+
+void MainWindow::on_TestButtom_clicked()
+{
+
+    //=========================Normailize
+    std::vector<int> DNm;
+    DNm.clear();
+    for(int n=0;n<OPic.size();n++)
+    {
+        int total = 0;
+        int count = 0;
+        for(int i=0;i<OPic[n].cols;i++)
+        {
+            for(int j=0;j<OPic[n].rows;j++)
+            {
+                if(CutPic[n].at<cv::Vec3b>(j,i)[0] !=0)
                 {
-                    warptemp[2].at<cv::Vec3b>(j,i)[0]=0;
-                    warptemp[2].at<cv::Vec3b>(j,i)[1]=0;
-                    warptemp[2].at<cv::Vec3b>(j,i)[2]=0;
+                    total = total + OPic[n].at<cv::Vec3b>(j,i)[0];
+                    count++;
                 }
             }
         }
-        if(CutPic.size() == 5)
-            CutPic.pop_back();
-        CutPic.push_back(warptemp[2]);
-        qDebug()<<CutPic.size();
-        cv::imshow("test",CutPic[4]);
+        DNm.push_back(total/count);
 
+    }
+    std::vector<cv::Mat> testPic;
+    testPic.clear();
+    for(int n=0;n<OPic.size();n++)
+    {
+        testPic.push_back(OPic[n]);
+        for(int i=0;i<OPic[n].cols;i++)
+        {
+            for(int j=0;j<OPic[n].rows;j++)
+            {
+                if(CutPic[n].at<cv::Vec3b>(j,i)[0] !=0)
+                {
+                    testPic[n].at<cv::Vec3b>(j,i)[0] = OPic[n].at<cv::Vec3b>(j,i)[0] + (128 - DNm[n]);
+                    testPic[n].at<cv::Vec3b>(j,i)[1] = OPic[n].at<cv::Vec3b>(j,i)[1] + (128 - DNm[n]);
+                    testPic[n].at<cv::Vec3b>(j,i)[2] = OPic[n].at<cv::Vec3b>(j,i)[2] + (128 - DNm[n]);
+                }
+            }
+        }
+    }
+    //=================================
+    //=======================Cut
+    std::vector<cv::Mat> showMat;
+    showMat.clear();
+    for(int n=0;n<testPic.size();n++)
+    {
+        cv::Mat m = testPic[n];
+        for(int i=0;i<testPic[n].cols;i++)
+        {
+            for(int j=0;j<testPic[n].rows;j++)
+            {
+                int k = m.at<cv::Vec3b>(j,i)[0]+(128-WrefPic[n].at<cv::Vec3b>(j,i)[0]);
+                m.at<cv::Vec3b>(j,i)[0] = k;
+                m.at<cv::Vec3b>(j,i)[1] = k;
+                m.at<cv::Vec3b>(j,i)[2] = k;
+            }
+        }
+        testPic[n] = m.clone();
+        cv::imshow(QString::number(n).toStdString(),testPic[n]);
+        //showMat.push_back(m);
+        //Pic[n] = m.clone();
+    }
 }

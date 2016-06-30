@@ -24,7 +24,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void ShowOnLabel(cv::Mat mat,QLabel *k);
-    void LoadFromFile(std::vector<cv::Mat> &Ref);
+    void LoadFromFile(std::vector<cv::Mat> &Ref ,QString &name);
     void LoadPic(std::vector<cv::Mat> &Ref,QLabel *k);
     void StitchMethod(std::vector<cv::Mat> &Ref,std::vector<cv::Mat> &WRef, std::vector<cv::Mat> &mask, cv::Mat &RefResult,std::vector<cv::Point> &CorPoint);
     int TransferWarp(std::vector<cv::Mat> &Pic,std::vector<cv::Mat> &WarpPic);
@@ -75,6 +75,8 @@ private slots:
 
     void on_RGBButtom_clicked();
 
+    void on_TestButtom_clicked();
+
 private:
     Ui::MainWindow *ui;
     std::vector<cv::Mat> refPic;
@@ -103,6 +105,8 @@ private:
 
 
     cv::Mat RGB;
+
+    QString FileAd;
 
 
 };

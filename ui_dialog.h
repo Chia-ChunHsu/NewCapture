@@ -42,12 +42,14 @@ public:
     QSlider *UpperSlider;
     QSlider *LowerSlider;
     QPushButton *RGBButton;
+    QSpinBox *xSpinBox;
+    QSpinBox *ySpinBox;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("Dialog"));
-        Dialog->resize(983, 511);
+        Dialog->resize(978, 512);
         labelScale = new QLabel(Dialog);
         labelScale->setObjectName(QStringLiteral("labelScale"));
         labelScale->setGeometry(QRect(720, 10, 250, 250));
@@ -116,6 +118,18 @@ public:
         font1.setFamily(QStringLiteral("Times New Roman"));
         font1.setPointSize(20);
         RGBButton->setFont(font1);
+        xSpinBox = new QSpinBox(Dialog);
+        xSpinBox->setObjectName(QStringLiteral("xSpinBox"));
+        xSpinBox->setGeometry(QRect(10, 430, 131, 61));
+        xSpinBox->setFont(font);
+        xSpinBox->setMinimum(-10);
+        xSpinBox->setMaximum(10);
+        ySpinBox = new QSpinBox(Dialog);
+        ySpinBox->setObjectName(QStringLiteral("ySpinBox"));
+        ySpinBox->setGeometry(QRect(160, 430, 131, 61));
+        ySpinBox->setFont(font);
+        ySpinBox->setMinimum(-10);
+        ySpinBox->setMaximum(10);
 
         retranslateUi(Dialog);
 

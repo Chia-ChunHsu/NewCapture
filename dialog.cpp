@@ -35,7 +35,7 @@ void Dialog::initial(std::vector<cv::Mat> cutPic, std::vector<cv::Point> RefCorP
     }
     temp.push_back(cutPic[4]);
     Omat.push_back(cutPic[4]);
-    CorPoint.push_back(RefCorPoint[2]);
+    CorPoint.push_back(RefCorPoint[0]);
     qApp->installEventFilter(this);
 }
 
@@ -106,6 +106,15 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
     }
     std::vector<int> dy;
     std::vector<int> dx;
+
+    //int dy0 = -t1.y+RefCorPoint[0].y;
+//    int dx0 = -t1.x+RefCorPoint[0].x;
+//    int dy1 = -t1.y+RefCorPoint[1].y;
+//    int dx1 = -t1.x+RefCorPoint[1].x-1;
+//    int dy2 = -t1.y+RefCorPoint[2].y;
+//    int dx2 = -t1.x+RefCorPoint[2].x;
+//    int dy3 = -t1.y+RefCorPoint[3].y;
+//    int dx3 = -t1.x+RefCorPoint[3].x-1;
     for(int i=0;i<m.size();i++)
     {
         if(ui->spinBox->value()==1)
@@ -130,8 +139,8 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
         }
         else if(ui->spinBox->value()==5)
         {
-            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[4].y-CorPoint[0].y));
-            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[4].x-CorPoint[0].x));
+            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[4].y-CorPoint[0].y)-1);
+            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[4].x-CorPoint[0].x)+1);
         }
     }
 
@@ -182,7 +191,7 @@ void Dialog::show(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
     std::vector<int> dx;
     for(int i=0;i<m.size();i++)
     {
-        if(ui->spinBox->value()==1)
+        if(ui->spinBox->value()==1||   ui->spinBox->value()==5)
         {
             dy.push_back(-t1.y+CorPoint[i].y);
             dx.push_back(-t1.x+CorPoint[i].x);
@@ -192,7 +201,7 @@ void Dialog::show(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
             dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[1].y-CorPoint[0].y));
             dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[1].x-CorPoint[0].x));
         }
-        else if(ui->spinBox->value()==3 ||   ui->spinBox->value()==5)
+        else if(ui->spinBox->value()==3 )
         {
             dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[2].y-CorPoint[0].y));
             dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[2].x-CorPoint[0].x));
@@ -274,4 +283,14 @@ void Dialog::on_saveButton_clicked()
 void Dialog::on_RGBButton_clicked()
 {
 
+}
+
+void Dialog::on_xSpinBox_valueChanged(int arg1)
+{
+    CorPoint[0].x = CorPoint[0].x+arg1;
+}
+
+void Dialog::on_ySpinBox_valueChanged(int arg1)
+{
+    CorPoint[0].y = CorPoint[0].y+arg1;
 }

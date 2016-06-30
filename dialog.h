@@ -31,6 +31,10 @@ private slots:
 
     void on_RGBButton_clicked();
 
+    void on_xSpinBox_valueChanged(int arg1);
+
+    void on_ySpinBox_valueChanged(int arg1);
+
 private:
     Ui::Dialog *ui;
     void ShowOnLabel(cv::Mat mat,QLabel *k);

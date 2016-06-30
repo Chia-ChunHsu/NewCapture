@@ -55,6 +55,7 @@ public:
     QSpinBox *spinBox_2;
     QSpinBox *spinBoxT1;
     QSpinBox *spinBoxT2;
+    QPushButton *TestButtom;
     QWidget *tab_3;
     QLabel *FalseColorLabel;
     QPushButton *PredictButton;
@@ -66,6 +67,9 @@ public:
     QRadioButton *OriginalRadioButton;
     QRadioButton *CutRadioButton;
     QPushButton *KnnPredictButtom;
+    QLabel *FileName;
+    QSpinBox *xSpinBox;
+    QSpinBox *ySpinBox;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -74,7 +78,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(478, 323);
+        MainWindow->resize(488, 496);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
@@ -135,29 +139,31 @@ public:
         CutButton = new QPushButton(tab_4);
         CutButton->setObjectName(QStringLiteral("CutButton"));
         CutButton->setEnabled(false);
-        CutButton->setGeometry(QRect(310, 180, 141, 51));
+        CutButton->setGeometry(QRect(310, 130, 141, 51));
         ThresholdSlider1 = new QSlider(tab_4);
         ThresholdSlider1->setObjectName(QStringLiteral("ThresholdSlider1"));
         ThresholdSlider1->setEnabled(false);
         ThresholdSlider1->setGeometry(QRect(310, 40, 101, 19));
         ThresholdSlider1->setMaximum(255);
-        ThresholdSlider1->setValue(96);
+        ThresholdSlider1->setValue(91);
         ThresholdSlider1->setOrientation(Qt::Horizontal);
         spinBox = new QSpinBox(tab_4);
         spinBox->setObjectName(QStringLiteral("spinBox"));
         spinBox->setGeometry(QRect(410, 40, 42, 22));
         spinBox->setMaximum(255);
+        spinBox->setValue(91);
         ThresholdSlider2 = new QSlider(tab_4);
         ThresholdSlider2->setObjectName(QStringLiteral("ThresholdSlider2"));
         ThresholdSlider2->setEnabled(false);
         ThresholdSlider2->setGeometry(QRect(310, 100, 101, 19));
         ThresholdSlider2->setMaximum(255);
-        ThresholdSlider2->setValue(175);
+        ThresholdSlider2->setValue(128);
         ThresholdSlider2->setOrientation(Qt::Horizontal);
         spinBox_2 = new QSpinBox(tab_4);
         spinBox_2->setObjectName(QStringLiteral("spinBox_2"));
         spinBox_2->setGeometry(QRect(410, 100, 42, 22));
         spinBox_2->setMaximum(255);
+        spinBox_2->setValue(128);
         spinBoxT1 = new QSpinBox(tab_4);
         spinBoxT1->setObjectName(QStringLiteral("spinBoxT1"));
         spinBoxT1->setGeometry(QRect(310, 10, 51, 22));
@@ -167,6 +173,9 @@ public:
         spinBoxT2->setGeometry(QRect(310, 70, 51, 22));
         spinBoxT2->setMaximum(3);
         spinBoxT2->setValue(2);
+        TestButtom = new QPushButton(tab_4);
+        TestButtom->setObjectName(QStringLiteral("TestButtom"));
+        TestButtom->setGeometry(QRect(310, 190, 141, 41));
         tabWidget->addTab(tab_4, QString());
         tab_3 = new QWidget();
         tab_3->setObjectName(QStringLiteral("tab_3"));
@@ -215,10 +224,27 @@ public:
         KnnPredictButtom = new QPushButton(centralWidget);
         KnnPredictButtom->setObjectName(QStringLiteral("KnnPredictButtom"));
         KnnPredictButtom->setGeometry(QRect(530, 290, 141, 61));
+        FileName = new QLabel(centralWidget);
+        FileName->setObjectName(QStringLiteral("FileName"));
+        FileName->setGeometry(QRect(10, 280, 461, 16));
+        xSpinBox = new QSpinBox(centralWidget);
+        xSpinBox->setObjectName(QStringLiteral("xSpinBox"));
+        xSpinBox->setGeometry(QRect(150, 380, 121, 51));
+        QFont font4;
+        font4.setPointSize(30);
+        xSpinBox->setFont(font4);
+        xSpinBox->setMinimum(-10);
+        xSpinBox->setMaximum(10);
+        ySpinBox = new QSpinBox(centralWidget);
+        ySpinBox->setObjectName(QStringLiteral("ySpinBox"));
+        ySpinBox->setGeometry(QRect(280, 380, 121, 51));
+        ySpinBox->setFont(font4);
+        ySpinBox->setMinimum(-10);
+        ySpinBox->setMaximum(10);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 478, 21));
+        menuBar->setGeometry(QRect(0, 0, 488, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -229,7 +255,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -250,6 +276,7 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "Step 2", 0));
         CutLabel->setText(QApplication::translate("MainWindow", "Leaf Mask", 0));
         CutButton->setText(QApplication::translate("MainWindow", "Cut", 0));
+        TestButtom->setText(QApplication::translate("MainWindow", "Test", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("MainWindow", "Step 3", 0));
         FalseColorLabel->setText(QApplication::translate("MainWindow", "Prediction", 0));
         PredictButton->setText(QApplication::translate("MainWindow", "Predict", 0));
@@ -262,6 +289,7 @@ public:
         OriginalRadioButton->setText(QApplication::translate("MainWindow", "Original Picture", 0));
         CutRadioButton->setText(QApplication::translate("MainWindow", "Cut Picture", 0));
         KnnPredictButtom->setText(QApplication::translate("MainWindow", "Predict by KNN", 0));
+        FileName->setText(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi
 
 };
