@@ -41,9 +41,10 @@ public:
     QLabel *label4;
     QSlider *UpperSlider;
     QSlider *LowerSlider;
-    QPushButton *RGBButton;
+    QPushButton *SaveRGBData;
     QSpinBox *xSpinBox;
     QSpinBox *ySpinBox;
+    QLabel *label;
 
     void setupUi(QDialog *Dialog)
     {
@@ -111,13 +112,13 @@ public:
         LowerSlider->setMaximum(255);
         LowerSlider->setValue(50);
         LowerSlider->setOrientation(Qt::Horizontal);
-        RGBButton = new QPushButton(Dialog);
-        RGBButton->setObjectName(QStringLiteral("RGBButton"));
-        RGBButton->setGeometry(QRect(720, 430, 251, 71));
+        SaveRGBData = new QPushButton(Dialog);
+        SaveRGBData->setObjectName(QStringLiteral("SaveRGBData"));
+        SaveRGBData->setGeometry(QRect(720, 430, 251, 71));
         QFont font1;
         font1.setFamily(QStringLiteral("Times New Roman"));
         font1.setPointSize(20);
-        RGBButton->setFont(font1);
+        SaveRGBData->setFont(font1);
         xSpinBox = new QSpinBox(Dialog);
         xSpinBox->setObjectName(QStringLiteral("xSpinBox"));
         xSpinBox->setGeometry(QRect(10, 430, 131, 61));
@@ -130,6 +131,9 @@ public:
         ySpinBox->setFont(font);
         ySpinBox->setMinimum(-10);
         ySpinBox->setMaximum(10);
+        label = new QLabel(Dialog);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(440, 450, 47, 12));
 
         retranslateUi(Dialog);
 
@@ -146,7 +150,8 @@ public:
         label2->setText(QApplication::translate("Dialog", "TextLabel", 0));
         label3->setText(QApplication::translate("Dialog", "TextLabel", 0));
         label4->setText(QApplication::translate("Dialog", "TextLabel", 0));
-        RGBButton->setText(QApplication::translate("Dialog", "Open RGB", 0));
+        SaveRGBData->setText(QApplication::translate("Dialog", "Save RGB Data", 0));
+        label->setText(QApplication::translate("Dialog", "TextLabel", 0));
     } // retranslateUi
 
 };

@@ -28,12 +28,11 @@ private slots:
 
     void on_saveButton_clicked();
 
-
-    void on_RGBButton_clicked();
-
     void on_xSpinBox_valueChanged(int arg1);
 
     void on_ySpinBox_valueChanged(int arg1);
+
+    void on_SaveRGBData_clicked();
 
 private:
     Ui::Dialog *ui;
@@ -43,6 +42,7 @@ private:
     std::vector<cv::Mat> Omat;
     std::vector<cv::Point> CorPoint;
     std::vector<std::vector<int>> data;
+    std::vector<std::vector<int>> RGBData;
     std::vector<cv::Mat> temp;
 
     //std::vector<cv::Mat> labelmat;

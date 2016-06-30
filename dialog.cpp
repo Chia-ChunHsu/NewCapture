@@ -139,8 +139,8 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
         }
         else if(ui->spinBox->value()==5)
         {
-            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[4].y-CorPoint[0].y)-1);
-            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[4].x-CorPoint[0].x)+1);
+            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[4].y-CorPoint[0].y));
+            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[4].x-CorPoint[0].x));
         }
     }
 
@@ -148,7 +148,7 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
     std::vector<int> tempdata;
     tempdata.clear();
 
-
+    std::vector<int> t;
     for(int i=0;i<m.size();i++)
     {
         if(i!=4)
@@ -165,6 +165,11 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
                 ui->label4->setText(QString::number(n));
         }
 
+        for(int i=0;i<3;i++)
+        {
+            int color = m[4].at<cv::Vec3b>(y-dy[4],x-dx[4])[i];
+            t.push_back(color);
+        }
 
         cv::Point p(x-dx[i],y-dy[i]);
         cv::circle(m[i],p,1,cv::Scalar(0,0,255),-1,8);
@@ -175,6 +180,11 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
     }
 
     data.push_back(tempdata);
+
+
+
+    ui->label->setText(QString::number(t[2]));
+    RGBData.push_back(t);
     ShowOnLabel(temp[ui->spinBox->value()-1],k);
 
 }
@@ -278,13 +288,6 @@ void Dialog::on_saveButton_clicked()
     file.close();
 }
 
-
-
-void Dialog::on_RGBButton_clicked()
-{
-
-}
-
 void Dialog::on_xSpinBox_valueChanged(int arg1)
 {
     CorPoint[0].x = CorPoint[0].x+arg1;
@@ -293,4 +296,27 @@ void Dialog::on_xSpinBox_valueChanged(int arg1)
 void Dialog::on_ySpinBox_valueChanged(int arg1)
 {
     CorPoint[0].y = CorPoint[0].y+arg1;
+}
+
+void Dialog::on_SaveRGBData_clicked()
+{
+    QString name = QFileDialog::getSaveFileName(this, tr("Save File"),
+                                                "D:/Data/MultiSpectral_Device_Data/0903_0904_set/0903_0904trainData/",
+                                                tr("Data "));
+
+    QFile file(name+".tab");
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&file);
+
+    //int tmp =  saveMat.at<cv::Vec3b>(0,i)[0];
+    //out <<ui->L1->text()<<"\t"<<ui->L2->text()<<"\t"<<ui->L3->text()<<"\t"<<ui->L4->text();
+    for(int i=0;i<RGBData.size();i++)
+    {
+        for(int j=0;j<RGBData[i].size();j++)
+        {
+            out<<RGBData[i][j]<<"\t";
+        }
+        out<< "\n";
+    }
+    file.close();
 }

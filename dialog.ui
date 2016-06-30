@@ -208,7 +208,7 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QPushButton" name="RGBButton">
+  <widget class="QPushButton" name="SaveRGBData">
    <property name="geometry">
     <rect>
      <x>720</x>
@@ -224,7 +224,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Open RGB</string>
+    <string>Save RGB Data</string>
    </property>
   </widget>
   <widget class="QSpinBox" name="xSpinBox">
@@ -267,6 +267,19 @@
    </property>
    <property name="maximum">
     <number>10</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>450</y>
+     <width>47</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
    </property>
   </widget>
  </widget>
