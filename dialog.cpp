@@ -320,3 +320,16 @@ void Dialog::on_SaveRGBData_clicked()
     }
     file.close();
 }
+
+void Dialog::on_UpperSlider_valueChanged(int value)
+{
+    int upperbound = ui->UpperSlider->value();
+    int lowerbound = ui->LowerSlider->value();
+
+}
+
+void Dialog::on_LowerSlider_valueChanged(int value)
+{
+    int upperbound = ui->UpperSlider->value();
+    int lowerbound = ui->LowerSlider->value();
+}

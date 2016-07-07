@@ -34,6 +34,10 @@ private slots:
 
     void on_SaveRGBData_clicked();
 
+    void on_UpperSlider_valueChanged(int value);
+
+    void on_LowerSlider_valueChanged(int value);
+
 private:
     Ui::Dialog *ui;
     void ShowOnLabel(cv::Mat mat,QLabel *k);

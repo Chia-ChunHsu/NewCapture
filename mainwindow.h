@@ -77,10 +77,17 @@ private slots:
 
     void on_TestButtom_clicked();
 
+    void on_upSlider_sliderMoved(int position);
+
+    void on_downSlider_sliderMoved(int position);
+
+    void on_Slider750_sliderMoved(int position);
+
 private:
     Ui::MainWindow *ui;
     std::vector<cv::Mat> refPic;
     std::vector<cv::Mat> WrefPic;
+    std::vector<cv::Mat> WarpWPic;
     std::vector<cv::Mat> Pic;
     std::vector<cv::Mat> OPic;
     std::vector<cv::Mat> WRefMask;

@@ -50,7 +50,7 @@ public:
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("Dialog"));
-        Dialog->resize(978, 512);
+        Dialog->resize(978, 649);
         labelScale = new QLabel(Dialog);
         labelScale->setObjectName(QStringLiteral("labelScale"));
         labelScale->setGeometry(QRect(720, 10, 250, 250));
