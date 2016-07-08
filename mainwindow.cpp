@@ -548,6 +548,8 @@ void MainWindow::on_CutButton_clicked()
 
 void MainWindow::on_PredictButton_clicked()
 {
+
+
     cv::Mat predict;
     predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
     predict = cv::Scalar::all(0);
@@ -645,11 +647,12 @@ float MainWindow::predictresult(int y,int x)
         int n = CutPic[3].at<cv::Vec3b>(y-dy3,x-dx3)[0];
         result.push_back(QString::number(n));
     }
-    cv::Mat test(1,4,CV_32FC1);
-    if(result.size()!=4)
+    result.push_back(QString::number(abs(CutPic[1].at<cv::Vec3b>(y-dy1,x-dx1)[0]-CutPic[2].at<cv::Vec3b>(y-dy2,x-dx2)[0])));
+    cv::Mat test(1,5,CV_32FC1);
+    if(result.size()!=5)
         return 100;
 
-    for(int j=0;j<4;j++)
+    for(int j=0;j<5;j++)
     {
         test.at<float>(0,j) = result[j].toFloat();
     }
@@ -753,64 +756,64 @@ void MainWindow::on_KnnPredictButtom_clicked()
     predict = cv::Scalar::all(0);
     //svm.load("SVM.txt");//_______________________________
 
-    //    QString test_file = QFileDialog::getOpenFileName(this,tr("Train Data"),".",tr("Data File(*.txt)"));
-    //    if(test_file.isEmpty())
-    //    {
-    //        qDebug()<<"test_file is empty!";
-    //        return;
-    //    }
+        QString test_file = QFileDialog::getOpenFileName(this,tr("Train Data"),".",tr("Data File(*.txt)"));
+        if(test_file.isEmpty())
+        {
+            qDebug()<<"test_file is empty!";
+            return;
+        }
 
 
-    //    std::vector<float> s;
-    //    std::vector<float> l;
+        std::vector<float> s;
+        std::vector<float> l;
 
-    //    s.clear();
-    //    l.clear();
-    //    QFile file1(test_file);
-    //    file1.open(QIODevice::ReadOnly);
-    //    QTextStream in1(&file1);
-    //    while(!in1.atEnd())
-    //    {
-    //        for(int j=0;j<5;j++)
-    //        {
-    //            QString str;
-    //            in1>>str;
+        s.clear();
+        l.clear();
+        QFile file1(test_file);
+        file1.open(QIODevice::ReadOnly);
+        QTextStream in1(&file1);
+        while(!in1.atEnd())
+        {
+            for(int j=0;j<5;j++)
+            {
+                QString str;
+                in1>>str;
 
-    //            if(!str.isNull())
-    //            {
-    //                if(j==4)
-    //                    l.push_back(str.toFloat());
-    //                else
-    //                    s.push_back(str.toFloat());
-    //            }
-    //        }
+                if(!str.isNull())
+                {
+                    if(j==4)
+                        l.push_back(str.toFloat());
+                    else
+                        s.push_back(str.toFloat());
+                }
+            }
 
-    //    }
-    //    file1.close();
+        }
+        file1.close();
 
-    //    if(l.size()*4!=s.size())
-    //    {
-    //        qDebug()<<"label and features problem!";
-    //        return;
-    //    }
-    //    cv::Mat trainingData(l.size(),4,CV_32FC1);
-    //    cv::Mat label(l.size(),1,CV_32FC1);
+        if(l.size()*4!=s.size())
+        {
+            qDebug()<<"label and features problem!";
+            return;
+        }
+        cv::Mat trainingData(l.size(),4,CV_32FC1);
+        cv::Mat label(l.size(),1,CV_32FC1);
 
 
-    //    for(int i=0;i<s.size();i++)
-    //    {
-    //        trainingData.at<float>(i/4,i%4)=s[i];
-    //    }
-    //    for(int i=0;i<l.size();i++)
-    //    {
-    //        label.at<float>(i,0)=l[i];
-    //    }
+        for(int i=0;i<s.size();i++)
+        {
+            trainingData.at<float>(i/4,i%4)=s[i];
+        }
+        for(int i=0;i<l.size();i++)
+        {
+            label.at<float>(i,0)=l[i];
+        }
 
-    //    //cv::Mat test(l.size(),4,CV_32FC1);
-    //    cv::Mat *nearest;
-    //    nearest = new cv::Mat(1,3,CV_32FC1);
-    //    CvKNearest *knn;
-    //    knn = new CvKNearest(trainingData,label,cv::Mat(),false,10);
+        //cv::Mat test(l.size(),4,CV_32FC1);
+        cv::Mat *nearest;
+        nearest = new cv::Mat(1,3,CV_32FC1);
+        CvKNearest *knn;
+        knn = new CvKNearest(trainingData,label,cv::Mat(),false,10);
 
     //    qDebug()<<"hello";
 
@@ -866,25 +869,25 @@ void MainWindow::on_KnnPredictButtom_clicked()
                     }
 
                     //====================
-                    //float value = knn->find_nearest(test,3,0,0,nearest,0);
-                    float value = test.at<float>(0,0) *(test.at<float>(0,2) + test.at<float>(0,3) - test.at<float>(0,1)*2 );
-                    //float value = predictresult(j,i);
-                    float index = (test.at<float>(2,0)-test.at<float>(1,0))/(test.at<float>(1,0));
-                    float habs;
-                    float iabs;
-                    float sabs;
-                    habs = abs(-2.093*log(test.at<float>(2,0))-10.048-index);
-                    iabs = abs(-2.4591*log(test.at<float>(2,0))-11.154-index);
-                    sabs = abs(-2.0641*log(test.at<float>(2,0))-9.2553-index);
-                    //if(value > ui->upSlider->value())
-                    if(habs < iabs && habs<sabs)
+                    float value = knn->find_nearest(test,3,0,0,nearest,0);
+//                    float value = test.at<float>(0,0) *(test.at<float>(0,2) + test.at<float>(0,3) - test.at<float>(0,1)*2 );
+//                    float value = predictresult(j,i);
+//                    float index = (test.at<float>(2,0)-test.at<float>(1,0))/(test.at<float>(1,0));
+//                    float habs;
+//                    float iabs;
+//                    float sabs;
+//                    habs = abs(-2.093*log(test.at<float>(2,0))-10.048-index);
+//                    iabs = abs(-2.4591*log(test.at<float>(2,0))-11.154-index);
+//                    sabs = abs(-2.0641*log(test.at<float>(2,0))-9.2553-index);
+//                    //if(value > ui->upSlider->value())
+                    if(value == 0)
                     {
                         predict.at<cv::Vec3b>(j,i)[0] = 0;
                         predict.at<cv::Vec3b>(j,i)[1] = 255;
                         predict.at<cv::Vec3b>(j,i)[2] = 0;
                     }
                     //else if(value < ui->downSlider->value())
-                    else if(sabs< iabs && sabs<habs)
+                    else if(value ==2)
                     {
                         predict.at<cv::Vec3b>(j,i)[0] = 0;
                         predict.at<cv::Vec3b>(j,i)[1] = 0;
