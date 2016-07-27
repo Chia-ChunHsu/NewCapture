@@ -91,9 +91,9 @@ bool Dialog::eventFilter(QObject *obj, QEvent *event)
       int x = pt.rx();
       int y = pt.ry();
 
-      draw(temp,x,y,ui->labelall);
-      //draw(temp,pt.x(),pt.y(),ui->labelall);
-      //show(temp,pt.x(),pt.y(),ui->labelScale);
+      //draw(temp,x,y,ui->labelall);
+      draw(temp,pt.x(),pt.y(),ui->labelall);
+      show(temp,pt.x(),pt.y(),ui->labelScale);
   }
 
 
@@ -121,27 +121,27 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
         }
     }
 
-
     std::vector<int> tempdata;
     tempdata.clear();
-    cv::imshow("Omat4",Omat[4]);
+    //cv::imshow("Omat4",Omat[4]);
 
     std::vector<int> t;
-    qDebug()<<"m "<<m.size();
+//    qDebug()<<"m "<<m.size();
     for(int i=0;i<m.size();i++)
     {
-        if(i<5)
+        if(i<10)
         {
-            int n = Omat[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
+            //int n = Omat[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
+            int n = m[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
             tempdata.push_back(n);
-            if(i==0)
-                ui->label1->setText(QString::number(n));
-            else if(i==1)
-                ui->label2->setText(QString::number(n));
-            else if(i==2)
-                ui->label3->setText(QString::number(n));
-            else if(i==3)
-                ui->label4->setText(QString::number(n));
+//            if(i==0)
+//                ui->label1->setText(QString::number(n));
+//            else if(i==1)
+//                ui->label2->setText(QString::number(n));
+//            else if(i==2)
+//                ui->label3->setText(QString::number(n));
+//            else if(i==3)
+//                ui->label4->setText(QString::number(n));
         }
         for(int i=0;i<3;i++)
         {
@@ -151,8 +151,8 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
 
         cv::Point p(x-dx[i],y-dy[i]);
         cv::circle(m[i],p,1,cv::Scalar(0,0,255),-1,8);
-        //cv::Mat t;
-        //cv::cvtColor(m[i],t,CV_BGR2RGB);
+        cv::Mat t;
+        cv::cvtColor(m[i],t,CV_BGR2RGB);
         cv::imwrite(QString::number(i).toStdString()+"point.jpg",m[i]);
 
     }
@@ -201,6 +201,9 @@ void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
     std::vector<cv::Mat> roi;
     roi.clear();
 
+    std::vector<cv::Mat> show_roi;
+    show_roi.clear();
+
     for(int n=0;n<mat.size();n++)
     {
         cv::Mat kt = mat[n]; //複製一張原圖
@@ -210,6 +213,9 @@ void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
         cv::Mat troi = kt(r);
 
         roi.push_back(troi);
+        cv::Mat temp = roi[n].clone();
+        show_roi.push_back(temp);
+
 
         //計算各張圖的灰階值
         int pn = mat[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
@@ -233,10 +239,19 @@ void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
             ui->pn5->setText(QString::number(pn));
         else if(n==9)
             ui->pn6->setText(QString::number(pn));
-        cv::circle(roi[n],cv::Point(gap,gap),1,cv::Scalar(0,0,255),-1,8);
+
+//        cv::Mat tmp = t[i].clone();
+//        cv::Rect r = cv::Rect(x-gap-dx[i],y-gap-dy[i],2*gap,2*gap);
+//        cv::Mat troi = tmp(r);
+//        roi.push_back(troi);
+//        cv::circle(roi[i],cv::Point(gap,gap),1,cv::Scalar(0,0,255),-1,8);
+        cv::imshow("show_roi_"+QString::number(n).toStdString(),show_roi[n]);
+        cv::imshow("roi_"+QString::number(n).toStdString(),roi[n]);
+        cv::circle(show_roi[n],cv::Point(gap,gap),1,cv::Scalar(0,0,255),-1,8);
+
     }
 
-    ShowOnLabel(roi[ui->spinBox->value()-1],k);
+    ShowOnLabel(show_roi[ui->spinBox->value()-1],k);
 }
 
 //void Dialog::show(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
