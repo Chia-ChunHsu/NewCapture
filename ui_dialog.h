@@ -45,12 +45,18 @@ public:
     QSpinBox *xSpinBox;
     QSpinBox *ySpinBox;
     QLabel *label;
+    QLabel *pn1;
+    QLabel *pn2;
+    QLabel *pn3;
+    QLabel *pn4;
+    QLabel *pn5;
+    QLabel *pn6;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("Dialog"));
-        Dialog->resize(978, 649);
+        Dialog->resize(1051, 649);
         labelScale = new QLabel(Dialog);
         labelScale->setObjectName(QStringLiteral("labelScale"));
         labelScale->setGeometry(QRect(720, 10, 250, 250));
@@ -62,7 +68,7 @@ public:
         font.setPointSize(20);
         spinBox->setFont(font);
         spinBox->setMinimum(1);
-        spinBox->setMaximum(5);
+        spinBox->setMaximum(11);
         saveButton = new QPushButton(Dialog);
         saveButton->setObjectName(QStringLiteral("saveButton"));
         saveButton->setGeometry(QRect(720, 350, 251, 71));
@@ -134,6 +140,24 @@ public:
         label = new QLabel(Dialog);
         label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(440, 450, 47, 12));
+        pn1 = new QLabel(Dialog);
+        pn1->setObjectName(QStringLiteral("pn1"));
+        pn1->setGeometry(QRect(910, 270, 47, 12));
+        pn2 = new QLabel(Dialog);
+        pn2->setObjectName(QStringLiteral("pn2"));
+        pn2->setGeometry(QRect(970, 270, 47, 12));
+        pn3 = new QLabel(Dialog);
+        pn3->setObjectName(QStringLiteral("pn3"));
+        pn3->setGeometry(QRect(910, 300, 47, 12));
+        pn4 = new QLabel(Dialog);
+        pn4->setObjectName(QStringLiteral("pn4"));
+        pn4->setGeometry(QRect(970, 300, 47, 12));
+        pn5 = new QLabel(Dialog);
+        pn5->setObjectName(QStringLiteral("pn5"));
+        pn5->setGeometry(QRect(910, 330, 47, 12));
+        pn6 = new QLabel(Dialog);
+        pn6->setObjectName(QStringLiteral("pn6"));
+        pn6->setGeometry(QRect(970, 330, 47, 12));
 
         retranslateUi(Dialog);
 
@@ -152,6 +176,12 @@ public:
         label4->setText(QApplication::translate("Dialog", "TextLabel", 0));
         SaveRGBData->setText(QApplication::translate("Dialog", "Save RGB Data", 0));
         label->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        pn1->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        pn2->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        pn3->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        pn4->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        pn5->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        pn6->setText(QApplication::translate("Dialog", "TextLabel", 0));
     } // retranslateUi
 
 };

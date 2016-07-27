@@ -30,7 +30,10 @@ public:
     int TransferWarp(std::vector<cv::Mat> &Pic,std::vector<cv::Mat> &WarpPic);
     void CutMask(int one,int two,cv::Mat &MaskResult);
     float predictresult(int y,int x);
-
+    float SVI_value(int y,int x);
+    float NDVI_value(int y,int x);
+    void Muti_value(int y,int x,float &div1,float &div2,float &div3,float &div4,float &div5,float &div6);
+    void Div_value(int y,int x,std::vector<float> &div);
 
 private slots:
     void on_LoadRefButton_clicked();
@@ -83,6 +86,14 @@ private slots:
 
     void on_Slider750_sliderMoved(int position);
 
+    void on_SVI_Button_clicked();
+
+
+
+    void on_NDVIButton_clicked();
+
+    void on_Multi_Buttom_clicked();
+
 private:
     Ui::MainWindow *ui;
     std::vector<cv::Mat> refPic;
@@ -114,8 +125,21 @@ private:
     cv::Mat RGB;
 
     QString FileAd;
+    QString FileNameAd;
 
+    cv::Mat NDVIMat;
+    bool ShadowPlace(int y,int x);
 
+    cv::Mat s;
+
+    cv::Mat gk2;
+
+    cv::Mat gdiv1;
+    cv::Mat gdiv2;
+    cv::Mat gdiv3;
+    cv::Mat gdiv4;
+    cv::Mat gdiv5;
+    cv::Mat gdiv6;
 };
 
 #endif // MAINWINDOW_H

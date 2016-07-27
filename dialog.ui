@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>978</width>
+    <width>1051</width>
     <height>649</height>
    </rect>
   </property>
@@ -47,7 +47,7 @@
     <number>1</number>
    </property>
    <property name="maximum">
-    <number>5</number>
+    <number>11</number>
    </property>
   </widget>
   <widget class="QPushButton" name="saveButton">
@@ -274,6 +274,84 @@
     <rect>
      <x>440</x>
      <y>450</y>
+     <width>47</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pn1">
+   <property name="geometry">
+    <rect>
+     <x>910</x>
+     <y>270</y>
+     <width>47</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pn2">
+   <property name="geometry">
+    <rect>
+     <x>970</x>
+     <y>270</y>
+     <width>47</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pn3">
+   <property name="geometry">
+    <rect>
+     <x>910</x>
+     <y>300</y>
+     <width>47</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pn4">
+   <property name="geometry">
+    <rect>
+     <x>970</x>
+     <y>300</y>
+     <width>47</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pn5">
+   <property name="geometry">
+    <rect>
+     <x>910</x>
+     <y>330</y>
+     <width>47</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pn6">
+   <property name="geometry">
+    <rect>
+     <x>970</x>
+     <y>330</y>
      <width>47</width>
      <height>12</height>
     </rect>
