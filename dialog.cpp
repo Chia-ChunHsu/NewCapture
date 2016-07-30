@@ -154,7 +154,6 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
         cv::Mat t;
         cv::cvtColor(m[i],t,CV_BGR2RGB);
         cv::imwrite(QString::number(i).toStdString()+"point.jpg",m[i]);
-
     }
 
     data.push_back(tempdata);
@@ -162,7 +161,6 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
     ui->label->setText(QString::number(t[2]));
     RGBData.push_back(t);
     ShowOnLabel(temp[ui->spinBox->value()-1],k);
-
 }
 
 void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
@@ -245,8 +243,8 @@ void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
 //        cv::Mat troi = tmp(r);
 //        roi.push_back(troi);
 //        cv::circle(roi[i],cv::Point(gap,gap),1,cv::Scalar(0,0,255),-1,8);
-        cv::imshow("show_roi_"+QString::number(n).toStdString(),show_roi[n]);
-        cv::imshow("roi_"+QString::number(n).toStdString(),roi[n]);
+//        cv::imshow("show_roi_"+QString::number(n).toStdString(),show_roi[n]);
+//        cv::imshow("roi_"+QString::number(n).toStdString(),roi[n]);
         cv::circle(show_roi[n],cv::Point(gap,gap),1,cv::Scalar(0,0,255),-1,8);
 
     }

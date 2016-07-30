@@ -56,7 +56,7 @@ public:
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("Dialog"));
-        Dialog->resize(1051, 649);
+        Dialog->resize(1051, 580);
         labelScale = new QLabel(Dialog);
         labelScale->setObjectName(QStringLiteral("labelScale"));
         labelScale->setGeometry(QRect(720, 10, 250, 250));
@@ -108,13 +108,13 @@ public:
         label4->setGeometry(QRect(850, 320, 41, 21));
         UpperSlider = new QSlider(Dialog);
         UpperSlider->setObjectName(QStringLiteral("UpperSlider"));
-        UpperSlider->setGeometry(QRect(10, 550, 701, 22));
+        UpperSlider->setGeometry(QRect(10, 520, 701, 22));
         UpperSlider->setMaximum(255);
         UpperSlider->setValue(200);
         UpperSlider->setOrientation(Qt::Horizontal);
         LowerSlider = new QSlider(Dialog);
         LowerSlider->setObjectName(QStringLiteral("LowerSlider"));
-        LowerSlider->setGeometry(QRect(10, 580, 701, 22));
+        LowerSlider->setGeometry(QRect(10, 550, 701, 22));
         LowerSlider->setMaximum(255);
         LowerSlider->setValue(50);
         LowerSlider->setOrientation(Qt::Horizontal);
