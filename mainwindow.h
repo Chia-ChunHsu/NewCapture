@@ -33,7 +33,9 @@ public:
     float SVI_value(int y,int x);
     float NDVI_value(int y,int x);
     void Muti_value(int y,int x,float &div1,float &div2,float &div3,float &div4,float &div5,float &div6);
-    void Div_value(int y,int x,std::vector<float> &div);
+    void Div_value(std::vector<cv::Mat> &m,int y,int x,std::vector<float> &div);
+    void Pluspixel_value(std::vector<cv::Mat> &m,int y,int x,std::vector<int> &pixel);
+    void MinusPixel_value(std::vector<cv::Mat> &m,int y,int x,std::vector<int> &pixel);
 
 private slots:
     void on_LoadRefButton_clicked();
