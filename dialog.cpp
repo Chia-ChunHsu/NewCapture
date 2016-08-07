@@ -29,18 +29,22 @@ void Dialog::initial(std::vector<cv::Mat> cutPic, std::vector<cv::Point> RefCorP
     Omat.assign(cutPic.begin(),cutPic.end());
 //    temp = cutPic;
 //    Omat = cutPic;
-    for(int i=0;i<cutPic.size()-7;i++)
+    for(int i=0;i<cutPic.size()-13;i++)
     {
         CorPoint.push_back(RefCorPoint[i]);
     }
     //cv::Point p(RefCorPoint[0].x,RefCorPoint[0].y);
-    for(int n=0;n<6;n++)
+    for(int n=0;n<12;n++)
     {
         CorPoint.push_back(RefCorPoint[0]);
     }
     CorPoint.push_back(RefCorPoint[0]);
     qApp->installEventFilter(this);
-    qDebug()<<"0 "<<cutPic[4].cols<<" "<<cutPic[4].rows<<" "<<cutPic[0].cols;
+    //qDebug()<<"0 "<<cutPic[4].cols<<" "<<cutPic[4].rows<<" "<<cutPic[0].cols;
+    for(int i=0;i<CorPoint.size();i++)
+    {
+        qDebug()<<i<<" "<<temp[i].cols<<" "<<temp[i].rows<<" "<<CorPoint[i].x<<" "<<CorPoint[i].y;
+    }
 }
 
 void Dialog::ShowOnLabel(cv::Mat mat, QLabel *k)
@@ -108,6 +112,12 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
         t1.x = std::min(t1.x,CorPoint[i].x);
         t1.y = std::min(t1.y,CorPoint[i].y);
     }
+
+    for(int n=4;n<16;n++)
+    {
+        CorPoint[n]=t1;
+    }
+
     std::vector<int> dy;
     std::vector<int> dx;
 
@@ -129,23 +139,14 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
 //    qDebug()<<"m "<<m.size();
     for(int i=0;i<m.size();i++)
     {
-        if(i<10)
+        if(i<16)
         {
-            //int n = Omat[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
             int n = m[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
             tempdata.push_back(n);
-//            if(i==0)
-//                ui->label1->setText(QString::number(n));
-//            else if(i==1)
-//                ui->label2->setText(QString::number(n));
-//            else if(i==2)
-//                ui->label3->setText(QString::number(n));
-//            else if(i==3)
-//                ui->label4->setText(QString::number(n));
         }
         for(int i=0;i<3;i++)
         {
-            int color = m[5].at<cv::Vec3b>(y-dy[5],x-dx[5])[i];
+            int color = m[16].at<cv::Vec3b>(y-dy[16],x-dx[16])[i];
             t.push_back(color);
         }
 
@@ -158,7 +159,7 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
 
     data.push_back(tempdata);
 
-    ui->label->setText(QString::number(t[2]));
+//    ui->label->setText(QString::number(t[2]));
     RGBData.push_back(t);
     ShowOnLabel(temp[ui->spinBox->value()-1],k);
 }
@@ -173,9 +174,17 @@ void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
         t1.x = std::min(t1.x,CorPoint[i].x);
         t1.y = std::min(t1.y,CorPoint[i].y);
     }
+
+    for(int n=4;n<16;n++)
+    {
+        CorPoint[n]=t1;
+    }
+
     std::vector<int> dx;//記錄各張圖片的相對位置關係
     std::vector<int> dy;
+
     qDebug()<<"mat size = "<<mat.size();
+
     for(int n=0;n<mat.size();n++)
     {
         for(int spin = 1;spin<=ui->spinBox->maximum();spin++)
@@ -214,9 +223,11 @@ void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
         cv::Mat temp = roi[n].clone();
         show_roi.push_back(temp);
 
-
         //計算各張圖的灰階值
-        int pn = mat[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+        int pn;
+
+        pn= mat[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+
         if(n==0)
             ui->label1->setText(QString::number(pn));
         else if(n==1)
@@ -237,6 +248,18 @@ void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
             ui->pn5->setText(QString::number(pn));
         else if(n==9)
             ui->pn6->setText(QString::number(pn));
+        else if(n==10)
+            ui->ndiv1->setText(QString::number(pn));
+        else if(n==11)
+            ui->ndiv2->setText(QString::number(pn));
+        else if(n==12)
+            ui->ndiv3->setText(QString::number(pn));
+        else if(n==13)
+            ui->ndiv4->setText(QString::number(pn));
+        else if(n==14)
+            ui->ndiv5->setText(QString::number(pn));
+        else if(n==15)
+            ui->ndiv6->setText(QString::number(pn));
 
 //        cv::Mat tmp = t[i].clone();
 //        cv::Rect r = cv::Rect(x-gap-dx[i],y-gap-dy[i],2*gap,2*gap);

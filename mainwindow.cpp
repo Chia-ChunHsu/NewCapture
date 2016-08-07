@@ -993,7 +993,7 @@ void MainWindow::on_RGBButtom_clicked()
         }
     }
 
-    if(CutPic.size() == 11)
+    if(CutPic.size() == 17)
         CutPic.pop_back();
     CutPic.push_back(warptemp[0]);
     qDebug()<<CutPic.size();
@@ -1013,16 +1013,15 @@ void MainWindow::on_RGBButtom_clicked()
     {
         for(int j=0;j<maskResult.rows;j++)
         {
-            if(maskResult.at<cv::Vec3b>(j,i)[0] != 255 && j-dy0>=0 && j-dy0<CutPic[10].rows && i-dx0>=0 && i-dx0<CutPic[10].cols)
+            if(maskResult.at<cv::Vec3b>(j,i)[0] != 255 && j-dy0>=0 && j-dy0<CutPic[16].rows && i-dx0>=0 && i-dx0<CutPic[16].cols)
             {
-                CutPic[10].at<cv::Vec3b>(j-dy0,i-dx0)[0]=0;
-                CutPic[10].at<cv::Vec3b>(j-dy0,i-dx0)[1]=0;
-                CutPic[10].at<cv::Vec3b>(j-dy0,i-dx0)[2]=0;
+                CutPic[16].at<cv::Vec3b>(j-dy0,i-dx0)[0]=0;
+                CutPic[16].at<cv::Vec3b>(j-dy0,i-dx0)[1]=0;
+                CutPic[16].at<cv::Vec3b>(j-dy0,i-dx0)[2]=0;
             }
         }
     }
-    cv::imshow("RGB_Cut",CutPic[10]);
-
+    cv::imshow("RGB_Cut",CutPic[16]);
 }
 
 void MainWindow::on_TestButtom_clicked()
@@ -1890,11 +1889,7 @@ void MainWindow::on_Multi_Buttom_clicked()
         temp = cv::Scalar::all(0);
         MinusMat.push_back(temp);
     }
-    qDebug()<<"Initial AddMat";
-//    cv::Mat m1234;
-//    m1234.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(CV_32F,1));
-//    m1234 = cv::Scalar::all(0);
-//    cv::Mat m
+
     for(int i=0;i<Refresult.cols;i++)
     {
         for(int j=0;j<Refresult.rows;j++)
@@ -1923,8 +1918,6 @@ void MainWindow::on_Multi_Buttom_clicked()
                     AddMat[n].at<cv::Vec3b>(j,i)[1]=pixel[n];
                     AddMat[n].at<cv::Vec3b>(j,i)[2]=pixel[n];
                 }
-
-
             }
         }
     }
@@ -1938,11 +1931,11 @@ void MainWindow::on_Multi_Buttom_clicked()
     {
         cv::normalize(MinusMat[n],MinusMat[n],0,255,CV_MINMAX);
         cv::imwrite("MinusMat_"+QString::number(n).toStdString()+".jpg",MinusMat[n]);
+
+        CutPic.push_back(MinusMat[n]);
     }
 
     std::vector<cv::Mat> dst;
-
-
     for(int n=0;n<division.size();n++)
     {
         cv::normalize(division[n],division[n],0,255,CV_MINMAX,CV_8U);//注意這邊還是只有one channel
@@ -1955,10 +1948,6 @@ void MainWindow::on_Multi_Buttom_clicked()
 
         int p_value[256]={0};
 
-//        for(int i=0;i<256;i++)
-//        {
-//            p_v
-//        }
         int max =0;
         int mp_value = 0;
 
@@ -1972,8 +1961,6 @@ void MainWindow::on_Multi_Buttom_clicked()
                     max= p_value[temp.at<cv::Vec3b>(j,i)[0]];
                     mp_value = temp.at<cv::Vec3b>(j,i)[0];
                 }
-                //if(temp.at<cv::Vec3b>(j,i)[0] > max)
-                    //max = temp.at<cv::Vec3b>(j,i)[0];
             }
         }
         qDebug()<<n<<" "<<max<<" "<<mp_value;
@@ -1992,21 +1979,15 @@ void MainWindow::on_Multi_Buttom_clicked()
                 temp.at<cv::Vec3b>(j,i)[1] = result_value;
                 temp.at<cv::Vec3b>(j,i)[2] = result_value;
             }
-
         }
 
-
-
         cv::imwrite("division_avg_normalize_"+QString::number(n).toStdString()+".jpg",temp);
-        //cv::equalizeHist(division[n],division[n]);
-        //cv::imshow("division_equalize",division[n]);
+
 
         dst.push_back(temp);
 
 
-        //cv::imshow(QString::number(n).toStdString()+"_dst",temp);
-        //qDebug()<<n<<" "<<temp.type();
-        CutPic.push_back(temp);
+        //CutPic.push_back(temp);
     }
 
     std::vector<cv::Mat> OriginalAvgMat;
@@ -2027,7 +2008,7 @@ void MainWindow::on_Multi_Buttom_clicked()
                 }
             }
         }
-        cv::Mat atmp = CutPic[n];
+        cv::Mat atmp = CutPic[n].clone();
         for(int i=0;i<CutPic[n].cols;i++)
         {
             for(int j=0;j<CutPic[n].rows;j++)
@@ -2082,6 +2063,7 @@ void MainWindow::on_Multi_Buttom_clicked()
         cv::Mat normalbgr;
         cv::cvtColor(division_normal[n],normalbgr,CV_GRAY2BGR);
         cv::imwrite("division_normal_normalize_"+QString::number(n).toStdString()+".jpg",division_normal[n]);
+        CutPic.push_back(normalbgr);
     }
 }
 

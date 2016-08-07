@@ -51,6 +51,12 @@ public:
     QLabel *pn4;
     QLabel *pn5;
     QLabel *pn6;
+    QLabel *ndiv1;
+    QLabel *ndiv2;
+    QLabel *ndiv3;
+    QLabel *ndiv4;
+    QLabel *ndiv5;
+    QLabel *ndiv6;
 
     void setupUi(QDialog *Dialog)
     {
@@ -68,10 +74,10 @@ public:
         font.setPointSize(20);
         spinBox->setFont(font);
         spinBox->setMinimum(1);
-        spinBox->setMaximum(11);
+        spinBox->setMaximum(17);
         saveButton = new QPushButton(Dialog);
         saveButton->setObjectName(QStringLiteral("saveButton"));
-        saveButton->setGeometry(QRect(720, 350, 251, 71));
+        saveButton->setGeometry(QRect(720, 350, 171, 71));
         saveButton->setFont(font);
         scrollArea = new QScrollArea(Dialog);
         scrollArea->setObjectName(QStringLiteral("scrollArea"));
@@ -120,7 +126,7 @@ public:
         LowerSlider->setOrientation(Qt::Horizontal);
         SaveRGBData = new QPushButton(Dialog);
         SaveRGBData->setObjectName(QStringLiteral("SaveRGBData"));
-        SaveRGBData->setGeometry(QRect(720, 430, 251, 71));
+        SaveRGBData->setGeometry(QRect(720, 430, 171, 71));
         QFont font1;
         font1.setFamily(QStringLiteral("Times New Roman"));
         font1.setPointSize(20);
@@ -158,6 +164,24 @@ public:
         pn6 = new QLabel(Dialog);
         pn6->setObjectName(QStringLiteral("pn6"));
         pn6->setGeometry(QRect(970, 330, 47, 12));
+        ndiv1 = new QLabel(Dialog);
+        ndiv1->setObjectName(QStringLiteral("ndiv1"));
+        ndiv1->setGeometry(QRect(920, 390, 47, 12));
+        ndiv2 = new QLabel(Dialog);
+        ndiv2->setObjectName(QStringLiteral("ndiv2"));
+        ndiv2->setGeometry(QRect(980, 390, 47, 12));
+        ndiv3 = new QLabel(Dialog);
+        ndiv3->setObjectName(QStringLiteral("ndiv3"));
+        ndiv3->setGeometry(QRect(920, 420, 47, 12));
+        ndiv4 = new QLabel(Dialog);
+        ndiv4->setObjectName(QStringLiteral("ndiv4"));
+        ndiv4->setGeometry(QRect(980, 420, 47, 12));
+        ndiv5 = new QLabel(Dialog);
+        ndiv5->setObjectName(QStringLiteral("ndiv5"));
+        ndiv5->setGeometry(QRect(920, 450, 47, 12));
+        ndiv6 = new QLabel(Dialog);
+        ndiv6->setObjectName(QStringLiteral("ndiv6"));
+        ndiv6->setGeometry(QRect(980, 450, 47, 12));
 
         retranslateUi(Dialog);
 
@@ -182,6 +206,12 @@ public:
         pn4->setText(QApplication::translate("Dialog", "TextLabel", 0));
         pn5->setText(QApplication::translate("Dialog", "TextLabel", 0));
         pn6->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        ndiv1->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        ndiv2->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        ndiv3->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        ndiv4->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        ndiv5->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        ndiv6->setText(QApplication::translate("Dialog", "TextLabel", 0));
     } // retranslateUi
 
 };
