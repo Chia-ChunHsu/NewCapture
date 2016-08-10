@@ -59,6 +59,7 @@ public:
     QWidget *tab_3;
     QLabel *FalseColorLabel;
     QPushButton *PredictButton;
+    QSpinBox *FeaturesSpinBox;
     QDateTimeEdit *dateTimeEdit;
     QPushButton *ApplyButton;
     QPushButton *ChooseButton;
@@ -202,19 +203,27 @@ public:
         PredictButton = new QPushButton(tab_3);
         PredictButton->setObjectName(QStringLiteral("PredictButton"));
         PredictButton->setGeometry(QRect(310, 180, 141, 51));
+        FeaturesSpinBox = new QSpinBox(tab_3);
+        FeaturesSpinBox->setObjectName(QStringLiteral("FeaturesSpinBox"));
+        FeaturesSpinBox->setGeometry(QRect(310, 120, 141, 51));
+        QFont font1;
+        font1.setPointSize(16);
+        FeaturesSpinBox->setFont(font1);
+        FeaturesSpinBox->setMaximum(20);
+        FeaturesSpinBox->setValue(4);
         tabWidget->addTab(tab_3, QString());
         dateTimeEdit = new QDateTimeEdit(centralWidget);
         dateTimeEdit->setObjectName(QStringLiteral("dateTimeEdit"));
         dateTimeEdit->setGeometry(QRect(220, 0, 171, 22));
-        QFont font1;
-        font1.setPointSize(11);
-        dateTimeEdit->setFont(font1);
+        QFont font2;
+        font2.setPointSize(11);
+        dateTimeEdit->setFont(font2);
         ApplyButton = new QPushButton(centralWidget);
         ApplyButton->setObjectName(QStringLiteral("ApplyButton"));
         ApplyButton->setGeometry(QRect(390, 0, 81, 23));
-        QFont font2;
-        font2.setPointSize(10);
-        ApplyButton->setFont(font2);
+        QFont font3;
+        font3.setPointSize(10);
+        ApplyButton->setFont(font3);
         ChooseButton = new QPushButton(centralWidget);
         ChooseButton->setObjectName(QStringLiteral("ChooseButton"));
         ChooseButton->setEnabled(false);
@@ -226,9 +235,7 @@ public:
         RGBButtom->setObjectName(QStringLiteral("RGBButtom"));
         RGBButtom->setEnabled(false);
         RGBButtom->setGeometry(QRect(320, 320, 151, 41));
-        QFont font3;
-        font3.setPointSize(16);
-        RGBButtom->setFont(font3);
+        RGBButtom->setFont(font1);
         KnnPredictButtom = new QPushButton(centralWidget);
         KnnPredictButtom->setObjectName(QStringLiteral("KnnPredictButtom"));
         KnnPredictButtom->setGeometry(QRect(480, 250, 141, 61));
@@ -332,7 +339,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1084, 22));
+        menuBar->setGeometry(QRect(0, 0, 1084, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -343,7 +350,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

@@ -480,18 +480,6 @@ void MainWindow::on_PredictButton_clicked()
     predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
     predict = cv::Scalar::all(0);
 
-
-//    std::vector<int> dy;
-//    std::vector<int> dx;
-
-//    for(int i=0;i<RefCorPoint.size();i++)
-//    {
-//        dy.push_back(-t1.y+RefCorPoint[i].y);
-//        dx.push_back(-t1.x+RefCorPoint[i].x);
-//    }
-
-
-    //svm.load("SVM.txt");
     for(int i=0;i<Refresult.cols;i++)
     {
         for(int j=0;j<Refresult.rows;j++)
@@ -517,12 +505,6 @@ void MainWindow::on_PredictButton_clicked()
                     predict.at<cv::Vec3b>(j,i)[1] = 0;
                     predict.at<cv::Vec3b>(j,i)[2] = 255;
                 }
-                else if(value == 3)
-                {
-                    predict.at<cv::Vec3b>(j,i)[0] = 255;
-                    predict.at<cv::Vec3b>(j,i)[1] = 255;
-                    predict.at<cv::Vec3b>(j,i)[2] = 255;
-                }
             }
         }
     }
@@ -538,13 +520,28 @@ void MainWindow::on_PredictButton_clicked()
 float MainWindow::predictresult(int y,int x)
 {
     //
-    int features = 10;
+    int features = ui->FeaturesSpinBox->value() ;
     cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
     for(int i=0;i<RefCorPoint.size();i++)
     {
         t1.x = std::min(t1.x,RefCorPoint[i].x);
         t1.y = std::min(t1.y,RefCorPoint[i].y);
     }
+
+    if(features==16)
+    {
+        for(int n=4;n<features;n++)
+        {
+            RefCorPoint[n] = t1;
+        }
+    }
+
+
+
+
+//    std::vector<int> dx;
+//    std::vector<int> dy;
+
 
     int dy0 = -t1.y+RefCorPoint[0].y;
     int dx0 = -t1.x+RefCorPoint[0].x;
@@ -554,52 +551,60 @@ float MainWindow::predictresult(int y,int x)
     int dx2 = -t1.x+RefCorPoint[2].x;
     int dy3 = -t1.y+RefCorPoint[3].y;
     int dx3 = -t1.x+RefCorPoint[3].x;
+    int dy4 = 0;
+    int dx4 = 0;
 
 
     int cutsize = 1;
     std::vector<QString> wavelength;
     std::vector<QString> result;
     result.clear();
-    if(x-dx0-cutsize>1 && x-dx0+cutsize <CutPic[0].cols-1 && y-dy0-cutsize >1 && y-dy0+cutsize<CutPic[0].rows-1)
+    if(features == 16 || features == 4)
     {
-        int n = CutPic[0].at<cv::Vec3b>(y-dy0,x-dx0)[0];
-        wavelength.push_back(QString::number(n));
-        result.push_back(QString::number(n));
-        //result.push_back(QString::number(n));
-    }
-    if(x-dx1-cutsize>1 && x-dx1+cutsize <CutPic[1].cols-1 && y-dy1-cutsize >1 && y-dy1+cutsize<CutPic[1].rows-1)
-    {
-        int n = CutPic[1].at<cv::Vec3b>(y-dy1,x-dx1)[0];
-        wavelength.push_back(QString::number(n));
-        result.push_back(QString::number(n));
-        //result.push_back(QString::number(n));
-    }
-    if(x-dx2-cutsize>1 && x-dx2+cutsize <CutPic[2].cols-1 && y-dy2-cutsize >1 && y-dy2+cutsize<CutPic[2].rows-1)
-    {
-        int n = CutPic[2].at<cv::Vec3b>(y-dy2,x-dx2)[0];
-        wavelength.push_back(QString::number(n));
-        result.push_back(QString::number(n));
-        //result.push_back(QString::number(n));
-    }
-    if(x-dx3-cutsize>1 && x-dx3+cutsize <CutPic[3].cols-1 && y-dy3-cutsize >1 && y-dy3+cutsize<CutPic[3].rows-1)
-    {
-        int n = CutPic[3].at<cv::Vec3b>(y-dy3,x-dx3)[0];
-        wavelength.push_back(QString::number(n));
-        result.push_back(QString::number(n));
-        //result.push_back(QString::number(n));
+        if(x-dx0-cutsize>1 && x-dx0+cutsize <CutPic[0].cols-1 && y-dy0-cutsize >1 && y-dy0+cutsize<CutPic[0].rows-1)
+        {
+            int n = CutPic[0].at<cv::Vec3b>(y-dy0,x-dx0)[0];
+            wavelength.push_back(QString::number(n));
+            result.push_back(QString::number(n));
+            //result.push_back(QString::number(n));
+        }
+        if(x-dx1-cutsize>1 && x-dx1+cutsize <CutPic[1].cols-1 && y-dy1-cutsize >1 && y-dy1+cutsize<CutPic[1].rows-1)
+        {
+            int n = CutPic[1].at<cv::Vec3b>(y-dy1,x-dx1)[0];
+            wavelength.push_back(QString::number(n));
+            result.push_back(QString::number(n));
+            //result.push_back(QString::number(n));
+        }
+        if(x-dx2-cutsize>1 && x-dx2+cutsize <CutPic[2].cols-1 && y-dy2-cutsize >1 && y-dy2+cutsize<CutPic[2].rows-1)
+        {
+            int n = CutPic[2].at<cv::Vec3b>(y-dy2,x-dx2)[0];
+            wavelength.push_back(QString::number(n));
+            result.push_back(QString::number(n));
+            //result.push_back(QString::number(n));
+        }
+        if(x-dx3-cutsize>1 && x-dx3+cutsize <CutPic[3].cols-1 && y-dy3-cutsize >1 && y-dy3+cutsize<CutPic[3].rows-1)
+        {
+            int n = CutPic[3].at<cv::Vec3b>(y-dy3,x-dx3)[0];
+            wavelength.push_back(QString::number(n));
+            result.push_back(QString::number(n));
+            //result.push_back(QString::number(n));
+        }
     }
     //div1=1/0 div2=2/0 div3=3/0 div4=2/1  div5=3/1 div6=3/2
     //result.push_back(QString::number(abs(CutPic[1].at<cv::Vec3b>(y-dy1,x-dx1)[0]-CutPic[2].at<cv::Vec3b>(y-dy2,x-dx2)[0])));
 
-    if(x-dx0-cutsize>1 && x-dx0+cutsize <CutPic[0].cols-1 && y-dy0-cutsize >1 && y-dy0+cutsize<CutPic[0].rows-1)
+    if(ui->FeaturesSpinBox->value()>4)
     {
-        for(int k=4;k<10;k++)
+        if(x-dx4-cutsize>1 && x-dx4+cutsize <CutPic[4].cols-1 && y-dy4-cutsize >1 && y-dy4+cutsize<CutPic[4].rows-1)
         {
-            int n = CutPic[k].at<cv::Vec3b>(y-dy0,x-dx0)[0];
-            //wavelength.push_back(QString::number(n));
-            result.push_back(QString::number(n));
+            for(int k=4;k<features;k++)
+            {
+                int n = CutPic[k].at<cv::Vec3b>(y-dy4,x-dx4)[0];//y-dy0,x-dx0
+                //wavelength.push_back(QString::number(n));
+                result.push_back(QString::number(n));
+            }
+            //result.push_back(QString::number(n));
         }
-        //result.push_back(QString::number(n));
     }
 //    result.push_back(QString::number(wavelength[1].toFloat()/wavelength[0].toFloat()));
 //    result.push_back(QString::number(wavelength[2].toFloat()/wavelength[0].toFloat()));
