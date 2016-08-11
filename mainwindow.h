@@ -142,6 +142,8 @@ private:
     cv::Mat gdiv4;
     cv::Mat gdiv5;
     cv::Mat gdiv6;
+
+    int flag;
 };
 
 #endif // MAINWINDOW_H

@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->setInterval(1000);
     timer->start();
     FileAd= "";
+    flag =1;
 }
 
 MainWindow::~MainWindow()
@@ -528,66 +529,73 @@ float MainWindow::predictresult(int y,int x)
         t1.y = std::min(t1.y,RefCorPoint[i].y);
     }
 
-    int dy0 = -t1.y+RefCorPoint[0].y-(t1.y-RefCorPoint[0].y);
-    int dx0 = -t1.x+RefCorPoint[0].x-(t1.x-RefCorPoint[0].x);
-    int dy1 = -t1.y+RefCorPoint[1].y-(t1.y-RefCorPoint[0].y);
-    int dx1 = -t1.x+RefCorPoint[1].x-(t1.x-RefCorPoint[0].x);
-    int dy2 = -t1.y+RefCorPoint[2].y-(t1.y-RefCorPoint[0].y);
-    int dx2 = -t1.x+RefCorPoint[2].x-(t1.x-RefCorPoint[0].x);
-    int dy3 = -t1.y+RefCorPoint[3].y-(t1.y-RefCorPoint[0].y);
-    int dx3 = -t1.x+RefCorPoint[3].x-(t1.x-RefCorPoint[0].x);
+//    int dy0 = -t1.y+RefCorPoint[0].y-(t1.y-RefCorPoint[0].y);
+//    int dx0 = -t1.x+RefCorPoint[0].x-(t1.x-RefCorPoint[0].x);
+//    int dy1 = -t1.y+RefCorPoint[1].y-(t1.y-RefCorPoint[0].y);
+//    int dx1 = -t1.x+RefCorPoint[1].x-(t1.x-RefCorPoint[0].x);
+//    int dy2 = -t1.y+RefCorPoint[2].y-(t1.y-RefCorPoint[0].y);
+//    int dx2 = -t1.x+RefCorPoint[2].x-(t1.x-RefCorPoint[0].x);
+//    int dy3 = -t1.y+RefCorPoint[3].y-(t1.y-RefCorPoint[0].y);
+//    int dx3 = -t1.x+RefCorPoint[3].x-(t1.x-RefCorPoint[0].x);
 
-    int dy4 = -(t1.y-RefCorPoint[0].y);
-    int dx4 = -(t1.x-RefCorPoint[0].x);
+    for(int n=4;n<16;n++)
+    {
+        RefCorPoint[n]=t1;
+    }
+//    int dy4 = -(t1.y-RefCorPoint[0].y);
+//    int dx4 = -(t1.x-RefCorPoint[0].x);
 
+    std::vector<int> dx;
+    std::vector<int> dy;
+    for(int n=0;n<16;n++)
+    {
+        dx.push_back(-t1.x+RefCorPoint[n].x/*-(t1.x-RefCorPoint[0].x)*/);
+        dy.push_back(-t1.y+RefCorPoint[n].y/*-(t1.y-RefCorPoint[0].y)*/);
+    }
 
-    int cutsize = 1;
+    if(flag == 1)
+    {
+        qDebug()<<RefCorPoint[0].x<<" "<<RefCorPoint[0].y;
+        qDebug()<<RefCorPoint[1].x<<" "<<RefCorPoint[1].y;
+        qDebug()<<RefCorPoint[2].x<<" "<<RefCorPoint[2].y;
+        qDebug()<<RefCorPoint[3].x<<" "<<RefCorPoint[3].y;
+        for(int i=0;i<dx.size();i++)
+        {
+            qDebug()<<i<<" "<<dx[i]<<" "<<dy[i];
+        }
+        flag =2;
+    }
+
+    //int cutsize = 1;
     //std::vector<QString> wavelength;
     std::vector<int> result;
     result.clear();
-    if(features == 16 || features == 4)
-    {
-        if(x-dx0-cutsize>1 && x-dx0+cutsize <CutPic[0].cols-1 && y-dy0-cutsize >1 && y-dy0+cutsize<CutPic[0].rows-1)
-        {
-            int n = CutPic[0].at<cv::Vec3b>(y-dy0,x-dx0)[0];
-            //wavelength.push_back(QString::number(n));
-            result.push_back(n);
-            //result.push_back(QString::number(n));
-        }
-        if(x-dx1-cutsize>1 && x-dx1+cutsize <CutPic[1].cols-1 && y-dy1-cutsize >1 && y-dy1+cutsize<CutPic[1].rows-1)
-        {
-            int n = CutPic[1].at<cv::Vec3b>(y-dy1,x-dx1)[0];
-            //wavelength.push_back(QString::number(n));
-            result.push_back(n);
-            //result.push_back(QString::number(n));
-        }
-        if(x-dx2-cutsize>1 && x-dx2+cutsize <CutPic[2].cols-1 && y-dy2-cutsize >1 && y-dy2+cutsize<CutPic[2].rows-1)
-        {
-            int n = CutPic[2].at<cv::Vec3b>(y-dy2,x-dx2)[0];
-            //wavelength.push_back(QString::number(n));
-            result.push_back(n);
-            //result.push_back(QString::number(n));
-        }
-        if(x-dx3-cutsize>1 && x-dx3+cutsize <CutPic[3].cols-1 && y-dy3-cutsize >1 && y-dy3+cutsize<CutPic[3].rows-1)
-        {
-            int n = CutPic[3].at<cv::Vec3b>(y-dy3,x-dx3)[0];
-            //wavelength.push_back(QString::number(n));
-            result.push_back(n);
-            //result.push_back(QString::number(n));
-        }
-    }
-    //div1=1/0 div2=2/0 div3=3/0 div4=2/1  div5=3/1 div6=3/2
-    //result.push_back(QString::number(abs(CutPic[1].at<cv::Vec3b>(y-dy1,x-dx1)[0]-CutPic[2].at<cv::Vec3b>(y-dy2,x-dx2)[0])));
 
-    if(ui->FeaturesSpinBox->value()>4)
+    if(features == 16)
     {
-        for(int k=4;k<16;k++)
+        for(int n=0;n<16;n++)
         {
-            int n = CutPic[k].at<cv::Vec3b>(y-dy4,x-dx4)[0];//y-dy0,x-dx0
-            //wavelength.push_back(QString::number(n));
-            result.push_back(n);
+            if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+            {
+                int pn;
+                pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+                result.push_back(pn);
+            }
         }
     }
+    else if(features == 12)
+    {
+        for(int n=4;n<16;n++)
+        {
+            if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+            {
+                int pn;
+                pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+                result.push_back(pn);
+            }
+        }
+    }
+
 
     cv::Mat test(1,features,CV_32FC1);
 
