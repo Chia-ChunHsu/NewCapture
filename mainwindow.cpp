@@ -528,65 +528,51 @@ float MainWindow::predictresult(int y,int x)
         t1.y = std::min(t1.y,RefCorPoint[i].y);
     }
 
-    if(features==16)
-    {
-        for(int n=4;n<features;n++)
-        {
-            RefCorPoint[n] = t1;
-        }
-    }
+    int dy0 = -t1.y+RefCorPoint[0].y-(t1.y-RefCorPoint[0].y);
+    int dx0 = -t1.x+RefCorPoint[0].x-(t1.x-RefCorPoint[0].x);
+    int dy1 = -t1.y+RefCorPoint[1].y-(t1.y-RefCorPoint[0].y);
+    int dx1 = -t1.x+RefCorPoint[1].x-(t1.x-RefCorPoint[0].x);
+    int dy2 = -t1.y+RefCorPoint[2].y-(t1.y-RefCorPoint[0].y);
+    int dx2 = -t1.x+RefCorPoint[2].x-(t1.x-RefCorPoint[0].x);
+    int dy3 = -t1.y+RefCorPoint[3].y-(t1.y-RefCorPoint[0].y);
+    int dx3 = -t1.x+RefCorPoint[3].x-(t1.x-RefCorPoint[0].x);
 
-
-
-
-//    std::vector<int> dx;
-//    std::vector<int> dy;
-
-
-    int dy0 = -t1.y+RefCorPoint[0].y;
-    int dx0 = -t1.x+RefCorPoint[0].x;
-    int dy1 = -t1.y+RefCorPoint[1].y;
-    int dx1 = -t1.x+RefCorPoint[1].x;
-    int dy2 = -t1.y+RefCorPoint[2].y;
-    int dx2 = -t1.x+RefCorPoint[2].x;
-    int dy3 = -t1.y+RefCorPoint[3].y;
-    int dx3 = -t1.x+RefCorPoint[3].x;
-    int dy4 = 0;
-    int dx4 = 0;
+    int dy4 = -(t1.y-RefCorPoint[0].y);
+    int dx4 = -(t1.x-RefCorPoint[0].x);
 
 
     int cutsize = 1;
-    std::vector<QString> wavelength;
-    std::vector<QString> result;
+    //std::vector<QString> wavelength;
+    std::vector<int> result;
     result.clear();
     if(features == 16 || features == 4)
     {
         if(x-dx0-cutsize>1 && x-dx0+cutsize <CutPic[0].cols-1 && y-dy0-cutsize >1 && y-dy0+cutsize<CutPic[0].rows-1)
         {
             int n = CutPic[0].at<cv::Vec3b>(y-dy0,x-dx0)[0];
-            wavelength.push_back(QString::number(n));
-            result.push_back(QString::number(n));
+            //wavelength.push_back(QString::number(n));
+            result.push_back(n);
             //result.push_back(QString::number(n));
         }
         if(x-dx1-cutsize>1 && x-dx1+cutsize <CutPic[1].cols-1 && y-dy1-cutsize >1 && y-dy1+cutsize<CutPic[1].rows-1)
         {
             int n = CutPic[1].at<cv::Vec3b>(y-dy1,x-dx1)[0];
-            wavelength.push_back(QString::number(n));
-            result.push_back(QString::number(n));
+            //wavelength.push_back(QString::number(n));
+            result.push_back(n);
             //result.push_back(QString::number(n));
         }
         if(x-dx2-cutsize>1 && x-dx2+cutsize <CutPic[2].cols-1 && y-dy2-cutsize >1 && y-dy2+cutsize<CutPic[2].rows-1)
         {
             int n = CutPic[2].at<cv::Vec3b>(y-dy2,x-dx2)[0];
-            wavelength.push_back(QString::number(n));
-            result.push_back(QString::number(n));
+            //wavelength.push_back(QString::number(n));
+            result.push_back(n);
             //result.push_back(QString::number(n));
         }
         if(x-dx3-cutsize>1 && x-dx3+cutsize <CutPic[3].cols-1 && y-dy3-cutsize >1 && y-dy3+cutsize<CutPic[3].rows-1)
         {
             int n = CutPic[3].at<cv::Vec3b>(y-dy3,x-dx3)[0];
-            wavelength.push_back(QString::number(n));
-            result.push_back(QString::number(n));
+            //wavelength.push_back(QString::number(n));
+            result.push_back(n);
             //result.push_back(QString::number(n));
         }
     }
@@ -595,32 +581,25 @@ float MainWindow::predictresult(int y,int x)
 
     if(ui->FeaturesSpinBox->value()>4)
     {
-        if(x-dx4-cutsize>1 && x-dx4+cutsize <CutPic[4].cols-1 && y-dy4-cutsize >1 && y-dy4+cutsize<CutPic[4].rows-1)
+        for(int k=4;k<16;k++)
         {
-            for(int k=4;k<features;k++)
-            {
-                int n = CutPic[k].at<cv::Vec3b>(y-dy4,x-dx4)[0];//y-dy0,x-dx0
-                //wavelength.push_back(QString::number(n));
-                result.push_back(QString::number(n));
-            }
-            //result.push_back(QString::number(n));
+            int n = CutPic[k].at<cv::Vec3b>(y-dy4,x-dx4)[0];//y-dy0,x-dx0
+            //wavelength.push_back(QString::number(n));
+            result.push_back(n);
         }
     }
-//    result.push_back(QString::number(wavelength[1].toFloat()/wavelength[0].toFloat()));
-//    result.push_back(QString::number(wavelength[2].toFloat()/wavelength[0].toFloat()));
-//    result.push_back(QString::number(wavelength[3].toFloat()/wavelength[0].toFloat()));
-//    result.push_back(QString::number(wavelength[2].toFloat()/wavelength[1].toFloat()));
-//    result.push_back(QString::number(wavelength[3].toFloat()/wavelength[1].toFloat()));
-//    result.push_back(QString::number(wavelength[3].toFloat()/wavelength[2].toFloat()));
 
     cv::Mat test(1,features,CV_32FC1);
 
     if(result.size()!=features)
+    {
+        qDebug()<<"Wrong!";
         return 100;
+    }
 
     for(int j=0;j<features;j++)
     {
-        test.at<float>(0,j) = result[j].toFloat();
+        test.at<float>(0,j) = float(result[j]);
     }
 
     svm.load("SVM.txt");
