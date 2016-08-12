@@ -480,6 +480,10 @@ void MainWindow::on_PredictButton_clicked()
     cv::Mat predict;
     predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
     predict = cv::Scalar::all(0);
+    for(int i=0;i<CutPic.size();i++)
+    {
+        cv::imshow(QString::number(i).toStdString(),CutPic[i]);
+    }
 
     for(int i=0;i<Refresult.cols;i++)
     {
@@ -522,25 +526,26 @@ float MainWindow::predictresult(int y,int x)
 {
     //
     int features = ui->FeaturesSpinBox->value() ;
+
+    std::vector<cv::Point> Point;
+    //std::copy(RefCorPoint.begin(),RefCorPoint.end(),Point.begin());
+
+    for(int i=0;i<4;i++)
+    {
+        Point.push_back(RefCorPoint[i]);
+    }
+    //qDebug()<<"Size = "<<Point.size();
     cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
+
     for(int i=0;i<RefCorPoint.size();i++)
     {
         t1.x = std::min(t1.x,RefCorPoint[i].x);
         t1.y = std::min(t1.y,RefCorPoint[i].y);
     }
 
-//    int dy0 = -t1.y+RefCorPoint[0].y-(t1.y-RefCorPoint[0].y);
-//    int dx0 = -t1.x+RefCorPoint[0].x-(t1.x-RefCorPoint[0].x);
-//    int dy1 = -t1.y+RefCorPoint[1].y-(t1.y-RefCorPoint[0].y);
-//    int dx1 = -t1.x+RefCorPoint[1].x-(t1.x-RefCorPoint[0].x);
-//    int dy2 = -t1.y+RefCorPoint[2].y-(t1.y-RefCorPoint[0].y);
-//    int dx2 = -t1.x+RefCorPoint[2].x-(t1.x-RefCorPoint[0].x);
-//    int dy3 = -t1.y+RefCorPoint[3].y-(t1.y-RefCorPoint[0].y);
-//    int dx3 = -t1.x+RefCorPoint[3].x-(t1.x-RefCorPoint[0].x);
-
     for(int n=4;n<16;n++)
     {
-        RefCorPoint[n]=t1;
+        Point.push_back(t1);
     }
 //    int dy4 = -(t1.y-RefCorPoint[0].y);
 //    int dx4 = -(t1.x-RefCorPoint[0].x);
@@ -549,22 +554,23 @@ float MainWindow::predictresult(int y,int x)
     std::vector<int> dy;
     for(int n=0;n<16;n++)
     {
-        dx.push_back(-t1.x+RefCorPoint[n].x/*-(t1.x-RefCorPoint[0].x)*/);
-        dy.push_back(-t1.y+RefCorPoint[n].y/*-(t1.y-RefCorPoint[0].y)*/);
+        dx.push_back(-t1.x+Point[n].x/*-(t1.x-RefCorPoint[0].x)*/);
+        dy.push_back(-t1.y+Point[n].y/*-(t1.y-RefCorPoint[0].y)*/);
     }
 
-    if(flag == 1)
-    {
-        qDebug()<<RefCorPoint[0].x<<" "<<RefCorPoint[0].y;
-        qDebug()<<RefCorPoint[1].x<<" "<<RefCorPoint[1].y;
-        qDebug()<<RefCorPoint[2].x<<" "<<RefCorPoint[2].y;
-        qDebug()<<RefCorPoint[3].x<<" "<<RefCorPoint[3].y;
-        for(int i=0;i<dx.size();i++)
-        {
-            qDebug()<<i<<" "<<dx[i]<<" "<<dy[i];
-        }
-        flag =2;
-    }
+//    if(flag == 1)
+//    {
+//        qDebug()<<Point[0].x<<" "<<Point[0].y;
+//        qDebug()<<Point[1].x<<" "<<Point[1].y;
+//        qDebug()<<Point[2].x<<" "<<Point[2].y;
+//        qDebug()<<Point[3].x<<" "<<Point[3].y;
+//        for(int i=0;i<dx.size();i++)
+//        {
+//            qDebug()<<i<<" "<<dx[i]<<" "<<dy[i];
+//        }
+//        flag =2;
+//    }
+    //qDebug()<<"0";
 
     //int cutsize = 1;
     //std::vector<QString> wavelength;
@@ -595,9 +601,11 @@ float MainWindow::predictresult(int y,int x)
             }
         }
     }
+    //qDebug()<<"1";
 
 
     cv::Mat test(1,features,CV_32FC1);
+
 
     if(result.size()!=features)
     {
@@ -609,8 +617,10 @@ float MainWindow::predictresult(int y,int x)
     {
         test.at<float>(0,j) = float(result[j]);
     }
+    //qDebug()<<"2";
 
     svm.load("SVM.txt");
+    //qDebug()<<"3";
     float resultclass = svm.predict(test);
 
     float finalresult = resultclass;
@@ -1635,7 +1645,7 @@ void MainWindow::Div_value(std::vector<cv::Mat> &m,int y,int x,std::vector<float
     std::vector<int> dy;
     std::vector<int> dx;
 
-    for(int i=0;i<RefCorPoint.size();i++)
+    for(int i=0;i<4;i++)
     {
         dy.push_back(-t1.y+RefCorPoint[i].y);
         dx.push_back(-t1.x+RefCorPoint[i].x);
@@ -1645,7 +1655,7 @@ void MainWindow::Div_value(std::vector<cv::Mat> &m,int y,int x,std::vector<float
 
     std::vector<QString> result;
 
-    for(int i=0;i<RefCorPoint.size();i++)
+    for(int i=0;i<4;i++)
     {
         if(x-dx[i]-cutsize>1 && x-dx[i]+cutsize <m[i].cols-1 && y-dy[i]-cutsize >1 && y-dy[i]+cutsize<m[i].rows-1)
         {
@@ -1712,7 +1722,7 @@ void MainWindow::MinusPixel_value(std::vector<cv::Mat> &m,int y,int x,std::vecto
     std::vector<int> dy;
     std::vector<int> dx;
 
-    for(int i=0;i<RefCorPoint.size();i++)
+    for(int i=0;i<4;i++)
     {
         dy.push_back(-t1.y+RefCorPoint[i].y);
         dx.push_back(-t1.x+RefCorPoint[i].x);
@@ -1723,7 +1733,7 @@ void MainWindow::MinusPixel_value(std::vector<cv::Mat> &m,int y,int x,std::vecto
     //std::vector<QString> result;
 
     std::vector<int> result;
-    for(int i=0;i<RefCorPoint.size();i++)
+    for(int i=0;i<4;i++)
     {
         if(x-dx[i]-cutsize>1 && x-dx[i]+cutsize <m[i].cols-1 && y-dy[i]-cutsize >1 && y-dy[i]+cutsize<m[i].rows-1)
         {
@@ -1852,6 +1862,7 @@ void MainWindow::on_NDVIButton_clicked()
 
 void MainWindow::on_Multi_Buttom_clicked()
 {
+    qDebug()<<"Initial Size "<<CutPic.size();
     std::vector<cv::Mat> division;
     for(int i=0;i<6;i++)
     {
@@ -1861,18 +1872,7 @@ void MainWindow::on_Multi_Buttom_clicked()
         division.push_back(temp);
     }
 
-    //svm.load("SVM.txt");
-    qDebug()<<"000";
-    qDebug()<<"CutPic size = "<<CutPic.size();
 
-    std::vector<cv::Mat> AddMat;
-    for(int n=0;n<11;n++)
-    {
-        cv::Mat temp;
-        temp.create(Refresult.rows,Refresult.cols,Refresult.type());
-        temp = cv::Scalar::all(0);
-        AddMat.push_back(temp);
-    }
     std::vector<cv::Mat> MinusMat;
     for(int n=0;n<6;n++)
     {
@@ -1890,11 +1890,11 @@ void MainWindow::on_Multi_Buttom_clicked()
             {
                 //div1=1/0 div2=2/0 div3=3/0 div4=2/1  div5=3/1 div6=3/2
                 std::vector<float>div;
-                std::vector<int> pixel;
+                //std::vector<int> pixel;
                 std::vector<int> minus_pixel;
                 //Muti_value(j,i,div1,div2,div3,div4,div5,div6);
                 Div_value(CutPic,j,i,div);
-                Pluspixel_value(CutPic,j,i,pixel);
+                //Pluspixel_value(CutPic,j,i,pixel);
                 MinusPixel_value(CutPic,j,i,minus_pixel);
 
                 for(int n=0;n<6;n++)
@@ -1904,28 +1904,27 @@ void MainWindow::on_Multi_Buttom_clicked()
                     MinusMat[n].at<cv::Vec3b>(j,i)[1]=minus_pixel[n];
                     MinusMat[n].at<cv::Vec3b>(j,i)[2]=minus_pixel[n];
                 }
-                for(int n=0;n<11;n++)
-                {
-                    AddMat[n].at<cv::Vec3b>(j,i)[0]=pixel[n];
-                    AddMat[n].at<cv::Vec3b>(j,i)[1]=pixel[n];
-                    AddMat[n].at<cv::Vec3b>(j,i)[2]=pixel[n];
-                }
             }
         }
     }
-    qDebug()<<"AddMat set value";
-    for(int n=0;n<11;n++)
-    {
-        cv::normalize(AddMat[n],AddMat[n],0,255,CV_MINMAX);
-        cv::imwrite("AddMat_"+QString::number(n).toStdString()+".jpg",AddMat[n]);
-    }
+    qDebug()<<"000";
     for(int n=0;n<6;n++)
     {
         cv::normalize(MinusMat[n],MinusMat[n],0,255,CV_MINMAX);
         cv::imwrite("MinusMat_"+QString::number(n).toStdString()+".jpg",MinusMat[n]);
-
-        CutPic.push_back(MinusMat[n]);
     }
+
+    if(CutPic.size()>4)
+    {
+        for(int n=0;n<6;n++)
+            CutPic[n+4]=MinusMat[n];
+    }
+    else
+    {
+        for(int n=0;n<6;n++)
+            CutPic.push_back(MinusMat[n]);
+    }
+    qDebug()<<"After Add Minus size ="<<CutPic.size();
 
     std::vector<cv::Mat> dst;
     for(int n=0;n<division.size();n++)
@@ -1955,7 +1954,7 @@ void MainWindow::on_Multi_Buttom_clicked()
                 }
             }
         }
-        qDebug()<<n<<" "<<max<<" "<<mp_value;
+        //qDebug()<<n<<" "<<max<<" "<<mp_value;
 
         for(int i=0;i<temp.cols;i++)
         {
@@ -1975,9 +1974,7 @@ void MainWindow::on_Multi_Buttom_clicked()
 
         cv::imwrite("division_avg_normalize_"+QString::number(n).toStdString()+".jpg",temp);
 
-
         dst.push_back(temp);
-
 
         //CutPic.push_back(temp);
     }
@@ -2005,8 +2002,6 @@ void MainWindow::on_Multi_Buttom_clicked()
         {
             for(int j=0;j<CutPic[n].rows;j++)
             {
-//                if(NDVIMat[n].at<cv::vec3b>(j,i)[1] == 255)
-//                {
                 int new_value = CutPic[n].at<cv::Vec3b>(j,i)[0]+(127-max_value);
                 if(new_value > 255)
                     new_value = 255;
@@ -2015,14 +2010,13 @@ void MainWindow::on_Multi_Buttom_clicked()
                 atmp.at<cv::Vec3b>(j,i)[0] = new_value;
                 atmp.at<cv::Vec3b>(j,i)[1] = new_value;
                 atmp.at<cv::Vec3b>(j,i)[2] = new_value;
-//                }
             }
         }
         OriginalAvgMat.push_back(atmp);
         //cv::imshow(QString::number(n).toStdString(),atmp);
         cv::imwrite("normal_avg127_"+QString::number(n).toStdString()+".jpg",atmp);
     }
-    qDebug()<<"OriginalAvgMat size = "<<OriginalAvgMat.size();
+    //qDebug()<<"OriginalAvgMat size = "<<OriginalAvgMat.size();
     std::vector<cv::Mat> division_normal;
     for(int i=0;i<6;i++)
     {
@@ -2049,14 +2043,29 @@ void MainWindow::on_Multi_Buttom_clicked()
             }
         }
     }
+    std::vector<cv::Mat> normalDivMat;
     for(int n=0;n<division_normal.size();n++)
     {
         cv::normalize(division_normal[n],division_normal[n],0,255,CV_MINMAX,CV_8U);//注意這邊還是只有one channel
         cv::Mat normalbgr;
         cv::cvtColor(division_normal[n],normalbgr,CV_GRAY2BGR);
+        normalDivMat.push_back(normalbgr);
         cv::imwrite("division_normal_normalize_"+QString::number(n).toStdString()+".jpg",division_normal[n]);
-        CutPic.push_back(normalbgr);
     }
+
+    if(CutPic.size()>10)
+    {
+        for(int n=0;n<normalDivMat.size();n++)
+            CutPic[n+10]=normalDivMat[n];
+    }
+    else
+    {
+        for(int n=0;n<normalDivMat.size();n++)
+            CutPic.push_back(normalDivMat[n]);
+    }
+    qDebug()<<"After Add Division size ="<<CutPic.size();
+
+    qDebug()<<"Final CutPic Size = "<<CutPic.size();
 }
 
 bool MainWindow::ShadowPlace(int y, int x)

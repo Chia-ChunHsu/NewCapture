@@ -2,7 +2,7 @@
 my_svm: !!opencv-ml-svm
    svm_type: C_SVC
    kernel: { type:LINEAR }
-   C: 32.
+   C: 128.
    term_criteria: { epsilon:2.2204460492503131e-016, iterations:100 }
    var_all: 12
    var_count: 12
