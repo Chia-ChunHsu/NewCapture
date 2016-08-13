@@ -30,11 +30,11 @@ public:
     int TransferWarp(std::vector<cv::Mat> &Pic,std::vector<cv::Mat> &WarpPic);
     void CutMask(int one,int two,cv::Mat &MaskResult);
     float predictresult(int y,int x);
-    float SVI_value(int y,int x);
-    float NDVI_value(int y,int x);
-    void Muti_value(int y,int x,float &div1,float &div2,float &div3,float &div4,float &div5,float &div6);
+//    float SVI_value(int y,int x);
+    float NDVI_value(std::vector<cv::Mat> &m,int y,int x);
+//    void Muti_value(int y,int x,float &div1,float &div2,float &div3,float &div4,float &div5,float &div6);
     void Div_value(std::vector<cv::Mat> &m,int y,int x,std::vector<float> &div);
-    void Pluspixel_value(std::vector<cv::Mat> &m,int y,int x,std::vector<int> &pixel);
+//    void Pluspixel_value(std::vector<cv::Mat> &m,int y,int x,std::vector<int> &pixel);
     void MinusPixel_value(std::vector<cv::Mat> &m,int y,int x,std::vector<int> &pixel);
 
 private slots:
@@ -80,7 +80,7 @@ private slots:
 
     void on_RGBButtom_clicked();
 
-    void on_TestButtom_clicked();
+//    void on_TestButtom_clicked();
 
     void on_upSlider_sliderMoved(int position);
 
@@ -88,7 +88,7 @@ private slots:
 
     void on_Slider750_sliderMoved(int position);
 
-    void on_SVI_Button_clicked();
+//    void on_SVI_Button_clicked();
 
 
 
