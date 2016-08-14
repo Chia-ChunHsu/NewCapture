@@ -82,11 +82,11 @@ private slots:
 
 //    void on_TestButtom_clicked();
 
-    void on_upSlider_sliderMoved(int position);
+//    void on_upSlider_sliderMoved(int position);
 
-    void on_downSlider_sliderMoved(int position);
+//    void on_downSlider_sliderMoved(int position);
 
-    void on_Slider750_sliderMoved(int position);
+//    void on_Slider750_sliderMoved(int position);
 
 //    void on_SVI_Button_clicked();
 
@@ -130,7 +130,7 @@ private:
     QString FileNameAd;
 
     cv::Mat NDVIMat;
-    bool ShadowPlace(int y,int x);
+//    bool ShadowPlace(int y,int x);
 
     cv::Mat s;
 

@@ -6,8 +6,7 @@ Dialog::Dialog(QWidget *parent) :
     ui(new Ui::Dialog)
 {
     ui->setupUi(this);
-    temp.clear();
-    data.clear();
+
 }
 
 Dialog::~Dialog()
@@ -15,7 +14,7 @@ Dialog::~Dialog()
     delete ui;
 }
 
-void Dialog::initial(std::vector<cv::Mat> cutPic, std::vector<cv::Point> RefCorPoint)
+void Dialog::initial(std::vector<cv::Mat> cutPic, std::vector<cv::Point> RefCorPoint, QString File)
 {
     this->open();
     ui->labelall->setGeometry(ui->labelall->x(),ui->labelall->y(),cutPic[0].cols,cutPic[0].rows);
@@ -25,10 +24,12 @@ void Dialog::initial(std::vector<cv::Mat> cutPic, std::vector<cv::Point> RefCorP
     temp.clear();
     //labelmat.clear();
     data.clear();
+    dataName = File;
+    Xposition.clear();
+    Yposition.clear();
     temp.assign(cutPic.begin(),cutPic.end());
     Omat.assign(cutPic.begin(),cutPic.end());
-//    temp = cutPic;
-//    Omat = cutPic;
+
     for(int i=0;i<cutPic.size()-13;i++)
     {
         CorPoint.push_back(RefCorPoint[i]);
@@ -133,10 +134,9 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
 
     std::vector<int> tempdata;
     tempdata.clear();
-    //cv::imshow("Omat4",Omat[4]);
+
 
     std::vector<int> t;
-//    qDebug()<<"m "<<m.size();
     for(int i=0;i<m.size();i++)
     {
         if(i<16)
@@ -149,15 +149,20 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
             int color = m[16].at<cv::Vec3b>(y-dy[16],x-dx[16])[i];
             t.push_back(color);
         }
-
         cv::Point p(x-dx[i],y-dy[i]);
         cv::circle(m[i],p,1,cv::Scalar(0,0,255),-1,8);
         cv::Mat t;
         cv::cvtColor(m[i],t,CV_BGR2RGB);
         cv::imwrite(QString::number(i).toStdString()+"point.jpg",m[i]);
     }
+    ui->PositionX->setText(QString::number(x));
+    ui->PositionY->setText(QString::number(y));
+
+    Xposition.push_back(x);
+    Yposition.push_back(y);
 
     data.push_back(tempdata);
+    ui->DataNumber->setText(QString::number(data.size()));
 
 //    ui->label->setText(QString::number(t[2]));
     RGBData.push_back(t);
@@ -166,7 +171,6 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
 
 void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
 {
-    qDebug()<<"Into the Show Step";
     //尋找四張多光譜中的最小值數值
     cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
     for(int i=0;i<CorPoint.size();i++)
@@ -183,7 +187,7 @@ void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
     std::vector<int> dx;//記錄各張圖片的相對位置關係
     std::vector<int> dy;
 
-    qDebug()<<"mat size = "<<mat.size();
+    //qDebug()<<"mat size = "<<mat.size();
 
     for(int n=0;n<mat.size();n++)
     {
@@ -261,102 +265,12 @@ void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
         else if(n==15)
             ui->ndiv6->setText(QString::number(pn));
 
-//        cv::Mat tmp = t[i].clone();
-//        cv::Rect r = cv::Rect(x-gap-dx[i],y-gap-dy[i],2*gap,2*gap);
-//        cv::Mat troi = tmp(r);
-//        roi.push_back(troi);
-//        cv::circle(roi[i],cv::Point(gap,gap),1,cv::Scalar(0,0,255),-1,8);
-//        cv::imshow("show_roi_"+QString::number(n).toStdString(),show_roi[n]);
-//        cv::imshow("roi_"+QString::number(n).toStdString(),roi[n]);
         cv::circle(show_roi[n],cv::Point(gap,gap),1,cv::Scalar(0,0,255),-1,8);
-
     }
 
     ShowOnLabel(show_roi[ui->spinBox->value()-1],k);
 }
 
-//void Dialog::show(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
-//{
-//    cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-//    for(int i=0;i<CorPoint.size();i++)
-//    {
-//        t1.x = std::min(t1.x,CorPoint[i].x);
-//        t1.y = std::min(t1.y,CorPoint[i].y);
-//    }
-//    std::vector<int> dy;
-//    std::vector<int> dx;
-//    for(int i=0;i<m.size();i++)
-//    {
-//        if(ui->spinBox->value()==1 || ui->spinBox->value()==6)
-//        {
-//            dy.push_back(-t1.y+CorPoint[i].y);
-//            dx.push_back(-t1.x+CorPoint[i].x);
-//        }
-//        else if(ui->spinBox->value()==2)
-//        {
-//            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[1].y-CorPoint[0].y));
-//            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[1].x-CorPoint[0].x));
-//        }
-//        else if(ui->spinBox->value()==3 )
-//        {
-//            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[2].y-CorPoint[0].y));
-//            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[2].x-CorPoint[0].x));
-//        }
-//        else if(ui->spinBox->value()==4 )
-//        {
-//            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[3].y-CorPoint[0].y));
-//            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[3].x-CorPoint[0].x));
-//        }
-//        else if(ui->spinBox->value()==5 )
-//        {
-//            dy.push_back(-t1.y+CorPoint[i].y-(CorPoint[4].y-CorPoint[0].y));
-//            dx.push_back(-t1.x+CorPoint[i].x-(CorPoint[4].x-CorPoint[0].x));
-//        }
-//    }
-//    int gap = 30;
-//    for(int i=0;i<m.size()-1;i++)
-//    {
-//        if(x-gap-dx[i]<0 || x+gap-dx[i]>m[i].cols || y-gap-dy[i]<0 || y+gap-dy[i]>m[i].rows)
-//            return;
-//    }
-//    std::vector<cv::Mat> roi;
-//    roi.clear();
-//    std::vector<cv::Mat> t;
-//    t.clear();
-//    for(int i=0;i<m.size();i++)
-//    {
-//        cv::Mat kt=m[i];
-//        t.push_back(kt);
-//        int n = m[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
-//        if(i==0)
-//            ui->label1->setText(QString::number(n));
-//        else if(i==1)
-//            ui->label2->setText(QString::number(n));
-//        else if(i==2 )
-//            ui->label3->setText(QString::number(n));
-//        else if(i==3)
-//            ui->label4->setText(QString::number(n));
-//        else if(i==4)
-//        {
-//            n = Omat[i].at<cv::Vec3b>(y-t1.y+CorPoint[0].y-dy[0],x-t1.x-CorPoint[0].x+dx[0])[0];
-//            ui->label5->setText(QString::number(n));
-//            n = m[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
-//            ui->label6->setText(QString::number(n));
-//            n = m[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
-//            ui->label7->setText(QString::number(n));
-//        }
-
-//        cv::Mat tmp = t[i].clone();
-//        cv::Rect r = cv::Rect(x-gap-dx[i],y-gap-dy[i],2*gap,2*gap);
-//        cv::Mat troi = tmp(r);
-//        roi.push_back(troi);
-//        cv::circle(roi[i],cv::Point(gap,gap),1,cv::Scalar(0,0,255),-1,8);
-//    }
-
-//    ShowOnLabel(roi[ui->spinBox->value()-1],k);
-
-
-//}
 
 void Dialog::on_spinBox_valueChanged(int arg1)
 {
@@ -370,12 +284,23 @@ void Dialog::on_saveButton_clicked()
                                                 "D:/Data/MultiSpectral_Device_Data/0903_0904_set/0903_0904trainData/",
                                                 tr("Data "));
 
-    QFile file(name+".tab");
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out(&file);
+    QStringList tName = dataName.split("/");
+    QStringList FName = tName[tName.size()-1].split(".");
+    QString SubName;
+    if(ui->radioButtonH->isChecked() == true)
+        SubName = "H";
+    else if(ui->radioButtonI->isChecked() == true)
+        SubName = "I";
+    else
+        SubName = "S";
 
-    //int tmp =  saveMat.at<cv::Vec3b>(0,i)[0];
-    //out <<ui->L1->text()<<"\t"<<ui->L2->text()<<"\t"<<ui->L3->text()<<"\t"<<ui->L4->text();
+    QFile file(name+"_"+FName[0]+"-"+SubName+".tab");
+    QFile fileXY(name+"_"+FName[0]+"_"+SubName+"_XY.tab");
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    fileXY.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&file);
+    QTextStream outXY(&fileXY);
+
     for(int i=0;i<data.size();i++)
     {
         for(int j=0;j<data[i].size();j++)
@@ -385,50 +310,36 @@ void Dialog::on_saveButton_clicked()
         out<< "\n";
     }
     file.close();
-}
-
-void Dialog::on_xSpinBox_valueChanged(int arg1)
-{
-    CorPoint[0].x = CorPoint[0].x+arg1;
-}
-
-void Dialog::on_ySpinBox_valueChanged(int arg1)
-{
-    CorPoint[0].y = CorPoint[0].y+arg1;
-}
-
-void Dialog::on_SaveRGBData_clicked()
-{
-    QString name = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                "D:/Data/MultiSpectral_Device_Data/0903_0904_set/0903_0904trainData/",
-                                                tr("Data "));
-
-    QFile file(name+".tab");
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out(&file);
-
-    //int tmp =  saveMat.at<cv::Vec3b>(0,i)[0];
-    //out <<ui->L1->text()<<"\t"<<ui->L2->text()<<"\t"<<ui->L3->text()<<"\t"<<ui->L4->text();
-    for(int i=0;i<RGBData.size();i++)
+    if(Yposition.size()!=Xposition.size())
     {
-        for(int j=0;j<RGBData[i].size();j++)
-        {
-            out<<RGBData[i][j]<<"\t";
-        }
-        out<< "\n";
+        qDebug()<<"XY Position Size isn't Match";
+        return;
     }
-    file.close();
+    for(int i=0;i<Xposition.size();i++)
+        outXY<<Xposition[i]<<"\t"<<Yposition[i]<<"\n";
+    fileXY.close();
 }
 
-void Dialog::on_UpperSlider_valueChanged(int value)
-{
-    int upperbound = ui->UpperSlider->value();
-    int lowerbound = ui->LowerSlider->value();
 
-}
-
-void Dialog::on_LowerSlider_valueChanged(int value)
+void Dialog::on_LoadPosition_clicked()
 {
-    int upperbound = ui->UpperSlider->value();
-    int lowerbound = ui->LowerSlider->value();
+    QString XYPositionFile = QFileDialog::getOpenFileName(this, tr("Open File"),                                                       "/",
+                                                          tr("Images (*.tab)"));
+    QFile XYFile(XYPositionFile);
+    QTextStream input(&XYFile);
+    if(!XYFile.open(QFile::ReadOnly | QIODevice::Text))
+    {
+        qDebug()<<"File Open Failed";
+        return;
+    }
+
+    do
+    {
+        int x,y;
+        input>>x>>y;
+        //input>>y;
+        qDebug()<<x<<y;
+        //draw(temp,x,y,ui->labelall);
+    }while(!input.atEnd());
+    XYFile.close();
 }

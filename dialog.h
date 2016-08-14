@@ -19,7 +19,7 @@ class Dialog : public QDialog
 public:
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
-    void initial(std::vector<cv::Mat> cutPic,std::vector<cv::Point> RefCorPoint );
+    void initial(std::vector<cv::Mat> cutPic,std::vector<cv::Point> RefCorPoint, QString File);
 
 
 private slots:
@@ -28,15 +28,8 @@ private slots:
 
     void on_saveButton_clicked();
 
-    void on_xSpinBox_valueChanged(int arg1);
 
-    void on_ySpinBox_valueChanged(int arg1);
-
-    void on_SaveRGBData_clicked();
-
-    void on_UpperSlider_valueChanged(int value);
-
-    void on_LowerSlider_valueChanged(int value);
+    void on_LoadPosition_clicked();
 
 private:
     Ui::Dialog *ui;
@@ -46,12 +39,16 @@ private:
     std::vector<cv::Mat> Omat;
     std::vector<cv::Point> CorPoint;
     std::vector<std::vector<int>> data;
+    std::vector<int> Xposition;
+    std::vector<int> Yposition;
     std::vector<std::vector<int>> RGBData;
     std::vector<cv::Mat> temp;
 
     //std::vector<cv::Mat> labelmat;
 
     cv::Mat res;
+
+    QString dataName;
 
 
 };

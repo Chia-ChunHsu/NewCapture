@@ -23,8 +23,9 @@ void MainWindow::ShowOnLabel(cv::Mat mat, QLabel *k)
 {
     if(mat.channels()==3)
     {
-        //cv::cvtColor(mat,mat,CV_BGR2RGB);
-        QImage qtemp = QImage((const unsigned char*)(mat.data),mat.cols,mat.rows,mat.step,QImage::Format_RGB888);
+        cv::Mat t;
+        cv::cvtColor(mat,t,CV_BGR2RGB);
+        QImage qtemp = QImage((const unsigned char*)(t.data),t.cols,t.rows,t.step,QImage::Format_RGB888);
         k->clear();
         k->setPixmap(QPixmap::fromImage(qtemp.scaled(k->width(),k->height(),Qt::KeepAspectRatio)));
         k->show();
@@ -288,7 +289,7 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
     CutPic.clear();
     for(int i=0;i<temp.size();i++)//將白校正且把背景去除的圖片加入
         CutPic.push_back(temp[i]);
-    ui->RGBButtom->setEnabled(true);
+
 
 
 }
@@ -436,6 +437,7 @@ void MainWindow::on_CutButton_clicked()
     ShowOnLabel(maskResult,ui->CutLabel);
 
     ui->ChooseButton->setEnabled(true);
+    ui->NDVIButton->setEnabled(true);
 }
 
 void MainWindow::on_PredictButton_clicked()
@@ -660,7 +662,7 @@ void MainWindow::on_ChooseButton_clicked()
     {
         //RefCorPoint[0].x = RefCorPoint[0].x+10;
         //RefCorPoint[0].y = RefCorPoint[0].y-10;
-        picdialog.initial(CutPic,RefCorPoint);
+        picdialog.initial(CutPic,RefCorPoint,ui->FileName->text());
     }
     return;
 }
@@ -929,7 +931,6 @@ void MainWindow::on_RGBButtom_clicked()
     cv::Size s = WRefMask[0].size();
     cv::resize(warptemp[0],warptemp[0],s);
 
-
     for(int i=0;i<warptemp[0].cols;i++)
     {
         for(int j=0;j<warptemp[0].rows;j++)
@@ -971,374 +972,10 @@ void MainWindow::on_RGBButtom_clicked()
             }
         }
     }
-    cv::imshow("RGB_Cut",CutPic[16]);
+    //cv::imshow("RGB_Cut",CutPic[16]);
+    qDebug()<<CutPic[16].channels();
+    ShowOnLabel(CutPic[16],ui->TempLabel);
 }
-
-//void MainWindow::on_TestButtom_clicked()
-//{
-//    //=========================Normailize
-//    std::vector<int> DNm;
-//    DNm.clear();
-//    for(int n=0;n<OPic.size();n++)
-//    {
-//        int total = 0;
-//        int count = 0;
-//        for(int i=0;i<OPic[n].cols;i++)
-//        {
-//            for(int j=0;j<OPic[n].rows;j++)
-//            {
-//                if(CutPic[n].at<cv::Vec3b>(j,i)[0] !=0)
-//                {
-//                    total = total + OPic[n].at<cv::Vec3b>(j,i)[0];
-//                    count++;
-//                }
-//            }
-//        }
-//        DNm.push_back(total/count);
-
-//    }
-//    std::vector<cv::Mat> testPic;
-//    testPic.clear();
-//    for(int n=0;n<OPic.size();n++)
-//    {
-//        testPic.push_back(OPic[n]);
-//        for(int i=0;i<OPic[n].cols;i++)
-//        {
-//            for(int j=0;j<OPic[n].rows;j++)
-//            {
-//                if(CutPic[n].at<cv::Vec3b>(j,i)[0] !=0)
-//                {
-//                    testPic[n].at<cv::Vec3b>(j,i)[0] = OPic[n].at<cv::Vec3b>(j,i)[0] + (128 - DNm[n]);
-//                    testPic[n].at<cv::Vec3b>(j,i)[1] = OPic[n].at<cv::Vec3b>(j,i)[1] + (128 - DNm[n]);
-//                    testPic[n].at<cv::Vec3b>(j,i)[2] = OPic[n].at<cv::Vec3b>(j,i)[2] + (128 - DNm[n]);
-//                }
-//            }
-//        }
-//    }
-//    //=================================
-//    //=======================Cut
-//    std::vector<cv::Mat> showMat;
-//    showMat.clear();
-//    for(int n=0;n<testPic.size();n++)
-//    {
-//        cv::Mat m = testPic[n];
-//        for(int i=0;i<testPic[n].cols;i++)
-//        {
-//            for(int j=0;j<testPic[n].rows;j++)
-//            {
-//                int k = m.at<cv::Vec3b>(j,i)[0]+(128-WrefPic[n].at<cv::Vec3b>(j,i)[0]);
-//                m.at<cv::Vec3b>(j,i)[0] = k;
-//                m.at<cv::Vec3b>(j,i)[1] = k;
-//                m.at<cv::Vec3b>(j,i)[2] = k;
-//            }
-//        }
-//        testPic[n] = m.clone();
-//    }
-//}
-
-void MainWindow::on_upSlider_sliderMoved(int position)
-{
-    cv::Mat predict;
-    predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
-    predict = cv::Scalar::all(0);
-
-    for(int i=0;i<Refresult.cols;i++)
-    {
-        for(int j=0;j<Refresult.rows;j++)
-        {
-            if(maskResult.at<cv::Vec3b>(j,i)[0] != 0)
-            {
-                cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-                for(int f=0;f<RefCorPoint.size();f++)
-                {
-                    t1.x = std::min(t1.x,RefCorPoint[f].x);
-                    t1.y = std::min(t1.y,RefCorPoint[f].y);
-                }
-                int dy0 = -t1.y+RefCorPoint[0].y;
-                int dx0 = -t1.x+RefCorPoint[0].x;
-                int dy1 = -t1.y+RefCorPoint[1].y;
-                int dx1 = -t1.x+RefCorPoint[1].x;
-                int dy2 = -t1.y+RefCorPoint[2].y;
-                int dx2 = -t1.x+RefCorPoint[2].x;
-                int dy3 = -t1.y+RefCorPoint[3].y;
-                int dx3 = -t1.x+RefCorPoint[3].x;
-
-                int cutsize = 1;
-                std::vector<QString> result;
-                if(i-dx0-cutsize>1 && i-dx0+cutsize <CutPic[0].cols-1 && j-dy0-cutsize >1 && j-dy0+cutsize<CutPic[0].rows-1)
-                {
-                    int n = CutPic[0].at<cv::Vec3b>(j-dy0,i-dx0)[0];
-                    result.push_back(QString::number(n));
-                }
-                if(i-dx1-cutsize>1 && i-dx1+cutsize <CutPic[1].cols-1 && j-dy1-cutsize >1 && j-dy1+cutsize<CutPic[1].rows-1)
-                {
-                    int n = CutPic[1].at<cv::Vec3b>(j-dy1,i-dx1)[0];
-                    result.push_back(QString::number(n));
-                }
-                if(i-dx2-cutsize>1 && i-dx2+cutsize <CutPic[2].cols-1 && j-dy2-cutsize >1 && j-dy2+cutsize<CutPic[2].rows-1)
-                {
-                    int n = CutPic[2].at<cv::Vec3b>(j-dy2,i-dx2)[0];
-                    result.push_back(QString::number(n));
-                }
-                if(i-dx3-cutsize>1 && i-dx3+cutsize <CutPic[3].cols-1 && j-dy3-cutsize >1 && j-dy3+cutsize<CutPic[3].rows-1)
-                {
-                    int n = CutPic[3].at<cv::Vec3b>(j-dy3,i-dx3)[0];
-                    result.push_back(QString::number(n));
-                }
-                cv::Mat test(1,4,CV_32FC1);
-                if(result.size()==4)
-                {
-                    for(int k=0;k<4;k++)
-                    {
-                        test.at<float>(0,k) = result[k].toFloat();
-                    }
-
-                    //====================
-                    //float value = knn->find_nearest(test,3,0,0,nearest,0);
-                    float value = test.at<float>(0,0) *(test.at<float>(0,2) + test.at<float>(0,3) - test.at<float>(0,1)*2 );
-                    //float value = predictresult(j,i);
-                    ui->up_label->setText(QString::number(ui->upSlider->value()));
-                    ui->down_label->setText(QString::number(ui->downSlider->value()));
-                    ui->label_750->setText(QString::number(ui->Slider750->value()));
-                    if(value > ui->upSlider->value() )
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 255;
-                        predict.at<cv::Vec3b>(j,i)[2] = 0;
-                    }
-                    else if(value < ui->downSlider->value())
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 0;
-                        predict.at<cv::Vec3b>(j,i)[2] = 255;
-                    }
-                    else if(test.at<float>(0,2) >ui->Slider750->value())
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 255;
-                        predict.at<cv::Vec3b>(j,i)[2] = 0;
-                    }
-                    else
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 255;
-                        predict.at<cv::Vec3b>(j,i)[2] = 255;
-                    }
-                }
-            }
-        }
-    }
-    //cv::imshow("Result Predict",predict);
-    cv::Mat k ;
-    cv::cvtColor(predict,k,CV_BGR2RGB);
-    ShowOnLabel(k,ui->FalseColorLabel);
-    cv::imshow("predict",predict);
-    qDebug()<<"O.K.";
-}
-
-void MainWindow::on_downSlider_sliderMoved(int position)
-{
-    cv::Mat predict;
-    predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
-    predict = cv::Scalar::all(0);
-
-    for(int i=0;i<Refresult.cols;i++)
-    {
-        for(int j=0;j<Refresult.rows;j++)
-        {
-            if(maskResult.at<cv::Vec3b>(j,i)[0] != 0)
-            {
-                cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-                for(int f=0;f<RefCorPoint.size();f++)
-                {
-                    t1.x = std::min(t1.x,RefCorPoint[f].x);
-                    t1.y = std::min(t1.y,RefCorPoint[f].y);
-                }
-                int dy0 = -t1.y+RefCorPoint[0].y;
-                int dx0 = -t1.x+RefCorPoint[0].x;
-                int dy1 = -t1.y+RefCorPoint[1].y;
-                int dx1 = -t1.x+RefCorPoint[1].x;
-                int dy2 = -t1.y+RefCorPoint[2].y;
-                int dx2 = -t1.x+RefCorPoint[2].x;
-                int dy3 = -t1.y+RefCorPoint[3].y;
-                int dx3 = -t1.x+RefCorPoint[3].x;
-
-                int cutsize = 1;
-                std::vector<QString> result;
-                if(i-dx0-cutsize>1 && i-dx0+cutsize <CutPic[0].cols-1 && j-dy0-cutsize >1 && j-dy0+cutsize<CutPic[0].rows-1)
-                {
-                    int n = CutPic[0].at<cv::Vec3b>(j-dy0,i-dx0)[0];
-                    result.push_back(QString::number(n));
-                }
-                if(i-dx1-cutsize>1 && i-dx1+cutsize <CutPic[1].cols-1 && j-dy1-cutsize >1 && j-dy1+cutsize<CutPic[1].rows-1)
-                {
-                    int n = CutPic[1].at<cv::Vec3b>(j-dy1,i-dx1)[0];
-                    result.push_back(QString::number(n));
-                }
-                if(i-dx2-cutsize>1 && i-dx2+cutsize <CutPic[2].cols-1 && j-dy2-cutsize >1 && j-dy2+cutsize<CutPic[2].rows-1)
-                {
-                    int n = CutPic[2].at<cv::Vec3b>(j-dy2,i-dx2)[0];
-                    result.push_back(QString::number(n));
-                }
-                if(i-dx3-cutsize>1 && i-dx3+cutsize <CutPic[3].cols-1 && j-dy3-cutsize >1 && j-dy3+cutsize<CutPic[3].rows-1)
-                {
-                    int n = CutPic[3].at<cv::Vec3b>(j-dy3,i-dx3)[0];
-                    result.push_back(QString::number(n));
-                }
-                cv::Mat test(1,4,CV_32FC1);
-                if(result.size()==4)
-                {
-                    for(int k=0;k<4;k++)
-                    {
-                        test.at<float>(0,k) = result[k].toFloat();
-                    }
-
-                    //====================
-                    //float value = knn->find_nearest(test,3,0,0,nearest,0);
-                    float value = test.at<float>(0,0) *(test.at<float>(0,2) + test.at<float>(0,3) - test.at<float>(0,1)*2 );
-                    //float value = predictresult(j,i);
-                    ui->up_label->setText(QString::number(ui->upSlider->value()));
-                    ui->down_label->setText(QString::number(ui->downSlider->value()));
-                    ui->label_750->setText(QString::number(ui->Slider750->value()));
-
-                    if(value > ui->upSlider->value())
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 255;
-                        predict.at<cv::Vec3b>(j,i)[2] = 0;
-                    }
-                    else if(value < ui->downSlider->value())
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 0;
-                        predict.at<cv::Vec3b>(j,i)[2] = 255;
-                    }
-                    else if(test.at<float>(0,2) >ui->Slider750->value())
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 255;
-                        predict.at<cv::Vec3b>(j,i)[2] = 0;
-                    }
-                    else
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 255;
-                        predict.at<cv::Vec3b>(j,i)[2] = 255;
-                    }
-                }
-            }
-        }
-    }
-    //cv::imshow("Result Predict",predict);
-    cv::Mat k ;
-    cv::cvtColor(predict,k,CV_BGR2RGB);
-    ShowOnLabel(k,ui->FalseColorLabel);
-    cv::imshow("predict",predict);
-    qDebug()<<"O.K.";
-
-}
-
-void MainWindow::on_Slider750_sliderMoved(int position)
-{
-    cv::Mat predict;
-    predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
-    predict = cv::Scalar::all(0);
-
-    for(int i=0;i<Refresult.cols;i++)
-    {
-        for(int j=0;j<Refresult.rows;j++)
-        {
-            if(maskResult.at<cv::Vec3b>(j,i)[0] != 0)
-            {
-                cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-                for(int f=0;f<RefCorPoint.size();f++)
-                {
-                    t1.x = std::min(t1.x,RefCorPoint[f].x);
-                    t1.y = std::min(t1.y,RefCorPoint[f].y);
-                }
-                int dy0 = -t1.y+RefCorPoint[0].y;
-                int dx0 = -t1.x+RefCorPoint[0].x;
-                int dy1 = -t1.y+RefCorPoint[1].y;
-                int dx1 = -t1.x+RefCorPoint[1].x;
-                int dy2 = -t1.y+RefCorPoint[2].y;
-                int dx2 = -t1.x+RefCorPoint[2].x;
-                int dy3 = -t1.y+RefCorPoint[3].y;
-                int dx3 = -t1.x+RefCorPoint[3].x;
-
-                int cutsize = 1;
-                std::vector<QString> result;
-                if(i-dx0-cutsize>1 && i-dx0+cutsize <CutPic[0].cols-1 && j-dy0-cutsize >1 && j-dy0+cutsize<CutPic[0].rows-1)
-                {
-                    int n = CutPic[0].at<cv::Vec3b>(j-dy0,i-dx0)[0];
-                    result.push_back(QString::number(n));
-                }
-                if(i-dx1-cutsize>1 && i-dx1+cutsize <CutPic[1].cols-1 && j-dy1-cutsize >1 && j-dy1+cutsize<CutPic[1].rows-1)
-                {
-                    int n = CutPic[1].at<cv::Vec3b>(j-dy1,i-dx1)[0];
-                    result.push_back(QString::number(n));
-                }
-                if(i-dx2-cutsize>1 && i-dx2+cutsize <CutPic[2].cols-1 && j-dy2-cutsize >1 && j-dy2+cutsize<CutPic[2].rows-1)
-                {
-                    int n = CutPic[2].at<cv::Vec3b>(j-dy2,i-dx2)[0];
-                    result.push_back(QString::number(n));
-                }
-                if(i-dx3-cutsize>1 && i-dx3+cutsize <CutPic[3].cols-1 && j-dy3-cutsize >1 && j-dy3+cutsize<CutPic[3].rows-1)
-                {
-                    int n = CutPic[3].at<cv::Vec3b>(j-dy3,i-dx3)[0];
-                    result.push_back(QString::number(n));
-                }
-                cv::Mat test(1,4,CV_32FC1);
-                if(result.size()==4)
-                {
-                    for(int k=0;k<4;k++)
-                    {
-                        test.at<float>(0,k) = result[k].toFloat();
-                    }
-
-                    //====================
-                    //float value = knn->find_nearest(test,3,0,0,nearest,0);
-                    float value = test.at<float>(0,0) *(test.at<float>(0,2) + test.at<float>(0,3) - test.at<float>(0,1)*2 );
-                    //float value = predictresult(j,i);
-                    ui->up_label->setText(QString::number(ui->upSlider->value()));
-                    ui->down_label->setText(QString::number(ui->downSlider->value()));
-                    ui->label_750->setText(QString::number(ui->Slider750->value()));
-
-                    if(value > ui->upSlider->value())
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 255;
-                        predict.at<cv::Vec3b>(j,i)[2] = 0;
-                    }
-                    else if(value < ui->downSlider->value())
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 0;
-                        predict.at<cv::Vec3b>(j,i)[2] = 255;
-                    }
-                    else if(test.at<float>(0,2) >ui->Slider750->value())
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 255;
-                        predict.at<cv::Vec3b>(j,i)[2] = 0;
-                    }
-                    else
-                    {
-                        predict.at<cv::Vec3b>(j,i)[0] = 0;
-                        predict.at<cv::Vec3b>(j,i)[1] = 255;
-                        predict.at<cv::Vec3b>(j,i)[2] = 255;
-                    }
-                }
-            }
-        }
-    }
-    //cv::imshow("Result Predict",predict);
-    cv::Mat k ;
-    cv::cvtColor(predict,k,CV_BGR2RGB);
-    ShowOnLabel(k,ui->FalseColorLabel);
-    cv::imshow("predict",predict);
-    qDebug()<<"O.K.";
-}
-
 
 float MainWindow::NDVI_value(std::vector<cv::Mat> &m,int y, int x)
 {
@@ -1544,7 +1181,7 @@ void MainWindow::on_NDVIButton_clicked()
             if(maskResult.at<cv::Vec3b>(j,i)[0] != 0)
             {
                 float value = NDVI_value(CutPic,j,i);
-                //ui->MultidoubleSpinBox_2
+
                 if(value < 0.9)
                 {
                     predict.at<cv::Vec3b>(j,i)[0] = 0;
@@ -1560,8 +1197,10 @@ void MainWindow::on_NDVIButton_clicked()
             }
         }
     }
-    cv::imshow("NDVI",predict);
+    //cv::imshow("NDVI",predict);
+    ShowOnLabel(predict,ui->TempLabel);
     NDVIMat = predict;//.clone();
+    ui->Multi_Buttom->setEnabled(true);
 }
 
 void MainWindow::on_Multi_Buttom_clicked()
@@ -1704,64 +1343,8 @@ void MainWindow::on_Multi_Buttom_clicked()
     qDebug()<<"After Add Division size ="<<CutPic.size();
 
     qDebug()<<"Final CutPic Size = "<<CutPic.size();
+
+    ui->RGBButtom->setEnabled(true);
 }
 
-bool MainWindow::ShadowPlace(int y, int x)
-{
-    cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-    for(int i=0;i<4;i++)
-    {
-        t1.x = std::min(t1.x,RefCorPoint[i].x);
-        t1.y = std::min(t1.y,RefCorPoint[i].y);
-    }
 
-    int dy0 = -t1.y+RefCorPoint[0].y;
-    int dx0 = -t1.x+RefCorPoint[0].x;
-    int dy1 = -t1.y+RefCorPoint[1].y;
-    int dx1 = -t1.x+RefCorPoint[1].x;
-    int dy2 = -t1.y+RefCorPoint[2].y;
-    int dx2 = -t1.x+RefCorPoint[2].x;
-    int dy3 = -t1.y+RefCorPoint[3].y;
-    int dx3 = -t1.x+RefCorPoint[3].x;
-
-
-    //int cutsize = 1;
-
-    std::vector<QString> result;
-    if(x-dx0>=0 && x-dx0 <CutPic[0].cols && y-dy0 >=0 && y-dy0<CutPic[0].rows)
-    {
-        int n = CutPic[0].at<cv::Vec3b>(y-dy0,x-dx0)[0];
-        result.push_back(QString::number(n));
-    }
-    if(x-dx1>=0 && x-dx1 <CutPic[1].cols && y-dy1 >=0 && y-dy1<CutPic[1].rows)
-    {
-        int n = CutPic[1].at<cv::Vec3b>(y-dy1,x-dx1)[0];
-        result.push_back(QString::number(n));
-    }
-    if(x-dx2>=0 && x-dx2 <CutPic[2].cols && y-dy2 >=0 && y-dy2<CutPic[2].rows)
-    {
-        int n = CutPic[2].at<cv::Vec3b>(y-dy2,x-dx2)[0];
-        result.push_back(QString::number(n));
-    }
-    if(x-dx3>=0 && x-dx3 <CutPic[3].cols && y-dy3 >=0 && y-dy3<CutPic[3].rows)
-    {
-        int n = CutPic[3].at<cv::Vec3b>(y-dy3,x-dx3)[0];
-        result.push_back(QString::number(n));
-    }
-
-    if(result.size()!=4)
-    {
-        return false;
-    }
-    //return;
-
-    if(result[0].toFloat() < ui->TCutdoubleSpinBox1->value()  &&  result[1].toFloat() <ui->TCutdoubleSpinBox2->value()&&  result[2].toFloat() < ui->TCutdoubleSpinBox3->value()&&  result[3].toFloat() <ui->TCutdoubleSpinBox4->value())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-
-}

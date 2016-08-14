@@ -14,12 +14,13 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QScrollArea>
-#include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QWidget>
 
@@ -39,12 +40,6 @@ public:
     QLabel *label2;
     QLabel *label3;
     QLabel *label4;
-    QSlider *UpperSlider;
-    QSlider *LowerSlider;
-    QPushButton *SaveRGBData;
-    QSpinBox *xSpinBox;
-    QSpinBox *ySpinBox;
-    QLabel *label;
     QLabel *pn1;
     QLabel *pn2;
     QLabel *pn3;
@@ -57,12 +52,20 @@ public:
     QLabel *ndiv4;
     QLabel *ndiv5;
     QLabel *ndiv6;
+    QGroupBox *groupBox;
+    QRadioButton *radioButtonH;
+    QRadioButton *radioButtonS;
+    QRadioButton *radioButtonI;
+    QPushButton *LoadPosition;
+    QLabel *PositionX;
+    QLabel *PositionY;
+    QLabel *DataNumber;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("Dialog"));
-        Dialog->resize(1051, 580);
+        Dialog->resize(1016, 482);
         labelScale = new QLabel(Dialog);
         labelScale->setObjectName(QStringLiteral("labelScale"));
         labelScale->setGeometry(QRect(720, 10, 250, 250));
@@ -112,76 +115,75 @@ public:
         label4 = new QLabel(Dialog);
         label4->setObjectName(QStringLiteral("label4"));
         label4->setGeometry(QRect(850, 320, 41, 21));
-        UpperSlider = new QSlider(Dialog);
-        UpperSlider->setObjectName(QStringLiteral("UpperSlider"));
-        UpperSlider->setGeometry(QRect(10, 520, 701, 22));
-        UpperSlider->setMaximum(255);
-        UpperSlider->setValue(200);
-        UpperSlider->setOrientation(Qt::Horizontal);
-        LowerSlider = new QSlider(Dialog);
-        LowerSlider->setObjectName(QStringLiteral("LowerSlider"));
-        LowerSlider->setGeometry(QRect(10, 550, 701, 22));
-        LowerSlider->setMaximum(255);
-        LowerSlider->setValue(50);
-        LowerSlider->setOrientation(Qt::Horizontal);
-        SaveRGBData = new QPushButton(Dialog);
-        SaveRGBData->setObjectName(QStringLiteral("SaveRGBData"));
-        SaveRGBData->setGeometry(QRect(720, 430, 171, 71));
-        QFont font1;
-        font1.setFamily(QStringLiteral("Times New Roman"));
-        font1.setPointSize(20);
-        SaveRGBData->setFont(font1);
-        xSpinBox = new QSpinBox(Dialog);
-        xSpinBox->setObjectName(QStringLiteral("xSpinBox"));
-        xSpinBox->setGeometry(QRect(10, 430, 131, 61));
-        xSpinBox->setFont(font);
-        xSpinBox->setMinimum(-10);
-        xSpinBox->setMaximum(10);
-        ySpinBox = new QSpinBox(Dialog);
-        ySpinBox->setObjectName(QStringLiteral("ySpinBox"));
-        ySpinBox->setGeometry(QRect(160, 430, 131, 61));
-        ySpinBox->setFont(font);
-        ySpinBox->setMinimum(-10);
-        ySpinBox->setMaximum(10);
-        label = new QLabel(Dialog);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(440, 450, 47, 12));
         pn1 = new QLabel(Dialog);
         pn1->setObjectName(QStringLiteral("pn1"));
-        pn1->setGeometry(QRect(910, 270, 47, 12));
+        pn1->setGeometry(QRect(900, 270, 47, 12));
         pn2 = new QLabel(Dialog);
         pn2->setObjectName(QStringLiteral("pn2"));
-        pn2->setGeometry(QRect(970, 270, 47, 12));
+        pn2->setGeometry(QRect(960, 270, 47, 12));
         pn3 = new QLabel(Dialog);
         pn3->setObjectName(QStringLiteral("pn3"));
-        pn3->setGeometry(QRect(910, 300, 47, 12));
+        pn3->setGeometry(QRect(900, 300, 47, 12));
         pn4 = new QLabel(Dialog);
         pn4->setObjectName(QStringLiteral("pn4"));
-        pn4->setGeometry(QRect(970, 300, 47, 12));
+        pn4->setGeometry(QRect(960, 300, 47, 12));
         pn5 = new QLabel(Dialog);
         pn5->setObjectName(QStringLiteral("pn5"));
-        pn5->setGeometry(QRect(910, 330, 47, 12));
+        pn5->setGeometry(QRect(900, 330, 47, 12));
         pn6 = new QLabel(Dialog);
         pn6->setObjectName(QStringLiteral("pn6"));
-        pn6->setGeometry(QRect(970, 330, 47, 12));
+        pn6->setGeometry(QRect(960, 330, 47, 12));
         ndiv1 = new QLabel(Dialog);
         ndiv1->setObjectName(QStringLiteral("ndiv1"));
-        ndiv1->setGeometry(QRect(920, 390, 47, 12));
+        ndiv1->setGeometry(QRect(900, 360, 47, 12));
         ndiv2 = new QLabel(Dialog);
         ndiv2->setObjectName(QStringLiteral("ndiv2"));
-        ndiv2->setGeometry(QRect(980, 390, 47, 12));
+        ndiv2->setGeometry(QRect(960, 360, 47, 12));
         ndiv3 = new QLabel(Dialog);
         ndiv3->setObjectName(QStringLiteral("ndiv3"));
-        ndiv3->setGeometry(QRect(920, 420, 47, 12));
+        ndiv3->setGeometry(QRect(900, 390, 47, 12));
         ndiv4 = new QLabel(Dialog);
         ndiv4->setObjectName(QStringLiteral("ndiv4"));
-        ndiv4->setGeometry(QRect(980, 420, 47, 12));
+        ndiv4->setGeometry(QRect(960, 390, 47, 12));
         ndiv5 = new QLabel(Dialog);
         ndiv5->setObjectName(QStringLiteral("ndiv5"));
-        ndiv5->setGeometry(QRect(920, 450, 47, 12));
+        ndiv5->setGeometry(QRect(900, 420, 47, 12));
         ndiv6 = new QLabel(Dialog);
         ndiv6->setObjectName(QStringLiteral("ndiv6"));
-        ndiv6->setGeometry(QRect(980, 450, 47, 12));
+        ndiv6->setGeometry(QRect(960, 420, 47, 12));
+        groupBox = new QGroupBox(Dialog);
+        groupBox->setObjectName(QStringLiteral("groupBox"));
+        groupBox->setGeometry(QRect(720, 430, 301, 51));
+        radioButtonH = new QRadioButton(groupBox);
+        radioButtonH->setObjectName(QStringLiteral("radioButtonH"));
+        radioButtonH->setGeometry(QRect(10, 20, 61, 16));
+        radioButtonS = new QRadioButton(groupBox);
+        radioButtonS->setObjectName(QStringLiteral("radioButtonS"));
+        radioButtonS->setGeometry(QRect(70, 20, 71, 16));
+        radioButtonI = new QRadioButton(groupBox);
+        radioButtonI->setObjectName(QStringLiteral("radioButtonI"));
+        radioButtonI->setGeometry(QRect(140, 20, 83, 16));
+        LoadPosition = new QPushButton(Dialog);
+        LoadPosition->setObjectName(QStringLiteral("LoadPosition"));
+        LoadPosition->setGeometry(QRect(10, 430, 381, 51));
+        LoadPosition->setFont(font);
+        PositionX = new QLabel(Dialog);
+        PositionX->setObjectName(QStringLiteral("PositionX"));
+        PositionX->setGeometry(QRect(400, 430, 101, 41));
+        PositionX->setFont(font);
+        PositionY = new QLabel(Dialog);
+        PositionY->setObjectName(QStringLiteral("PositionY"));
+        PositionY->setGeometry(QRect(510, 430, 101, 41));
+        PositionY->setFont(font);
+        DataNumber = new QLabel(Dialog);
+        DataNumber->setObjectName(QStringLiteral("DataNumber"));
+        DataNumber->setGeometry(QRect(620, 430, 101, 41));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(DataNumber->sizePolicy().hasHeightForWidth());
+        DataNumber->setSizePolicy(sizePolicy);
+        DataNumber->setFont(font);
 
         retranslateUi(Dialog);
 
@@ -198,8 +200,6 @@ public:
         label2->setText(QApplication::translate("Dialog", "TextLabel", 0));
         label3->setText(QApplication::translate("Dialog", "TextLabel", 0));
         label4->setText(QApplication::translate("Dialog", "TextLabel", 0));
-        SaveRGBData->setText(QApplication::translate("Dialog", "Save RGB Data", 0));
-        label->setText(QApplication::translate("Dialog", "TextLabel", 0));
         pn1->setText(QApplication::translate("Dialog", "TextLabel", 0));
         pn2->setText(QApplication::translate("Dialog", "TextLabel", 0));
         pn3->setText(QApplication::translate("Dialog", "TextLabel", 0));
@@ -212,6 +212,14 @@ public:
         ndiv4->setText(QApplication::translate("Dialog", "TextLabel", 0));
         ndiv5->setText(QApplication::translate("Dialog", "TextLabel", 0));
         ndiv6->setText(QApplication::translate("Dialog", "TextLabel", 0));
+        groupBox->setTitle(QApplication::translate("Dialog", "Type", 0));
+        radioButtonH->setText(QApplication::translate("Dialog", "Health", 0));
+        radioButtonS->setText(QApplication::translate("Dialog", "Symptom", 0));
+        radioButtonI->setText(QApplication::translate("Dialog", "Incubation", 0));
+        LoadPosition->setText(QApplication::translate("Dialog", "Load Position", 0));
+        PositionX->setText(QApplication::translate("Dialog", "X", 0));
+        PositionY->setText(QApplication::translate("Dialog", "Y", 0));
+        DataNumber->setText(QApplication::translate("Dialog", "0", 0));
     } // retranslateUi
 
 };
