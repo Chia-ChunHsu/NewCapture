@@ -228,13 +228,13 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
     cv::imwrite("dilMat.jpg",dilMat);
 
 
-    MaskResult = dilMat;
+    MaskResult = dilMat.clone();
 
     std::vector<cv::Mat> temp;
     temp.clear();
     for(int i=0;i<WarpPic.size();i++)
     {
-        cv::Mat tMat = WarpPic[i];
+        cv::Mat tMat = WarpPic[i].clone();
         temp.push_back(tMat);
     }
 
@@ -289,9 +289,6 @@ void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
     CutPic.clear();
     for(int i=0;i<temp.size();i++)//將白校正且把背景去除的圖片加入
         CutPic.push_back(temp[i]);
-
-
-
 }
 
 void MainWindow::on_LoadRefButton_clicked()
@@ -398,6 +395,7 @@ void MainWindow::on_LoadPicButton_clicked()
 
         showMat.push_back(m);
         Pic.push_back(m);
+        cv::imwrite(QString::number(n).toStdString()+"_White.jpg",m);
     }
 
     for(int n=0;n<OPic.size();n++)
@@ -445,10 +443,7 @@ void MainWindow::on_PredictButton_clicked()
     cv::Mat predict;
     predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
     predict = cv::Scalar::all(0);
-    //    for(int i=0;i<CutPic.size();i++)
-    //    {
-    //        cv::imshow(QString::number(i).toStdString(),CutPic[i]);
-    //    }
+
 
     for(int i=0;i<Refresult.cols;i++)
     {
@@ -479,10 +474,12 @@ void MainWindow::on_PredictButton_clicked()
         }
     }
     //cv::imshow("Result Predict",predict);
-    cv::Mat k ;
-    cv::cvtColor(predict,k,CV_BGR2RGB);
-    ShowOnLabel(k,ui->FalseColorLabel);
-    cv::imshow("pre",predict);
+    //cv::Mat k ;
+    //cv::cvtColor(predict,k,CV_BGR2RGB);
+    ShowOnLabel(predict,ui->FalseColorLabel);
+    //cv::imshow("pre",predict);
+
+    //cv::cvtColor(predict,predict)
 
     cv::imwrite(FileNameAd.toStdString()+"_pre.jpg",predict);
 }

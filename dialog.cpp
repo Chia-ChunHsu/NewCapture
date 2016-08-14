@@ -294,7 +294,7 @@ void Dialog::on_saveButton_clicked()
     else
         SubName = "S";
 
-    QFile file(name+"_"+FName[0]+"-"+SubName+".tab");
+    QFile file(name+"_"+FName[0]+"_"+SubName+".tab");
     QFile fileXY(name+"_"+FName[0]+"_"+SubName+"_XY.tab");
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     fileXY.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -338,8 +338,8 @@ void Dialog::on_LoadPosition_clicked()
         int x,y;
         input>>x>>y;
         //input>>y;
-        qDebug()<<x<<y;
-        //draw(temp,x,y,ui->labelall);
+        //qDebug()<<x<<y;
+        draw(temp,x,y,ui->labelall);
     }while(!input.atEnd());
     XYFile.close();
 }
