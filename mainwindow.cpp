@@ -405,7 +405,6 @@ void MainWindow::on_LoadPicButton_clicked()
             delete [] f[n][i];
         }
         delete [] f[n];
-
     }
     delete [] f;
 
@@ -444,7 +443,6 @@ void MainWindow::on_PredictButton_clicked()
     predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
     predict = cv::Scalar::all(0);
 
-
     for(int i=0;i<Refresult.cols;i++)
     {
         for(int j=0;j<Refresult.rows;j++)
@@ -452,6 +450,7 @@ void MainWindow::on_PredictButton_clicked()
             if(NDVIMat.at<cv::Vec3b>(j,i)[1] == 255)
             {
                 float value = predictresult(j,i);
+
                 if(value == 0)//G
                 {
                     predict.at<cv::Vec3b>(j,i)[0] = 0;
@@ -473,30 +472,23 @@ void MainWindow::on_PredictButton_clicked()
             }
         }
     }
-    //cv::imshow("Result Predict",predict);
-    //cv::Mat k ;
-    //cv::cvtColor(predict,k,CV_BGR2RGB);
-    ShowOnLabel(predict,ui->FalseColorLabel);
-    //cv::imshow("pre",predict);
 
-    //cv::cvtColor(predict,predict)
+    ShowOnLabel(predict,ui->FalseColorLabel);
 
     cv::imwrite(FileNameAd.toStdString()+"_pre.jpg",predict);
 }
 
 float MainWindow::predictresult(int y,int x)
 {
-    //
     int features = ui->FeaturesSpinBox->value() ;
 
     std::vector<cv::Point> Point;
-    //std::copy(RefCorPoint.begin(),RefCorPoint.end(),Point.begin());
 
     for(int i=0;i<4;i++)
     {
         Point.push_back(RefCorPoint[i]);
     }
-    //qDebug()<<"Size = "<<Point.size();
+
     cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
 
     for(int i=0;i<4;i++)
@@ -509,8 +501,6 @@ float MainWindow::predictresult(int y,int x)
     {
         Point.push_back(t1);
     }
-    //    int dy4 = -(t1.y-RefCorPoint[0].y);
-    //    int dx4 = -(t1.x-RefCorPoint[0].x);
 
     std::vector<int> dx;
     std::vector<int> dy;
@@ -520,22 +510,6 @@ float MainWindow::predictresult(int y,int x)
         dy.push_back(-t1.y+Point[n].y/*-(t1.y-RefCorPoint[0].y)*/);
     }
 
-    //    if(flag == 1)
-    //    {
-    //        qDebug()<<Point[0].x<<" "<<Point[0].y;
-    //        qDebug()<<Point[1].x<<" "<<Point[1].y;
-    //        qDebug()<<Point[2].x<<" "<<Point[2].y;
-    //        qDebug()<<Point[3].x<<" "<<Point[3].y;
-    //        for(int i=0;i<dx.size();i++)
-    //        {
-    //            qDebug()<<i<<" "<<dx[i]<<" "<<dy[i];
-    //        }
-    //        flag =2;
-    //    }
-    //qDebug()<<"0";
-
-    //int cutsize = 1;
-    //std::vector<QString> wavelength;
     std::vector<int> result;
     result.clear();
 
@@ -563,11 +537,70 @@ float MainWindow::predictresult(int y,int x)
             }
         }
     }
-    //qDebug()<<"1";
-
+    else if(features == 3)
+    {
+        int n = 10;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+        n=12;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+        n=15;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+    }
+    else if(features == 5)
+    {
+        int n = 7;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+        n=9;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+        n=10;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+        n=13;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+        n=15;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+    }
 
     cv::Mat test(1,features,CV_32FC1);
-
 
     if(result.size()!=features)
     {
@@ -580,8 +613,12 @@ float MainWindow::predictresult(int y,int x)
         test.at<float>(0,j) = result[j];
     }
 
-
     svm.load("SVM.txt");
+//    if(x == 280 && y==148)
+//    {
+//        for(int i=0;i<features;i++)
+//            qDebug()<< test.at<float>(0,i);
+//    }
 
     float resultclass = svm.predict(test);
 
