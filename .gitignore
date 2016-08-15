@@ -4,3 +4,4 @@ Makefile.Release
 release/
 .tab
 NewMicro.pro.user.82f1a9d
+*.tab

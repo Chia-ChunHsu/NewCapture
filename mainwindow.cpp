@@ -361,7 +361,7 @@ void MainWindow::on_LoadPicButton_clicked()
                 }
                 else
                 {
-                    f[n][i][j] = abs(OPic[n].at<cv::Vec3b>(j,i)[0] + (128 - DNm[n]));
+                    f[n][i][j] = OPic[n].at<cv::Vec3b>(j,i)[0] + (128 - DNm[n]);
                 }
             }
         }
@@ -385,6 +385,8 @@ void MainWindow::on_LoadPicButton_clicked()
                 else
                 {
                     int k = f[n][i][j]+(128-WrefPic[n].at<cv::Vec3b>(j,i)[0]);
+                    if(k<0)
+                        k=0;
 
                     m.at<cv::Vec3b>(j,i)[0] = abs(k);
                     m.at<cv::Vec3b>(j,i)[1] = abs(k);
@@ -546,7 +548,14 @@ float MainWindow::predictresult(int y,int x)
             pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
             result.push_back(pn);
         }
-        n=12;
+//        n = 11;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+        n=13;
         if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
         {
             int pn;
