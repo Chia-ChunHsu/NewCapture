@@ -388,9 +388,9 @@ void MainWindow::on_LoadPicButton_clicked()
                     if(k<0)
                         k=0;
 
-                    m.at<cv::Vec3b>(j,i)[0] = abs(k);
-                    m.at<cv::Vec3b>(j,i)[1] = abs(k);
-                    m.at<cv::Vec3b>(j,i)[2] = abs(k);
+                    m.at<cv::Vec3b>(j,i)[0] = k;
+                    m.at<cv::Vec3b>(j,i)[1] = k;
+                    m.at<cv::Vec3b>(j,i)[2] = k;
                 }
             }
         }
@@ -608,6 +608,38 @@ float MainWindow::predictresult(int y,int x)
             result.push_back(pn);
         }
     }
+    else if(features == 4)
+    {
+        int n = 0;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+        n=1;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+        n=2;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+        n=3;
+        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+        {
+            int pn;
+            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+            result.push_back(pn);
+        }
+    }
+
 
     cv::Mat test(1,features,CV_32FC1);
 
