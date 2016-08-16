@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -397,6 +397,138 @@
        <number>12</number>
       </property>
      </widget>
+     <widget class="QListWidget" name="listWidgetAttribute">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>10</y>
+        <width>71</width>
+        <height>101</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="listWidgetNotUse">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>10</y>
+        <width>71</width>
+        <height>101</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>568 nm</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>700 nm</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>750 nm</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>830 nm</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>568-700</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>568-750</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>568-830</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>700-750</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>700-830</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>750-830</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>700/568</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>750/568</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>830/568</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>750/700</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>830/700</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>830/750</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QPushButton" name="AttributeButtom">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>10</y>
+        <width>21</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&gt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="DeleteButtom">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>70</y>
+        <width>21</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QDateTimeEdit" name="dateTimeEdit">
@@ -585,7 +717,7 @@
      <x>0</x>
      <y>0</y>
      <width>623</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

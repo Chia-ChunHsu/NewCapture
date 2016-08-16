@@ -11,6 +11,7 @@
 #include <QTimer>
 #include <QDate>
 #include <dialog.h>
+#include <QListWidgetItem>
 
 namespace Ui {
 class MainWindow;
@@ -80,21 +81,13 @@ private slots:
 
     void on_RGBButtom_clicked();
 
-//    void on_TestButtom_clicked();
-
-//    void on_upSlider_sliderMoved(int position);
-
-//    void on_downSlider_sliderMoved(int position);
-
-//    void on_Slider750_sliderMoved(int position);
-
-//    void on_SVI_Button_clicked();
-
-
-
     void on_NDVIButton_clicked();
 
     void on_Multi_Buttom_clicked();
+
+    void on_AttributeButtom_clicked();
+
+    void on_DeleteButtom_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -113,16 +106,13 @@ private:
 
     CvSVM svm;
     QDateTime Dtime;
-    //QDate currentDate;
     QTime currentTime;
     int time;
 
     QString currentFile;
     QString FirstFile;
 
-
     Dialog picdialog;
-
 
     cv::Mat RGB;
 
@@ -130,7 +120,6 @@ private:
     QString FileNameAd;
 
     cv::Mat NDVIMat;
-//    bool ShadowPlace(int y,int x);
 
     cv::Mat s;
 

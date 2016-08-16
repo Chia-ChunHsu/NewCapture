@@ -1422,4 +1422,35 @@ void MainWindow::on_Multi_Buttom_clicked()
     ui->RGBButtom->setEnabled(true);
 }
 
+void MainWindow::on_AttributeButtom_clicked()
+{
+    if(ui->listWidgetNotUse->currentRow()==-1)
+        return;
 
+    QString itmName = ui->listWidgetNotUse->currentItem()->text();
+    int SelectedRow = ui->listWidgetNotUse->currentRow();
+    ui->listWidgetNotUse->takeItem(SelectedRow);
+    ui->listWidgetAttribute->addItem(itmName);
+
+    int listCount = ui->listWidgetAttribute->count();
+
+    qDebug()<<"item Number = "<<listCount;
+
+}
+
+void MainWindow::on_DeleteButtom_clicked()
+{
+    if(ui->listWidgetAttribute->currentRow()==-1)
+        return;
+
+    QString itmName = ui->listWidgetAttribute->currentItem()->text();
+
+    int SelectedRow = ui->listWidgetAttribute->currentRow();
+    ui->listWidgetAttribute->takeItem(SelectedRow);
+    ui->listWidgetNotUse->addItem(itmName);
+
+    int listCount = ui->listWidgetAttribute->count();
+
+    qDebug()<<"item Number = "<<listCount;
+
+}

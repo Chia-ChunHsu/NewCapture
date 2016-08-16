@@ -17,6 +17,7 @@
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
@@ -60,6 +61,10 @@ public:
     QLabel *FalseColorLabel;
     QPushButton *PredictButton;
     QSpinBox *FeaturesSpinBox;
+    QListWidget *listWidgetAttribute;
+    QListWidget *listWidgetNotUse;
+    QPushButton *AttributeButtom;
+    QPushButton *DeleteButtom;
     QDateTimeEdit *dateTimeEdit;
     QPushButton *ApplyButton;
     QPushButton *ChooseButton;
@@ -195,6 +200,36 @@ public:
         FeaturesSpinBox->setFont(font1);
         FeaturesSpinBox->setMaximum(20);
         FeaturesSpinBox->setValue(12);
+        listWidgetAttribute = new QListWidget(tab_3);
+        listWidgetAttribute->setObjectName(QStringLiteral("listWidgetAttribute"));
+        listWidgetAttribute->setGeometry(QRect(390, 10, 71, 101));
+        listWidgetNotUse = new QListWidget(tab_3);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        new QListWidgetItem(listWidgetNotUse);
+        listWidgetNotUse->setObjectName(QStringLiteral("listWidgetNotUse"));
+        listWidgetNotUse->setGeometry(QRect(300, 10, 71, 101));
+        AttributeButtom = new QPushButton(tab_3);
+        AttributeButtom->setObjectName(QStringLiteral("AttributeButtom"));
+        AttributeButtom->setEnabled(true);
+        AttributeButtom->setGeometry(QRect(370, 10, 21, 41));
+        DeleteButtom = new QPushButton(tab_3);
+        DeleteButtom->setObjectName(QStringLiteral("DeleteButtom"));
+        DeleteButtom->setEnabled(true);
+        DeleteButtom->setGeometry(QRect(370, 70, 21, 41));
         tabWidget->addTab(tab_3, QString());
         dateTimeEdit = new QDateTimeEdit(centralWidget);
         dateTimeEdit->setObjectName(QStringLiteral("dateTimeEdit"));
@@ -248,7 +283,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 623, 21));
+        menuBar->setGeometry(QRect(0, 0, 623, 22));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -259,7 +294,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -284,6 +319,45 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("MainWindow", "Step 3", 0));
         FalseColorLabel->setText(QApplication::translate("MainWindow", "Prediction", 0));
         PredictButton->setText(QApplication::translate("MainWindow", "Predict", 0));
+
+        const bool __sortingEnabled = listWidgetNotUse->isSortingEnabled();
+        listWidgetNotUse->setSortingEnabled(false);
+        QListWidgetItem *___qlistwidgetitem = listWidgetNotUse->item(0);
+        ___qlistwidgetitem->setText(QApplication::translate("MainWindow", "568 nm", 0));
+        QListWidgetItem *___qlistwidgetitem1 = listWidgetNotUse->item(1);
+        ___qlistwidgetitem1->setText(QApplication::translate("MainWindow", "700 nm", 0));
+        QListWidgetItem *___qlistwidgetitem2 = listWidgetNotUse->item(2);
+        ___qlistwidgetitem2->setText(QApplication::translate("MainWindow", "750 nm", 0));
+        QListWidgetItem *___qlistwidgetitem3 = listWidgetNotUse->item(3);
+        ___qlistwidgetitem3->setText(QApplication::translate("MainWindow", "830 nm", 0));
+        QListWidgetItem *___qlistwidgetitem4 = listWidgetNotUse->item(4);
+        ___qlistwidgetitem4->setText(QApplication::translate("MainWindow", "568-700", 0));
+        QListWidgetItem *___qlistwidgetitem5 = listWidgetNotUse->item(5);
+        ___qlistwidgetitem5->setText(QApplication::translate("MainWindow", "568-750", 0));
+        QListWidgetItem *___qlistwidgetitem6 = listWidgetNotUse->item(6);
+        ___qlistwidgetitem6->setText(QApplication::translate("MainWindow", "568-830", 0));
+        QListWidgetItem *___qlistwidgetitem7 = listWidgetNotUse->item(7);
+        ___qlistwidgetitem7->setText(QApplication::translate("MainWindow", "700-750", 0));
+        QListWidgetItem *___qlistwidgetitem8 = listWidgetNotUse->item(8);
+        ___qlistwidgetitem8->setText(QApplication::translate("MainWindow", "700-830", 0));
+        QListWidgetItem *___qlistwidgetitem9 = listWidgetNotUse->item(9);
+        ___qlistwidgetitem9->setText(QApplication::translate("MainWindow", "750-830", 0));
+        QListWidgetItem *___qlistwidgetitem10 = listWidgetNotUse->item(10);
+        ___qlistwidgetitem10->setText(QApplication::translate("MainWindow", "700/568", 0));
+        QListWidgetItem *___qlistwidgetitem11 = listWidgetNotUse->item(11);
+        ___qlistwidgetitem11->setText(QApplication::translate("MainWindow", "750/568", 0));
+        QListWidgetItem *___qlistwidgetitem12 = listWidgetNotUse->item(12);
+        ___qlistwidgetitem12->setText(QApplication::translate("MainWindow", "830/568", 0));
+        QListWidgetItem *___qlistwidgetitem13 = listWidgetNotUse->item(13);
+        ___qlistwidgetitem13->setText(QApplication::translate("MainWindow", "750/700", 0));
+        QListWidgetItem *___qlistwidgetitem14 = listWidgetNotUse->item(14);
+        ___qlistwidgetitem14->setText(QApplication::translate("MainWindow", "830/700", 0));
+        QListWidgetItem *___qlistwidgetitem15 = listWidgetNotUse->item(15);
+        ___qlistwidgetitem15->setText(QApplication::translate("MainWindow", "830/750", 0));
+        listWidgetNotUse->setSortingEnabled(__sortingEnabled);
+
+        AttributeButtom->setText(QApplication::translate("MainWindow", ">", 0));
+        DeleteButtom->setText(QApplication::translate("MainWindow", "<", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("MainWindow", "Step 4", 0));
         dateTimeEdit->setDisplayFormat(QApplication::translate("MainWindow", "yyyy/M/d AP hh:mm::ss", 0));
         ApplyButton->setText(QApplication::translate("MainWindow", "Apply", 0));
