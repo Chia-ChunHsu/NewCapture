@@ -85,9 +85,7 @@ private slots:
 
     void on_Multi_Buttom_clicked();
 
-    void on_AttributeButtom_clicked();
-
-    void on_DeleteButtom_clicked();
+    void on_TrainingButtom_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -133,6 +131,8 @@ private:
     cv::Mat gdiv6;
 
     int flag;
+
+    std::vector<int> Fnumber;
 };
 
 #endif // MAINWINDOW_H

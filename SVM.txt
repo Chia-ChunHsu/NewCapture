@@ -2,11 +2,11 @@
 my_svm: !!opencv-ml-svm
    svm_type: C_SVC
    kernel: { type:LINEAR }
-   C: 1.0000000000000001e-001
+   C: 8.
    term_criteria: { epsilon:9.9999999747524271e-007,
        iterations:2147483647 }
-   var_all: 4
-   var_count: 4
+   var_all: 3
+   var_count: 3
    class_count: 2
    class_labels: !!opencv-matrix
       rows: 1
@@ -15,11 +15,10 @@ my_svm: !!opencv-ml-svm
       data: [ 0, 2 ]
    sv_total: 1
    support_vectors:
-      - [ -3.44389044e-002, -5.42603061e-003, 1.24184318e-001,
-          2.18637455e-002 ]
+      - [ 4.20100018e-002, 2.95825917e-002, -2.58003231e-002 ]
    decision_functions:
       -
          sv_count: 1
-         rho: 1.8513250804133552e+001
+         rho: 8.2782658034976428e+000
          alpha: [ 1. ]
          index: [ 0 ]

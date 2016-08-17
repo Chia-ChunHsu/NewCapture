@@ -512,133 +512,140 @@ float MainWindow::predictresult(int y,int x)
         dy.push_back(-t1.y+Point[n].y/*-(t1.y-RefCorPoint[0].y)*/);
     }
 
+    std::vector<int> TResult;
+    TResult.clear();
+
     std::vector<int> result;
     result.clear();
 
-    if(features == 16)
-    {
+//    if(features == 16)
+//    {
         for(int n=0;n<16;n++)
         {
             if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
             {
                 int pn;
                 pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-                result.push_back(pn);
+                TResult.push_back(pn);
             }
         }
-    }
-    else if(features == 12)
-    {
-        for(int n=4;n<16;n++)
+        for(int i=0;i<Fnumber.size();i++)
         {
-            if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-            {
-                int pn;
-                pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-                result.push_back(pn);
-            }
+            result.push_back(TResult[Fnumber[i]]);
         }
-    }
-    else if(features == 3)
-    {
-        int n = 10;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-//        n = 11;
+//    }
+//    else if(features == 12)
+//    {
+//        for(int n=4;n<16;n++)
+//        {
+//            if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//            {
+//                int pn;
+//                pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//                result.push_back(pn);
+//            }
+//        }
+//    }
+//    else if(features == 3)
+//    {
+//        int n = 10;
 //        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
 //        {
 //            int pn;
 //            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
 //            result.push_back(pn);
 //        }
-        n=13;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-        n=15;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-    }
-    else if(features == 5)
-    {
-        int n = 7;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-        n=9;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-        n=10;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-        n=13;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-        n=15;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-    }
-    else if(features == 4)
-    {
-        int n = 0;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-        n=1;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-        n=2;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-        n=3;
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            result.push_back(pn);
-        }
-    }
+////        n = 11;
+////        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+////        {
+////            int pn;
+////            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+////            result.push_back(pn);
+////        }
+//        n=13;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+//        n=15;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+//    }
+//    else if(features == 5)
+//    {
+//        int n = 7;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+//        n=9;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+//        n=10;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+//        n=13;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+//        n=15;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+//    }
+//    else if(features == 4)
+//    {
+//        int n = 0;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+//        n=1;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+//        n=2;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+//        n=3;
+//        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
+//        {
+//            int pn;
+//            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
+//            result.push_back(pn);
+//        }
+//    }
 
 
     cv::Mat test(1,features,CV_32FC1);
@@ -655,11 +662,6 @@ float MainWindow::predictresult(int y,int x)
     }
 
     svm.load("SVM.txt");
-//    if(x == 280 && y==148)
-//    {
-//        for(int i=0;i<features;i++)
-//            qDebug()<< test.at<float>(0,i);
-//    }
 
     float resultclass = svm.predict(test);
 
@@ -1276,6 +1278,7 @@ void MainWindow::on_NDVIButton_clicked()
     ShowOnLabel(predict,ui->TempLabel);
     NDVIMat = predict;//.clone();
     ui->Multi_Buttom->setEnabled(true);
+    cv::imwrite("NDVI.jpg",NDVIMat);
 }
 
 void MainWindow::on_Multi_Buttom_clicked()
@@ -1422,35 +1425,152 @@ void MainWindow::on_Multi_Buttom_clicked()
     ui->RGBButtom->setEnabled(true);
 }
 
-void MainWindow::on_AttributeButtom_clicked()
+
+void MainWindow::on_TrainingButtom_clicked()
 {
-    if(ui->listWidgetNotUse->currentRow()==-1)
+    int features =0;
+    Fnumber.clear();
+
+    if(ui->checkBox0->isChecked()==true)
+    {
+        Fnumber.push_back(0);
+        features++;
+    }
+    if(ui->checkBox1->isChecked()==true)
+    {
+        Fnumber.push_back(1);
+        features++;
+    }
+    if(ui->checkBox2->isChecked()==true)
+    {
+        Fnumber.push_back(2);
+        features++;
+    }
+    if(ui->checkBox3->isChecked()==true)
+    {
+        Fnumber.push_back(3);
+        features++;
+    }
+    if(ui->checkBox4->isChecked()==true)
+    {
+        Fnumber.push_back(4);
+        features++;
+    }
+    if(ui->checkBox5->isChecked()==true)
+    {
+        Fnumber.push_back(5);
+        features++;
+    }
+    if(ui->checkBox6->isChecked()==true)
+    {
+        Fnumber.push_back(6);
+        features++;
+    }
+    if(ui->checkBox7->isChecked()==true)
+    {
+        Fnumber.push_back(7);
+        features++;
+    }
+    if(ui->checkBox8->isChecked()==true)
+    {
+        Fnumber.push_back(8);
+        features++;
+    }
+    if(ui->checkBox9->isChecked()==true)
+    {
+        Fnumber.push_back(9);
+        features++;
+    }
+    if(ui->checkBox10->isChecked()==true)
+    {
+        Fnumber.push_back(10);
+        features++;
+    }
+    if(ui->checkBox11->isChecked()==true)
+    {
+        Fnumber.push_back(11);
+        features++;
+    }
+    if(ui->checkBox12->isChecked()==true)
+    {
+        Fnumber.push_back(12);
+        features++;
+    }
+    if(ui->checkBox13->isChecked()==true)
+    {
+        Fnumber.push_back(13);
+        features++;
+    }
+    if(ui->checkBox14->isChecked()==true)
+    {
+        Fnumber.push_back(14);
+        features++;
+    }
+    if(ui->checkBox15->isChecked()==true)
+    {
+        Fnumber.push_back(15);
+        features++;
+    }
+
+    ui->FeaturesSpinBox->setValue(features);
+
+    QString hel_file = QFileDialog::getOpenFileName(this,tr("Health Data"),"D:/Dropbox/2016JuneExp/001Final/",tr("Data File(*.txt)"));
+    if(hel_file.isEmpty())
         return;
 
-    QString itmName = ui->listWidgetNotUse->currentItem()->text();
-    int SelectedRow = ui->listWidgetNotUse->currentRow();
-    ui->listWidgetNotUse->takeItem(SelectedRow);
-    ui->listWidgetAttribute->addItem(itmName);
+    std::vector<float> s;
+    std::vector<float> l;
 
-    int listCount = ui->listWidgetAttribute->count();
+    QFile file1(hel_file);
+    file1.open(QIODevice::ReadOnly);
+    QTextStream in1(&file1);
 
-    qDebug()<<"item Number = "<<listCount;
+    while(!in1.atEnd())
+    {
+        QString str= in1.readLine();
+        QStringList strList = str.split("\t");
+        l.push_back(strList[strList.length()-1].toFloat());
+        //qDebug()<<"l "<<strList[strList.length()-1];
+        for(int i=0;i<Fnumber.size();i++)
+        {
+            s.push_back(strList[Fnumber[i]].toFloat());
+            //qDebug()<<strList[Fnumber[i]];
+        }
 
-}
+    }
+    file1.close();
 
-void MainWindow::on_DeleteButtom_clicked()
-{
-    if(ui->listWidgetAttribute->currentRow()==-1)
+    if(l.size()*features!=s.size())
+    {
+        qDebug()<<"Features Size is not Match!";
         return;
+    }
+    qDebug()<<"002";
+    cv::Mat trainingData(l.size(),features,CV_32FC1);
+    cv::Mat label(l.size(),1,CV_32FC1);
+    for(int i=0;i<s.size();i++)
+    {
+        trainingData.at<float>(i/features,i%features)=s[i];
+    }
+    for(int i=0;i<l.size();i++)
+    {
+        label.at<float>(i,0)=l[i];
+    }
 
-    QString itmName = ui->listWidgetAttribute->currentItem()->text();
+    qDebug()<<"L size = "<<l.size()<<" S size = "<<s.size();
 
-    int SelectedRow = ui->listWidgetAttribute->currentRow();
-    ui->listWidgetAttribute->takeItem(SelectedRow);
-    ui->listWidgetNotUse->addItem(itmName);
+    CvSVMParams params;
+    params.svm_type = CvSVM::C_SVC;
 
-    int listCount = ui->listWidgetAttribute->count();
+    params.kernel_type =CvSVM::LINEAR;
+    //params.termCrit   = cv::TermCriteria(cv::TermCriteria::MAX_ITER, 100, 1e-6);
+    params.term_crit = cv::TermCriteria(CV_TERMCRIT_EPS, 100, 1e-6);
 
-    qDebug()<<"item Number = "<<listCount;
+    params.C = ui->C_spinBox->value();
 
+    svm.train(trainingData,label,cv::Mat(),cv::Mat(),params);
+    svm.save("SVM.txt");
+    qDebug()<<"Save";
 }
+
+

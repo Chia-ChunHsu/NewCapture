@@ -13,11 +13,12 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDateTimeEdit>
 #include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
@@ -59,12 +60,24 @@ public:
     QPushButton *TestButtom;
     QWidget *tab_3;
     QLabel *FalseColorLabel;
-    QPushButton *PredictButton;
     QSpinBox *FeaturesSpinBox;
-    QListWidget *listWidgetAttribute;
-    QListWidget *listWidgetNotUse;
-    QPushButton *AttributeButtom;
-    QPushButton *DeleteButtom;
+    QGroupBox *groupBox;
+    QCheckBox *checkBox1;
+    QCheckBox *checkBox6;
+    QCheckBox *checkBox11;
+    QCheckBox *checkBox2;
+    QCheckBox *checkBox7;
+    QCheckBox *checkBox8;
+    QCheckBox *checkBox9;
+    QCheckBox *checkBox13;
+    QCheckBox *checkBox12;
+    QCheckBox *checkBox14;
+    QCheckBox *checkBox0;
+    QCheckBox *checkBox10;
+    QCheckBox *checkBox3;
+    QCheckBox *checkBox15;
+    QCheckBox *checkBox4;
+    QCheckBox *checkBox5;
     QDateTimeEdit *dateTimeEdit;
     QPushButton *ApplyButton;
     QPushButton *ChooseButton;
@@ -76,6 +89,9 @@ public:
     QDoubleSpinBox *TCutdoubleSpinBox2;
     QDoubleSpinBox *TCutdoubleSpinBox4;
     QLabel *TempLabel;
+    QPushButton *TrainingButtom;
+    QPushButton *PredictButton;
+    QDoubleSpinBox *C_spinBox;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -84,7 +100,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(623, 396);
+        MainWindow->resize(627, 396);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
@@ -189,47 +205,66 @@ public:
         FalseColorLabel->setObjectName(QStringLiteral("FalseColorLabel"));
         FalseColorLabel->setGeometry(QRect(10, 10, 288, 216));
         FalseColorLabel->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 255);"));
-        PredictButton = new QPushButton(tab_3);
-        PredictButton->setObjectName(QStringLiteral("PredictButton"));
-        PredictButton->setGeometry(QRect(310, 180, 141, 51));
         FeaturesSpinBox = new QSpinBox(tab_3);
         FeaturesSpinBox->setObjectName(QStringLiteral("FeaturesSpinBox"));
-        FeaturesSpinBox->setGeometry(QRect(310, 120, 141, 51));
+        FeaturesSpinBox->setEnabled(false);
+        FeaturesSpinBox->setGeometry(QRect(310, 190, 141, 41));
         QFont font1;
         font1.setPointSize(16);
         FeaturesSpinBox->setFont(font1);
         FeaturesSpinBox->setMaximum(20);
-        FeaturesSpinBox->setValue(12);
-        listWidgetAttribute = new QListWidget(tab_3);
-        listWidgetAttribute->setObjectName(QStringLiteral("listWidgetAttribute"));
-        listWidgetAttribute->setGeometry(QRect(390, 10, 71, 101));
-        listWidgetNotUse = new QListWidget(tab_3);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        new QListWidgetItem(listWidgetNotUse);
-        listWidgetNotUse->setObjectName(QStringLiteral("listWidgetNotUse"));
-        listWidgetNotUse->setGeometry(QRect(300, 10, 71, 101));
-        AttributeButtom = new QPushButton(tab_3);
-        AttributeButtom->setObjectName(QStringLiteral("AttributeButtom"));
-        AttributeButtom->setEnabled(true);
-        AttributeButtom->setGeometry(QRect(370, 10, 21, 41));
-        DeleteButtom = new QPushButton(tab_3);
-        DeleteButtom->setObjectName(QStringLiteral("DeleteButtom"));
-        DeleteButtom->setEnabled(true);
-        DeleteButtom->setGeometry(QRect(370, 70, 21, 41));
+        FeaturesSpinBox->setValue(0);
+        groupBox = new QGroupBox(tab_3);
+        groupBox->setObjectName(QStringLiteral("groupBox"));
+        groupBox->setGeometry(QRect(310, 0, 141, 191));
+        checkBox1 = new QCheckBox(groupBox);
+        checkBox1->setObjectName(QStringLiteral("checkBox1"));
+        checkBox1->setGeometry(QRect(10, 30, 73, 16));
+        checkBox6 = new QCheckBox(groupBox);
+        checkBox6->setObjectName(QStringLiteral("checkBox6"));
+        checkBox6->setGeometry(QRect(10, 130, 73, 16));
+        checkBox11 = new QCheckBox(groupBox);
+        checkBox11->setObjectName(QStringLiteral("checkBox11"));
+        checkBox11->setGeometry(QRect(80, 90, 73, 16));
+        checkBox2 = new QCheckBox(groupBox);
+        checkBox2->setObjectName(QStringLiteral("checkBox2"));
+        checkBox2->setGeometry(QRect(10, 50, 73, 16));
+        checkBox7 = new QCheckBox(groupBox);
+        checkBox7->setObjectName(QStringLiteral("checkBox7"));
+        checkBox7->setGeometry(QRect(80, 10, 73, 16));
+        checkBox8 = new QCheckBox(groupBox);
+        checkBox8->setObjectName(QStringLiteral("checkBox8"));
+        checkBox8->setGeometry(QRect(80, 30, 73, 16));
+        checkBox9 = new QCheckBox(groupBox);
+        checkBox9->setObjectName(QStringLiteral("checkBox9"));
+        checkBox9->setGeometry(QRect(80, 50, 73, 16));
+        checkBox13 = new QCheckBox(groupBox);
+        checkBox13->setObjectName(QStringLiteral("checkBox13"));
+        checkBox13->setGeometry(QRect(80, 130, 73, 16));
+        checkBox12 = new QCheckBox(groupBox);
+        checkBox12->setObjectName(QStringLiteral("checkBox12"));
+        checkBox12->setGeometry(QRect(80, 110, 73, 16));
+        checkBox14 = new QCheckBox(groupBox);
+        checkBox14->setObjectName(QStringLiteral("checkBox14"));
+        checkBox14->setGeometry(QRect(80, 150, 73, 16));
+        checkBox0 = new QCheckBox(groupBox);
+        checkBox0->setObjectName(QStringLiteral("checkBox0"));
+        checkBox0->setGeometry(QRect(10, 10, 73, 16));
+        checkBox10 = new QCheckBox(groupBox);
+        checkBox10->setObjectName(QStringLiteral("checkBox10"));
+        checkBox10->setGeometry(QRect(80, 70, 73, 16));
+        checkBox3 = new QCheckBox(groupBox);
+        checkBox3->setObjectName(QStringLiteral("checkBox3"));
+        checkBox3->setGeometry(QRect(10, 70, 73, 16));
+        checkBox15 = new QCheckBox(groupBox);
+        checkBox15->setObjectName(QStringLiteral("checkBox15"));
+        checkBox15->setGeometry(QRect(80, 170, 73, 16));
+        checkBox4 = new QCheckBox(groupBox);
+        checkBox4->setObjectName(QStringLiteral("checkBox4"));
+        checkBox4->setGeometry(QRect(10, 90, 73, 16));
+        checkBox5 = new QCheckBox(groupBox);
+        checkBox5->setObjectName(QStringLiteral("checkBox5"));
+        checkBox5->setGeometry(QRect(10, 110, 73, 16));
         tabWidget->addTab(tab_3, QString());
         dateTimeEdit = new QDateTimeEdit(centralWidget);
         dateTimeEdit->setObjectName(QStringLiteral("dateTimeEdit"));
@@ -254,18 +289,18 @@ public:
         RGBButtom->setFont(font1);
         KnnPredictButtom = new QPushButton(centralWidget);
         KnnPredictButtom->setObjectName(QStringLiteral("KnnPredictButtom"));
-        KnnPredictButtom->setGeometry(QRect(480, 170, 141, 21));
+        KnnPredictButtom->setGeometry(QRect(730, 20, 91, 21));
         FileName = new QLabel(centralWidget);
         FileName->setObjectName(QStringLiteral("FileName"));
         FileName->setGeometry(QRect(10, 280, 461, 16));
         NDVIButton = new QPushButton(centralWidget);
         NDVIButton->setObjectName(QStringLiteral("NDVIButton"));
         NDVIButton->setEnabled(false);
-        NDVIButton->setGeometry(QRect(480, 30, 141, 61));
+        NDVIButton->setGeometry(QRect(480, 10, 141, 51));
         Multi_Buttom = new QPushButton(centralWidget);
         Multi_Buttom->setObjectName(QStringLiteral("Multi_Buttom"));
         Multi_Buttom->setEnabled(false);
-        Multi_Buttom->setGeometry(QRect(480, 100, 141, 61));
+        Multi_Buttom->setGeometry(QRect(480, 60, 141, 51));
         Multi_Buttom->setToolTipDuration(6);
         TCutdoubleSpinBox2 = new QDoubleSpinBox(centralWidget);
         TCutdoubleSpinBox2->setObjectName(QStringLiteral("TCutdoubleSpinBox2"));
@@ -279,11 +314,26 @@ public:
         TCutdoubleSpinBox4->setValue(140);
         TempLabel = new QLabel(centralWidget);
         TempLabel->setObjectName(QStringLiteral("TempLabel"));
-        TempLabel->setGeometry(QRect(490, 240, 128, 96));
+        TempLabel->setGeometry(QRect(490, 250, 128, 96));
+        TrainingButtom = new QPushButton(centralWidget);
+        TrainingButtom->setObjectName(QStringLiteral("TrainingButtom"));
+        TrainingButtom->setGeometry(QRect(480, 110, 141, 41));
+        TrainingButtom->setFont(font1);
+        PredictButton = new QPushButton(centralWidget);
+        PredictButton->setObjectName(QStringLiteral("PredictButton"));
+        PredictButton->setGeometry(QRect(480, 200, 141, 41));
+        C_spinBox = new QDoubleSpinBox(centralWidget);
+        C_spinBox->setObjectName(QStringLiteral("C_spinBox"));
+        C_spinBox->setGeometry(QRect(480, 150, 141, 51));
+        QFont font4;
+        font4.setPointSize(14);
+        C_spinBox->setFont(font4);
+        C_spinBox->setMaximum(512);
+        C_spinBox->setValue(8);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 623, 22));
+        menuBar->setGeometry(QRect(0, 0, 627, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -294,7 +344,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -318,46 +368,23 @@ public:
         TestButtom->setText(QApplication::translate("MainWindow", "Test", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("MainWindow", "Step 3", 0));
         FalseColorLabel->setText(QApplication::translate("MainWindow", "Prediction", 0));
-        PredictButton->setText(QApplication::translate("MainWindow", "Predict", 0));
-
-        const bool __sortingEnabled = listWidgetNotUse->isSortingEnabled();
-        listWidgetNotUse->setSortingEnabled(false);
-        QListWidgetItem *___qlistwidgetitem = listWidgetNotUse->item(0);
-        ___qlistwidgetitem->setText(QApplication::translate("MainWindow", "568 nm", 0));
-        QListWidgetItem *___qlistwidgetitem1 = listWidgetNotUse->item(1);
-        ___qlistwidgetitem1->setText(QApplication::translate("MainWindow", "700 nm", 0));
-        QListWidgetItem *___qlistwidgetitem2 = listWidgetNotUse->item(2);
-        ___qlistwidgetitem2->setText(QApplication::translate("MainWindow", "750 nm", 0));
-        QListWidgetItem *___qlistwidgetitem3 = listWidgetNotUse->item(3);
-        ___qlistwidgetitem3->setText(QApplication::translate("MainWindow", "830 nm", 0));
-        QListWidgetItem *___qlistwidgetitem4 = listWidgetNotUse->item(4);
-        ___qlistwidgetitem4->setText(QApplication::translate("MainWindow", "568-700", 0));
-        QListWidgetItem *___qlistwidgetitem5 = listWidgetNotUse->item(5);
-        ___qlistwidgetitem5->setText(QApplication::translate("MainWindow", "568-750", 0));
-        QListWidgetItem *___qlistwidgetitem6 = listWidgetNotUse->item(6);
-        ___qlistwidgetitem6->setText(QApplication::translate("MainWindow", "568-830", 0));
-        QListWidgetItem *___qlistwidgetitem7 = listWidgetNotUse->item(7);
-        ___qlistwidgetitem7->setText(QApplication::translate("MainWindow", "700-750", 0));
-        QListWidgetItem *___qlistwidgetitem8 = listWidgetNotUse->item(8);
-        ___qlistwidgetitem8->setText(QApplication::translate("MainWindow", "700-830", 0));
-        QListWidgetItem *___qlistwidgetitem9 = listWidgetNotUse->item(9);
-        ___qlistwidgetitem9->setText(QApplication::translate("MainWindow", "750-830", 0));
-        QListWidgetItem *___qlistwidgetitem10 = listWidgetNotUse->item(10);
-        ___qlistwidgetitem10->setText(QApplication::translate("MainWindow", "700/568", 0));
-        QListWidgetItem *___qlistwidgetitem11 = listWidgetNotUse->item(11);
-        ___qlistwidgetitem11->setText(QApplication::translate("MainWindow", "750/568", 0));
-        QListWidgetItem *___qlistwidgetitem12 = listWidgetNotUse->item(12);
-        ___qlistwidgetitem12->setText(QApplication::translate("MainWindow", "830/568", 0));
-        QListWidgetItem *___qlistwidgetitem13 = listWidgetNotUse->item(13);
-        ___qlistwidgetitem13->setText(QApplication::translate("MainWindow", "750/700", 0));
-        QListWidgetItem *___qlistwidgetitem14 = listWidgetNotUse->item(14);
-        ___qlistwidgetitem14->setText(QApplication::translate("MainWindow", "830/700", 0));
-        QListWidgetItem *___qlistwidgetitem15 = listWidgetNotUse->item(15);
-        ___qlistwidgetitem15->setText(QApplication::translate("MainWindow", "830/750", 0));
-        listWidgetNotUse->setSortingEnabled(__sortingEnabled);
-
-        AttributeButtom->setText(QApplication::translate("MainWindow", ">", 0));
-        DeleteButtom->setText(QApplication::translate("MainWindow", "<", 0));
+        groupBox->setTitle(QApplication::translate("MainWindow", "GroupBox", 0));
+        checkBox1->setText(QApplication::translate("MainWindow", "700", 0));
+        checkBox6->setText(QApplication::translate("MainWindow", "568-830", 0));
+        checkBox11->setText(QApplication::translate("MainWindow", "750/568", 0));
+        checkBox2->setText(QApplication::translate("MainWindow", "750", 0));
+        checkBox7->setText(QApplication::translate("MainWindow", "700-750", 0));
+        checkBox8->setText(QApplication::translate("MainWindow", "700-830", 0));
+        checkBox9->setText(QApplication::translate("MainWindow", "750-830", 0));
+        checkBox13->setText(QApplication::translate("MainWindow", "750/700", 0));
+        checkBox12->setText(QApplication::translate("MainWindow", "830/568", 0));
+        checkBox14->setText(QApplication::translate("MainWindow", "830/700", 0));
+        checkBox0->setText(QApplication::translate("MainWindow", "568", 0));
+        checkBox10->setText(QApplication::translate("MainWindow", "700/568", 0));
+        checkBox3->setText(QApplication::translate("MainWindow", "830", 0));
+        checkBox15->setText(QApplication::translate("MainWindow", "830/750", 0));
+        checkBox4->setText(QApplication::translate("MainWindow", "568-700", 0));
+        checkBox5->setText(QApplication::translate("MainWindow", "568-750", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("MainWindow", "Step 4", 0));
         dateTimeEdit->setDisplayFormat(QApplication::translate("MainWindow", "yyyy/M/d AP hh:mm::ss", 0));
         ApplyButton->setText(QApplication::translate("MainWindow", "Apply", 0));
@@ -368,6 +395,8 @@ public:
         NDVIButton->setText(QApplication::translate("MainWindow", "NDVI", 0));
         Multi_Buttom->setText(QApplication::translate("MainWindow", "Analize Data", 0));
         TempLabel->setText(QString());
+        TrainingButtom->setText(QApplication::translate("MainWindow", "SVM Training", 0));
+        PredictButton->setText(QApplication::translate("MainWindow", "Predict", 0));
     } // retranslateUi
 
 };

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>623</width>
+    <width>627</width>
     <height>396</height>
    </rect>
   </property>
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -363,26 +363,16 @@
        <string>Prediction</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="PredictButton">
-      <property name="geometry">
-       <rect>
-        <x>310</x>
-        <y>180</y>
-        <width>141</width>
-        <height>51</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Predict</string>
-      </property>
-     </widget>
      <widget class="QSpinBox" name="FeaturesSpinBox">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>310</x>
-        <y>120</y>
+        <y>190</y>
         <width>141</width>
-        <height>51</height>
+        <height>41</height>
        </rect>
       </property>
       <property name="font">
@@ -394,140 +384,229 @@
        <number>20</number>
       </property>
       <property name="value">
-       <number>12</number>
+       <number>0</number>
       </property>
      </widget>
-     <widget class="QListWidget" name="listWidgetAttribute">
+     <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
        <rect>
-        <x>390</x>
-        <y>10</y>
-        <width>71</width>
-        <height>101</height>
+        <x>310</x>
+        <y>0</y>
+        <width>141</width>
+        <height>191</height>
        </rect>
       </property>
-     </widget>
-     <widget class="QListWidget" name="listWidgetNotUse">
-      <property name="geometry">
-       <rect>
-        <x>300</x>
-        <y>10</y>
-        <width>71</width>
-        <height>101</height>
-       </rect>
+      <property name="title">
+       <string>GroupBox</string>
       </property>
-      <item>
-       <property name="text">
-        <string>568 nm</string>
+      <widget class="QCheckBox" name="checkBox1">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
        </property>
-      </item>
-      <item>
        <property name="text">
-        <string>700 nm</string>
+        <string>700</string>
        </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>750 nm</string>
+      </widget>
+      <widget class="QCheckBox" name="checkBox6">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>130</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
        </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>830 nm</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>568-700</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>568-750</string>
-       </property>
-      </item>
-      <item>
        <property name="text">
         <string>568-830</string>
        </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>700-750</string>
+      </widget>
+      <widget class="QCheckBox" name="checkBox11">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>90</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
        </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>700-830</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>750-830</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>700/568</string>
-       </property>
-      </item>
-      <item>
        <property name="text">
         <string>750/568</string>
        </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>830/568</string>
+      </widget>
+      <widget class="QCheckBox" name="checkBox2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>50</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
        </property>
-      </item>
-      <item>
+       <property name="text">
+        <string>750</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox7">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>10</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>700-750</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox8">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>30</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>700-830</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox9">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>50</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>750-830</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox13">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>130</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
        <property name="text">
         <string>750/700</string>
        </property>
-      </item>
-      <item>
+      </widget>
+      <widget class="QCheckBox" name="checkBox12">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>110</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>830/568</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox14">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>150</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
        <property name="text">
         <string>830/700</string>
        </property>
-      </item>
-      <item>
+      </widget>
+      <widget class="QCheckBox" name="checkBox0">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>568</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox10">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>70</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>700/568</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>70</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>830</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox15">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>170</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
        <property name="text">
         <string>830/750</string>
        </property>
-      </item>
-     </widget>
-     <widget class="QPushButton" name="AttributeButtom">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>370</x>
-        <y>10</y>
-        <width>21</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>&gt;</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="DeleteButtom">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>370</x>
-        <y>70</y>
-        <width>21</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>&lt;</string>
-      </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox4">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>90</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>568-700</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox5">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>110</y>
+         <width>73</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>568-750</string>
+       </property>
+      </widget>
      </widget>
     </widget>
    </widget>
@@ -607,9 +686,9 @@
    <widget class="QPushButton" name="KnnPredictButtom">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>170</y>
-      <width>141</width>
+      <x>730</x>
+      <y>20</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -637,9 +716,9 @@
     <property name="geometry">
      <rect>
       <x>480</x>
-      <y>30</y>
+      <y>10</y>
       <width>141</width>
-      <height>61</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="text">
@@ -653,9 +732,9 @@
     <property name="geometry">
      <rect>
       <x>480</x>
-      <y>100</y>
+      <y>60</y>
       <width>141</width>
-      <height>61</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="toolTipDuration">
@@ -701,7 +780,7 @@
     <property name="geometry">
      <rect>
       <x>490</x>
-      <y>240</y>
+      <y>250</y>
       <width>128</width>
       <height>96</height>
      </rect>
@@ -710,14 +789,66 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="TrainingButtom">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>110</y>
+      <width>141</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>SVM Training</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PredictButton">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>200</y>
+      <width>141</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Predict</string>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="C_spinBox">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>150</y>
+      <width>141</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="maximum">
+     <double>512.000000000000000</double>
+    </property>
+    <property name="value">
+     <double>8.000000000000000</double>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>623</width>
-     <height>22</height>
+     <width>627</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
