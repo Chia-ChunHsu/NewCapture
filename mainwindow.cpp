@@ -1512,6 +1512,8 @@ void MainWindow::on_TrainingButtom_clicked()
         features++;
     }
 
+    if(features==0)
+        return;
     ui->FeaturesSpinBox->setValue(features);
 
     QString hel_file = QFileDialog::getOpenFileName(this,tr("Health Data"),"D:/Dropbox/2016JuneExp/001Final/",tr("Data File(*.txt)"));

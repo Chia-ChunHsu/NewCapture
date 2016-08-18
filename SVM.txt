@@ -5,8 +5,8 @@ my_svm: !!opencv-ml-svm
    C: 8.
    term_criteria: { epsilon:9.9999999747524271e-007,
        iterations:2147483647 }
-   var_all: 3
-   var_count: 3
+   var_all: 4
+   var_count: 4
    class_count: 2
    class_labels: !!opencv-matrix
       rows: 1
@@ -15,10 +15,11 @@ my_svm: !!opencv-ml-svm
       data: [ 0, 2 ]
    sv_total: 1
    support_vectors:
-      - [ 4.20100018e-002, 2.95825917e-002, -2.58003231e-002 ]
+      - [ -1.66054517e-002, -1.24335798e-004, 2.26811916e-001,
+          -7.62855262e-002 ]
    decision_functions:
       -
          sv_count: 1
-         rho: 8.2782658034976428e+000
+         rho: 1.6824760470669180e+001
          alpha: [ 1. ]
          index: [ 0 ]
