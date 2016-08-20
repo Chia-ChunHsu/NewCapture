@@ -12,6 +12,7 @@
 #include <QDate>
 #include <dialog.h>
 #include <QListWidgetItem>
+#include <timestring.h>
 
 namespace Ui {
 class MainWindow;
@@ -31,11 +32,9 @@ public:
     int TransferWarp(std::vector<cv::Mat> &Pic,std::vector<cv::Mat> &WarpPic);
     void CutMask(int one,int two,cv::Mat &MaskResult);
     float predictresult(int y,int x);
-//    float SVI_value(int y,int x);
+
     float NDVI_value(std::vector<cv::Mat> &m,int y,int x);
-//    void Muti_value(int y,int x,float &div1,float &div2,float &div3,float &div4,float &div5,float &div6);
     void Div_value(std::vector<cv::Mat> &m,int y,int x,std::vector<float> &div);
-//    void Pluspixel_value(std::vector<cv::Mat> &m,int y,int x,std::vector<int> &pixel);
     void MinusPixel_value(std::vector<cv::Mat> &m,int y,int x,std::vector<int> &pixel);
 
 private slots:
@@ -68,14 +67,6 @@ private slots:
     void on_CapturePicButton_clicked();
 
     void on_ChooseButton_clicked();
-
-    void on_SaveButton_clicked();
-
-    void on_KnnPredictButtom_clicked();
-
-
-    void on_pushButton_clicked();
-
 
     void on_LoadWRefButton_clicked();
 
@@ -131,8 +122,8 @@ private:
     cv::Mat gdiv6;
 
     int flag;
-
     std::vector<int> Fnumber;
+
 };
 
 #endif // MAINWINDOW_H

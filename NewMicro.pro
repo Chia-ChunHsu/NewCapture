@@ -18,12 +18,14 @@ SOURCES += main.cpp\
         mainwindow.cpp\
     stitch.cpp\
     thread_stitch.cpp\
-    dialog.cpp
+    dialog.cpp \
+    timestring.cpp
 
 HEADERS  += mainwindow.h\
     stitch. \
     thread_stitch.h\
-    dialog.h
+    dialog.h \
+    timestring.h
 
 FORMS    += mainwindow.ui\
     dialog.ui

@@ -82,7 +82,6 @@ public:
     QPushButton *ApplyButton;
     QPushButton *ChooseButton;
     QPushButton *RGBButtom;
-    QPushButton *KnnPredictButtom;
     QLabel *FileName;
     QPushButton *NDVIButton;
     QPushButton *Multi_Buttom;
@@ -100,7 +99,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(627, 396);
+        MainWindow->resize(629, 396);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
@@ -287,9 +286,6 @@ public:
         RGBButtom->setEnabled(false);
         RGBButtom->setGeometry(QRect(320, 300, 151, 41));
         RGBButtom->setFont(font1);
-        KnnPredictButtom = new QPushButton(centralWidget);
-        KnnPredictButtom->setObjectName(QStringLiteral("KnnPredictButtom"));
-        KnnPredictButtom->setGeometry(QRect(730, 20, 91, 21));
         FileName = new QLabel(centralWidget);
         FileName->setObjectName(QStringLiteral("FileName"));
         FileName->setGeometry(QRect(10, 280, 461, 16));
@@ -333,7 +329,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 627, 21));
+        menuBar->setGeometry(QRect(0, 0, 629, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -344,7 +340,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -390,7 +386,6 @@ public:
         ApplyButton->setText(QApplication::translate("MainWindow", "Apply", 0));
         ChooseButton->setText(QApplication::translate("MainWindow", "Choose Point", 0));
         RGBButtom->setText(QApplication::translate("MainWindow", "Open RGB", 0));
-        KnnPredictButtom->setText(QApplication::translate("MainWindow", "Predict by KNN", 0));
         FileName->setText(QApplication::translate("MainWindow", "File", 0));
         NDVIButton->setText(QApplication::translate("MainWindow", "NDVI", 0));
         Multi_Buttom->setText(QApplication::translate("MainWindow", "Analize Data", 0));

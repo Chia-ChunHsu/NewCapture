@@ -28,7 +28,6 @@ private slots:
 
     void on_saveButton_clicked();
 
-
     void on_LoadPosition_clicked();
 
 private:
@@ -45,12 +44,8 @@ private:
     std::vector<cv::Mat> temp;
 
     //std::vector<cv::Mat> labelmat;
-
     cv::Mat res;
-
     QString dataName;
-
-
 };
 
 #endif // DIALOG_H

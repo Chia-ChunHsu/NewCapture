@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>627</width>
+    <width>629</width>
     <height>396</height>
    </rect>
   </property>
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -683,19 +683,6 @@
      <string>Open RGB</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="KnnPredictButtom">
-    <property name="geometry">
-     <rect>
-      <x>730</x>
-      <y>20</y>
-      <width>91</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Predict by KNN</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="FileName">
     <property name="geometry">
      <rect>
@@ -847,7 +834,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>627</width>
+     <width>629</width>
      <height>21</height>
     </rect>
    </property>
