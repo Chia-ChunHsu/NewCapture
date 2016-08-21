@@ -19,13 +19,17 @@ SOURCES += main.cpp\
     stitch.cpp\
     thread_stitch.cpp\
     dialog.cpp \
-    timestring.cpp
+    time.cpp \
+    svmdata.cpp \
+    analysis.cpp
 
 HEADERS  += mainwindow.h\
     stitch. \
     thread_stitch.h\
     dialog.h \
-    timestring.h
+    time.h \
+    svmdata.h \
+    analysis.h
 
 FORMS    += mainwindow.ui\
     dialog.ui

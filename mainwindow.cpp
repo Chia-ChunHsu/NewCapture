@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->start();
     FileAd= "";
     flag =1;
+
 }
 
 MainWindow::~MainWindow()
@@ -539,13 +540,10 @@ float MainWindow::predictresult(int y,int x)
         test.at<float>(0,j) = result[j];
     }
 
+    CvSVM svm;
     svm.load("SVM.txt");
-
-    float resultclass = svm.predict(test);
-
-    float finalresult = resultclass;
-
-    return finalresult;
+    float label = svm.predict(test);
+    return label;
 }
 
 void MainWindow::on_spinBox_valueChanged(int arg1)
@@ -571,33 +569,15 @@ void MainWindow::on_ThresholdSlider2_sliderMoved(int position)
 void MainWindow::on_ApplyButton_clicked()
 {
     QDateTime ctime = ui->dateTimeEdit->dateTime();
-//    QString year = QString::number(ctime.date().year());
-//    QString month = QString::number(ctime.date().month());
-//    QString day = QString::number(ctime.date().day());
-//    QString time = ctime.time().toString();
-
-//    ui->label->setText(year+"/"+month+"/"+day+" "+time);
-
-//    Dtime = ctime;
-//    currentFile = year+"/"+month+"/"+day+" "+time;
-
-    currentFile = getTimeStr(ctime);
-    Dtime =ctime;
-    ui->label->setText(currentFile);
-
+    t.setTime(ctime);
+    currentFile = t.getTimeString();
+    ui->Timelabel->setText(t.getTimeString());
 }
 
 void MainWindow::update()
 {
-    ui->dateTimeEdit->setDate(Dtime.date());
-    Dtime = Dtime.addSecs(1);
-    QString t = getTimeStr(Dtime);
-    ui->label->setText(t);
-//    QString year = QString::number(Dtime.date().year());
-//    QString month = QString::number(Dtime.date().month());
-//    QString day = QString::number(Dtime.date().day());
-//    QString time = Dtime.time().toString();
-//    ui->label->setText(year+"/"+month+"/"+day+" "+time);
+    t.updateTime(1);
+    ui->Timelabel->setText(t.getTimeString());
 }
 
 void MainWindow::on_CaptureRefButton_clicked()
@@ -696,7 +676,6 @@ void MainWindow::on_RGBButtom_clicked()
             }
         }
     }
-    //cv::imshow("RGB_Cut",CutPic[16]);
     qDebug()<<CutPic[16].channels();
     ShowOnLabel(CutPic[16],ui->TempLabel);
 }
@@ -718,9 +697,6 @@ float MainWindow::NDVI_value(std::vector<cv::Mat> &m,int y, int x)
     int dx2 = -t1.x+RefCorPoint[2].x;
     int dy3 = -t1.y+RefCorPoint[3].y;
     int dx3 = -t1.x+RefCorPoint[3].x;
-
-
-    //int cutsize = 1;
 
     std::vector<int> result;
     if(x-dx0>=0 && x-dx0 <m[0].cols && y-dy0 >=0 && y-dy0<m[0].rows)
@@ -751,7 +727,6 @@ float MainWindow::NDVI_value(std::vector<cv::Mat> &m,int y, int x)
         return -1.0;
     float ans = (float(result[2])-float(result[1])*20/400)/(float(result[2])+float(result[1])*20/400);
 
-
     return ans;
 }
 
@@ -773,8 +748,6 @@ void MainWindow::Div_value(std::vector<cv::Mat> &m,int y,int x,std::vector<float
         dy.push_back(-t1.y+RefCorPoint[i].y);
         dx.push_back(-t1.x+RefCorPoint[i].x);
     }
-
-    //int cutsize = 1;
 
     std::vector<QString> result;
 
@@ -866,12 +839,14 @@ void MainWindow::MinusPixel_value(std::vector<cv::Mat> &m,int y,int x,std::vecto
             result.push_back(n);
         }
     }
+
     if(result.size()!=4 )
     {
         for(int n=0;n<6;n++)
             pixel.push_back(0);
         return;
     }
+
     int v0 = abs(result[0]-result[1]);
     int v1 = abs(result[0]-result[2]);
     int v2 = abs(result[0]-result[3]);
@@ -916,7 +891,6 @@ void MainWindow::on_NDVIButton_clicked()
             }
         }
     }
-    //cv::imshow("NDVI",predict);
     ShowOnLabel(predict,ui->TempLabel);
     NDVIMat = predict;//.clone();
     ui->Multi_Buttom->setEnabled(true);
@@ -1011,10 +985,8 @@ void MainWindow::on_Multi_Buttom_clicked()
             }
         }
         OriginalAvgMat.push_back(atmp);
-        //cv::imshow(QString::number(n).toStdString(),atmp);
         cv::imwrite("normal_avg127_"+QString::number(n).toStdString()+".jpg",atmp);
     }
-    //qDebug()<<"OriginalAvgMat size = "<<OriginalAvgMat.size();
     std::vector<cv::Mat> division_normal;
     for(int i=0;i<6;i++)
     {
@@ -1067,12 +1039,10 @@ void MainWindow::on_Multi_Buttom_clicked()
     ui->RGBButtom->setEnabled(true);
 }
 
-
 void MainWindow::on_TrainingButtom_clicked()
 {
     int features =0;
     Fnumber.clear();
-
     if(ui->checkBox0->isChecked()==true)
     {
         Fnumber.push_back(0);
@@ -1153,68 +1123,18 @@ void MainWindow::on_TrainingButtom_clicked()
         Fnumber.push_back(15);
         features++;
     }
-
     if(features==0)
         return;
     ui->FeaturesSpinBox->setValue(features);
-
-    QString hel_file = QFileDialog::getOpenFileName(this,tr("Health Data"),"D:/Dropbox/2016JuneExp/001Final/",tr("Data File(*.txt)"));
-    if(hel_file.isEmpty())
-        return;
-
-    std::vector<float> s;
-    std::vector<float> l;
-
-    QFile file1(hel_file);
-    file1.open(QIODevice::ReadOnly);
-    QTextStream in1(&file1);
-
-    while(!in1.atEnd())
-    {
-        QString str= in1.readLine();
-        QStringList strList = str.split("\t");
-        l.push_back(strList[strList.length()-1].toFloat());
-        //qDebug()<<"l "<<strList[strList.length()-1];
-        for(int i=0;i<Fnumber.size();i++)
-        {
-            s.push_back(strList[Fnumber[i]].toFloat());
-            //qDebug()<<strList[Fnumber[i]];
-        }
-
-    }
-    file1.close();
-
-    if(l.size()*features!=s.size())
-    {
-        qDebug()<<"Features Size is not Match!";
-        return;
-    }
-    qDebug()<<"002";
-    cv::Mat trainingData(l.size(),features,CV_32FC1);
-    cv::Mat label(l.size(),1,CV_32FC1);
-    for(int i=0;i<s.size();i++)
-    {
-        trainingData.at<float>(i/features,i%features)=s[i];
-    }
-    for(int i=0;i<l.size();i++)
-    {
-        label.at<float>(i,0)=l[i];
-    }
-
-    qDebug()<<"L size = "<<l.size()<<" S size = "<<s.size();
-
-    CvSVMParams params;
-    params.svm_type = CvSVM::C_SVC;
-
-    params.kernel_type =CvSVM::LINEAR;
-    //params.termCrit   = cv::TermCriteria(cv::TermCriteria::MAX_ITER, 100, 1e-6);
-    params.term_crit = cv::TermCriteria(CV_TERMCRIT_EPS, 100, 1e-6);
-
-    params.C = ui->C_spinBox->value();
-
-    svm.train(trainingData,label,cv::Mat(),cv::Mat(),params);
-    svm.save("SVM.txt");
-    qDebug()<<"Save";
+    double C_param = ui->C_spinBox->value();
+    SvmData svm(Fnumber,features,C_param);
+    svm.initial();
 }
 
-
+void MainWindow::on_RecentTrainCheckBox_clicked()
+{
+    if(ui->RecentTrainCheckBox->isChecked() == true )
+        ui->TrainingButtom->setEnabled(false);
+    else
+        ui->TrainingButtom->setEnabled(true);
+}

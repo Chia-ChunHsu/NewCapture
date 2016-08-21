@@ -34,6 +34,8 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
+    QAction *actionClose;
+    QAction *actionTraining_Features;
     QWidget *centralWidget;
     QTabWidget *tabWidget;
     QWidget *tab;
@@ -41,7 +43,7 @@ public:
     QSpinBox *spinBoxRef;
     QPushButton *CaptureRefButton;
     QPushButton *LoadRefButton;
-    QLabel *label;
+    QLabel *Timelabel;
     QPushButton *LoadWRefButton;
     QWidget *tab_2;
     QLabel *PicLabel;
@@ -91,6 +93,8 @@ public:
     QPushButton *TrainingButtom;
     QPushButton *PredictButton;
     QDoubleSpinBox *C_spinBox;
+    QLabel *label;
+    QCheckBox *RecentTrainCheckBox;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -99,7 +103,11 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(629, 396);
+        MainWindow->resize(629, 376);
+        actionClose = new QAction(MainWindow);
+        actionClose->setObjectName(QStringLiteral("actionClose"));
+        actionTraining_Features = new QAction(MainWindow);
+        actionTraining_Features->setObjectName(QStringLiteral("actionTraining_Features"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
@@ -125,9 +133,9 @@ public:
         LoadRefButton->setObjectName(QStringLiteral("LoadRefButton"));
         LoadRefButton->setEnabled(false);
         LoadRefButton->setGeometry(QRect(310, 120, 141, 51));
-        label = new QLabel(tab);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(316, 60, 131, 20));
+        Timelabel = new QLabel(tab);
+        Timelabel->setObjectName(QStringLiteral("Timelabel"));
+        Timelabel->setGeometry(QRect(316, 60, 131, 20));
         LoadWRefButton = new QPushButton(tab);
         LoadWRefButton->setObjectName(QStringLiteral("LoadWRefButton"));
         LoadWRefButton->setGeometry(QRect(310, 80, 141, 31));
@@ -207,15 +215,15 @@ public:
         FeaturesSpinBox = new QSpinBox(tab_3);
         FeaturesSpinBox->setObjectName(QStringLiteral("FeaturesSpinBox"));
         FeaturesSpinBox->setEnabled(false);
-        FeaturesSpinBox->setGeometry(QRect(310, 190, 141, 41));
+        FeaturesSpinBox->setGeometry(QRect(310, 180, 141, 51));
         QFont font1;
-        font1.setPointSize(16);
+        font1.setPointSize(12);
         FeaturesSpinBox->setFont(font1);
         FeaturesSpinBox->setMaximum(20);
         FeaturesSpinBox->setValue(0);
         groupBox = new QGroupBox(tab_3);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(310, 0, 141, 191));
+        groupBox->setGeometry(QRect(310, 0, 141, 171));
         checkBox1 = new QCheckBox(groupBox);
         checkBox1->setObjectName(QStringLiteral("checkBox1"));
         checkBox1->setGeometry(QRect(10, 30, 73, 16));
@@ -224,46 +232,62 @@ public:
         checkBox6->setGeometry(QRect(10, 130, 73, 16));
         checkBox11 = new QCheckBox(groupBox);
         checkBox11->setObjectName(QStringLiteral("checkBox11"));
-        checkBox11->setGeometry(QRect(80, 90, 73, 16));
+        checkBox11->setGeometry(QRect(80, 70, 73, 16));
         checkBox2 = new QCheckBox(groupBox);
         checkBox2->setObjectName(QStringLiteral("checkBox2"));
         checkBox2->setGeometry(QRect(10, 50, 73, 16));
         checkBox7 = new QCheckBox(groupBox);
         checkBox7->setObjectName(QStringLiteral("checkBox7"));
-        checkBox7->setGeometry(QRect(80, 10, 73, 16));
+        checkBox7->setGeometry(QRect(10, 150, 73, 16));
         checkBox8 = new QCheckBox(groupBox);
         checkBox8->setObjectName(QStringLiteral("checkBox8"));
-        checkBox8->setGeometry(QRect(80, 30, 73, 16));
+        checkBox8->setGeometry(QRect(80, 10, 73, 16));
         checkBox9 = new QCheckBox(groupBox);
         checkBox9->setObjectName(QStringLiteral("checkBox9"));
-        checkBox9->setGeometry(QRect(80, 50, 73, 16));
+        checkBox9->setGeometry(QRect(80, 30, 73, 16));
         checkBox13 = new QCheckBox(groupBox);
         checkBox13->setObjectName(QStringLiteral("checkBox13"));
-        checkBox13->setGeometry(QRect(80, 130, 73, 16));
+        checkBox13->setGeometry(QRect(80, 110, 73, 16));
         checkBox12 = new QCheckBox(groupBox);
         checkBox12->setObjectName(QStringLiteral("checkBox12"));
-        checkBox12->setGeometry(QRect(80, 110, 73, 16));
+        checkBox12->setGeometry(QRect(80, 90, 73, 16));
         checkBox14 = new QCheckBox(groupBox);
         checkBox14->setObjectName(QStringLiteral("checkBox14"));
-        checkBox14->setGeometry(QRect(80, 150, 73, 16));
+        checkBox14->setGeometry(QRect(80, 130, 73, 16));
         checkBox0 = new QCheckBox(groupBox);
         checkBox0->setObjectName(QStringLiteral("checkBox0"));
         checkBox0->setGeometry(QRect(10, 10, 73, 16));
         checkBox10 = new QCheckBox(groupBox);
         checkBox10->setObjectName(QStringLiteral("checkBox10"));
-        checkBox10->setGeometry(QRect(80, 70, 73, 16));
+        checkBox10->setGeometry(QRect(80, 50, 73, 16));
         checkBox3 = new QCheckBox(groupBox);
         checkBox3->setObjectName(QStringLiteral("checkBox3"));
         checkBox3->setGeometry(QRect(10, 70, 73, 16));
         checkBox15 = new QCheckBox(groupBox);
         checkBox15->setObjectName(QStringLiteral("checkBox15"));
-        checkBox15->setGeometry(QRect(80, 170, 73, 16));
+        checkBox15->setGeometry(QRect(80, 150, 73, 16));
         checkBox4 = new QCheckBox(groupBox);
         checkBox4->setObjectName(QStringLiteral("checkBox4"));
         checkBox4->setGeometry(QRect(10, 90, 73, 16));
         checkBox5 = new QCheckBox(groupBox);
         checkBox5->setObjectName(QStringLiteral("checkBox5"));
         checkBox5->setGeometry(QRect(10, 110, 73, 16));
+        checkBox1->raise();
+        checkBox6->raise();
+        checkBox11->raise();
+        checkBox2->raise();
+        checkBox7->raise();
+        checkBox8->raise();
+        checkBox9->raise();
+        checkBox13->raise();
+        checkBox12->raise();
+        checkBox14->raise();
+        checkBox0->raise();
+        checkBox10->raise();
+        checkBox3->raise();
+        checkBox15->raise();
+        checkBox4->raise();
+        checkBox5->raise();
         tabWidget->addTab(tab_3, QString());
         dateTimeEdit = new QDateTimeEdit(centralWidget);
         dateTimeEdit->setObjectName(QStringLiteral("dateTimeEdit"));
@@ -271,16 +295,18 @@ public:
         QFont font2;
         font2.setPointSize(11);
         dateTimeEdit->setFont(font2);
+        dateTimeEdit->setDateTime(QDateTime(QDate(2016, 7, 14), QTime(0, 0, 0)));
         ApplyButton = new QPushButton(centralWidget);
         ApplyButton->setObjectName(QStringLiteral("ApplyButton"));
-        ApplyButton->setGeometry(QRect(390, 10, 81, 23));
+        ApplyButton->setGeometry(QRect(390, 10, 81, 21));
         QFont font3;
-        font3.setPointSize(10);
+        font3.setPointSize(9);
         ApplyButton->setFont(font3);
         ChooseButton = new QPushButton(centralWidget);
         ChooseButton->setObjectName(QStringLiteral("ChooseButton"));
         ChooseButton->setEnabled(false);
         ChooseButton->setGeometry(QRect(10, 300, 301, 41));
+        ChooseButton->setFont(font1);
         RGBButtom = new QPushButton(centralWidget);
         RGBButtom->setObjectName(QStringLiteral("RGBButtom"));
         RGBButtom->setEnabled(false);
@@ -292,11 +318,13 @@ public:
         NDVIButton = new QPushButton(centralWidget);
         NDVIButton->setObjectName(QStringLiteral("NDVIButton"));
         NDVIButton->setEnabled(false);
-        NDVIButton->setGeometry(QRect(480, 10, 141, 51));
+        NDVIButton->setGeometry(QRect(480, 10, 141, 41));
+        NDVIButton->setFont(font1);
         Multi_Buttom = new QPushButton(centralWidget);
         Multi_Buttom->setObjectName(QStringLiteral("Multi_Buttom"));
         Multi_Buttom->setEnabled(false);
-        Multi_Buttom->setGeometry(QRect(480, 60, 141, 51));
+        Multi_Buttom->setGeometry(QRect(480, 50, 141, 41));
+        Multi_Buttom->setFont(font1);
         Multi_Buttom->setToolTipDuration(6);
         TCutdoubleSpinBox2 = new QDoubleSpinBox(centralWidget);
         TCutdoubleSpinBox2->setObjectName(QStringLiteral("TCutdoubleSpinBox2"));
@@ -313,23 +341,31 @@ public:
         TempLabel->setGeometry(QRect(490, 250, 128, 96));
         TrainingButtom = new QPushButton(centralWidget);
         TrainingButtom->setObjectName(QStringLiteral("TrainingButtom"));
-        TrainingButtom->setGeometry(QRect(480, 110, 141, 41));
+        TrainingButtom->setGeometry(QRect(480, 90, 141, 41));
         TrainingButtom->setFont(font1);
         PredictButton = new QPushButton(centralWidget);
         PredictButton->setObjectName(QStringLiteral("PredictButton"));
         PredictButton->setGeometry(QRect(480, 200, 141, 41));
+        PredictButton->setFont(font1);
         C_spinBox = new QDoubleSpinBox(centralWidget);
         C_spinBox->setObjectName(QStringLiteral("C_spinBox"));
-        C_spinBox->setGeometry(QRect(480, 150, 141, 51));
-        QFont font4;
-        font4.setPointSize(14);
-        C_spinBox->setFont(font4);
+        C_spinBox->setGeometry(QRect(520, 160, 101, 31));
+        C_spinBox->setFont(font1);
         C_spinBox->setMaximum(512);
         C_spinBox->setValue(8);
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(490, 160, 21, 31));
+        QFont font4;
+        font4.setPointSize(10);
+        label->setFont(font4);
+        RecentTrainCheckBox = new QCheckBox(centralWidget);
+        RecentTrainCheckBox->setObjectName(QStringLiteral("RecentTrainCheckBox"));
+        RecentTrainCheckBox->setGeometry(QRect(490, 140, 131, 16));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 629, 21));
+        menuBar->setGeometry(QRect(0, 0, 629, 22));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -340,7 +376,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -349,10 +385,12 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        actionClose->setText(QApplication::translate("MainWindow", "Close", 0));
+        actionTraining_Features->setText(QApplication::translate("MainWindow", "Analysis", 0));
         RefLabel->setText(QApplication::translate("MainWindow", "Reference", 0));
         CaptureRefButton->setText(QApplication::translate("MainWindow", "Capture Reference", 0));
         LoadRefButton->setText(QApplication::translate("MainWindow", "Load Reference", 0));
-        label->setText(QApplication::translate("MainWindow", "Time", 0));
+        Timelabel->setText(QApplication::translate("MainWindow", "Time", 0));
         LoadWRefButton->setText(QApplication::translate("MainWindow", "Load White Ref", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "Step 1", 0));
         PicLabel->setText(QApplication::translate("MainWindow", "Sample Pictures", 0));
@@ -390,8 +428,10 @@ public:
         NDVIButton->setText(QApplication::translate("MainWindow", "NDVI", 0));
         Multi_Buttom->setText(QApplication::translate("MainWindow", "Analize Data", 0));
         TempLabel->setText(QString());
-        TrainingButtom->setText(QApplication::translate("MainWindow", "SVM Training", 0));
+        TrainingButtom->setText(QApplication::translate("MainWindow", "New SVM Training", 0));
         PredictButton->setText(QApplication::translate("MainWindow", "Predict", 0));
+        label->setText(QApplication::translate("MainWindow", "  C", 0));
+        RecentTrainCheckBox->setText(QApplication::translate("MainWindow", "Use Training Record", 0));
     } // retranslateUi
 
 };

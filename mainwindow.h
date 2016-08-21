@@ -12,7 +12,9 @@
 #include <QDate>
 #include <dialog.h>
 #include <QListWidgetItem>
-#include <timestring.h>
+#include "time.h"
+#include "svmdata.h"
+#include <QCheckBox>
 
 namespace Ui {
 class MainWindow;
@@ -78,6 +80,8 @@ private slots:
 
     void on_TrainingButtom_clicked();
 
+    void on_RecentTrainCheckBox_clicked();
+
 private:
     Ui::MainWindow *ui;
     std::vector<cv::Mat> refPic;
@@ -123,7 +127,7 @@ private:
 
     int flag;
     std::vector<int> Fnumber;
-
+    Time t;
 };
 
 #endif // MAINWINDOW_H
