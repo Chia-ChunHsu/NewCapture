@@ -21,7 +21,9 @@ SOURCES += main.cpp\
     dialog.cpp \
     time.cpp \
     svmdata.cpp \
-    analysis.cpp
+    prediction.cpp \
+    MaskAnalysis.cpp \
+    dataanalysis.cpp
 
 HEADERS  += mainwindow.h\
     stitch. \
@@ -29,7 +31,9 @@ HEADERS  += mainwindow.h\
     dialog.h \
     time.h \
     svmdata.h \
-    analysis.h
+    prediction.h \
+    MaskAnalysis.h \
+    dataanalysis.h
 
 FORMS    += mainwindow.ui\
     dialog.ui

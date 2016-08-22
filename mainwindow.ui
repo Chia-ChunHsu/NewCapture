@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -301,6 +301,9 @@
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBoxT1">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>310</x>
@@ -314,6 +317,9 @@
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBoxT2">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>310</x>
@@ -607,23 +613,6 @@
         <string>568-750</string>
        </property>
       </widget>
-      <zorder>checkBox1</zorder>
-      <zorder>checkBox6</zorder>
-      <zorder>checkBox11</zorder>
-      <zorder>checkBox2</zorder>
-      <zorder>checkBox7</zorder>
-      <zorder>checkBox8</zorder>
-      <zorder>checkBox9</zorder>
-      <zorder>checkBox13</zorder>
-      <zorder>checkBox12</zorder>
-      <zorder>checkBox14</zorder>
-      <zorder>checkBox0</zorder>
-      <zorder>checkBox10</zorder>
-      <zorder>checkBox3</zorder>
-      <zorder>checkBox15</zorder>
-      <zorder>checkBox4</zorder>
-      <zorder>checkBox5</zorder>
-      <zorder>tableWidget</zorder>
      </widget>
     </widget>
    </widget>
@@ -913,7 +902,7 @@
      <x>0</x>
      <y>0</y>
      <width>629</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

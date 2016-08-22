@@ -15,6 +15,7 @@
 #include "time.h"
 #include "svmdata.h"
 #include <QCheckBox>
+#include "MaskAnalysis.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,10 +33,7 @@ public:
     void LoadPic(std::vector<cv::Mat> &Ref,QLabel *k);
     void StitchMethod(std::vector<cv::Mat> &Ref,std::vector<cv::Mat> &WRef, std::vector<cv::Mat> &mask, cv::Mat &RefResult,std::vector<cv::Point> &CorPoint);
     int TransferWarp(std::vector<cv::Mat> &Pic,std::vector<cv::Mat> &WarpPic);
-    void CutMask(int one,int two,cv::Mat &MaskResult);
     float predictresult(int y,int x);
-
-    float NDVI_value(std::vector<cv::Mat> &m,int y,int x);
     void Div_value(std::vector<cv::Mat> &m,int y,int x,std::vector<float> &div);
     void MinusPixel_value(std::vector<cv::Mat> &m,int y,int x,std::vector<int> &pixel);
 
@@ -86,7 +84,7 @@ private:
     Ui::MainWindow *ui;
     std::vector<cv::Mat> refPic;
     std::vector<cv::Mat> WrefPic;
-    std::vector<cv::Mat> WarpWPic;
+    //std::vector<cv::Mat> WarpWPic;
     std::vector<cv::Mat> Pic;
     std::vector<cv::Mat> OPic;
     std::vector<cv::Mat> WRefMask;
@@ -128,6 +126,7 @@ private:
     int flag;
     std::vector<int> Fnumber;
     Time t;
+    MaskAnalysis analysisData;
 };
 
 #endif // MAINWINDOW_H

@@ -195,10 +195,12 @@ public:
         spinBox_2->setValue(126);
         spinBoxT1 = new QSpinBox(tab_4);
         spinBoxT1->setObjectName(QStringLiteral("spinBoxT1"));
+        spinBoxT1->setEnabled(false);
         spinBoxT1->setGeometry(QRect(310, 10, 51, 22));
         spinBoxT1->setMaximum(3);
         spinBoxT2 = new QSpinBox(tab_4);
         spinBoxT2->setObjectName(QStringLiteral("spinBoxT2"));
+        spinBoxT2->setEnabled(false);
         spinBoxT2->setGeometry(QRect(310, 70, 51, 22));
         spinBoxT2->setMaximum(3);
         spinBoxT2->setValue(2);
@@ -272,22 +274,6 @@ public:
         checkBox5 = new QCheckBox(groupBox);
         checkBox5->setObjectName(QStringLiteral("checkBox5"));
         checkBox5->setGeometry(QRect(10, 110, 73, 16));
-        checkBox1->raise();
-        checkBox6->raise();
-        checkBox11->raise();
-        checkBox2->raise();
-        checkBox7->raise();
-        checkBox8->raise();
-        checkBox9->raise();
-        checkBox13->raise();
-        checkBox12->raise();
-        checkBox14->raise();
-        checkBox0->raise();
-        checkBox10->raise();
-        checkBox3->raise();
-        checkBox15->raise();
-        checkBox4->raise();
-        checkBox5->raise();
         tabWidget->addTab(tab_3, QString());
         dateTimeEdit = new QDateTimeEdit(centralWidget);
         dateTimeEdit->setObjectName(QStringLiteral("dateTimeEdit"));
@@ -365,7 +351,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 629, 22));
+        menuBar->setGeometry(QRect(0, 0, 629, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -376,7 +362,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

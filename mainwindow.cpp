@@ -12,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->start();
     FileAd= "";
     flag =1;
-
 }
 
 MainWindow::~MainWindow()
@@ -44,7 +43,6 @@ void MainWindow::ShowOnLabel(cv::Mat mat, QLabel *k)
         k->setPixmap(QPixmap::fromImage(qtemp.scaled(k->width(),k->height(),Qt::KeepAspectRatio)));
         k->show();
     }
-
 }
 
 void MainWindow::LoadFromFile(std::vector<cv::Mat> &Ref ,QString &File)
@@ -60,7 +58,6 @@ void MainWindow::LoadFromFile(std::vector<cv::Mat> &Ref ,QString &File)
                                                       "Images (*.jpg)");
     if(names.size()!=4)
     {
-        //Ref.clear();
         return;
     }
     File = names[0];
@@ -75,7 +72,6 @@ void MainWindow::LoadFromFile(std::vector<cv::Mat> &Ref ,QString &File)
     }
     ui->FileName->setText(FileAd);
     FileNameAd = fn[0];
-
     Ref.clear();
     for(int i=0;i<4;i++)
     {
@@ -123,167 +119,6 @@ int MainWindow::TransferWarp(std::vector<cv::Mat> &Pic, std::vector<cv::Mat> &Wa
         }
     }
     return 1;
-}
-
-void MainWindow::CutMask(int one,int two,cv::Mat &MaskResult)
-{
-    cv::Mat shadow;
-    cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-    cv::Point m1(std::numeric_limits<int>::min(), std::numeric_limits<int>::min());
-
-    for(int i=0;i<RefCorPoint.size();i++)
-    {
-        t1.x = std::min(t1.x,RefCorPoint[i].x);
-        t1.y = std::min(t1.y,RefCorPoint[i].y);
-        m1.x = std::max(m1.x,RefCorPoint[i].x);
-        m1.y = std::max(m1.y,RefCorPoint[i].y);
-    }
-    cv::imwrite("ref.jpg",Refresult);
-    cv::Size size(Refresult.cols,Refresult.rows);
-
-    shadow.create(size,CV_MAKETYPE(Refresult.type(),3));
-    shadow = cv::Scalar::all(0);
-
-    std::vector<cv::Mat> tempWarp;
-    tempWarp.clear();
-    for(int i=0;i<WarpPic.size();i++)
-    {
-        tempWarp.push_back(WarpPic[i]);
-    }
-
-    int x1 = RefCorPoint[one].x-t1.x;
-    int y1 = RefCorPoint[one].y-t1.y;
-
-    int threv1 = ui->ThresholdSlider1->value();
-    int threv2 = ui->ThresholdSlider2->value();
-
-    int y2 = RefCorPoint[two].y-t1.y;
-    int x2 = RefCorPoint[two].x-t1.x;
-
-    for(int i = 0;i<shadow.cols;i++)
-    {
-        for(int j=0;j<shadow.rows;j++)
-        {
-            bool bool1 = false;
-            bool bool2 = false;
-            bool bool3 = false;
-            if(j>=y2 && i >=x2 && j <tempWarp[two].rows+y2 && i <tempWarp[two].cols+x2)
-            {
-                bool1 = ( tempWarp[two].at<cv::Vec3b>(j-y2,i-x2)[0]+tempWarp[two].at<cv::Vec3b>(j-y2,i-x2)[1]+tempWarp[two].at<cv::Vec3b>(j-y2,i-x2)[2])/3 > threv1;
-            }
-            if(j>=y1 && i>=x1 && j<tempWarp[one].rows+y1 && i<tempWarp[one].cols+x1)
-            {
-                bool2 = ( tempWarp[one].at<cv::Vec3b>(j-y1,i-x1)[0]+tempWarp[one].at<cv::Vec3b>(j-y1,i-x1)[1]+tempWarp[one].at<cv::Vec3b>(j-y1,i-x1)[2])/3< threv2;
-            }
-            if(j-y1-20>0 && j-y2-20>0 && i-x1-20>0 && i-x2-20>0 && j-y1+20 <tempWarp[one].rows && i-x1+20<tempWarp[one].cols && j-y2+20 <tempWarp[two].rows && i-x2+20<tempWarp[two].cols )
-            {
-                bool3 = true;
-            }
-            if(bool1==true  && bool2 == true && bool3 == true )
-            {
-                shadow.at<cv::Vec3b>(j,i)[0] = 255;
-                shadow.at<cv::Vec3b>(j,i)[1] = 255;
-                shadow.at<cv::Vec3b>(j,i)[2] = 255;
-            }
-            else
-            {
-                shadow.at<cv::Vec3b>(j,i)[0] = 0;
-                shadow.at<cv::Vec3b>(j,i)[1] = 0;
-                shadow.at<cv::Vec3b>(j,i)[2] = 0;
-            }
-        }
-    }
-    int erosion_elem = 0;
-    int erosion_size = 4;
-    int dilation_elem = 0;
-    int dilation_size = 4;
-
-    int erosion_type;
-    if( erosion_elem == 0 ){ erosion_type = cv::MORPH_RECT; }
-    else if( erosion_elem == 1 ){ erosion_type = cv::MORPH_CROSS; }
-    else if( erosion_elem == 2) { erosion_type = cv::MORPH_ELLIPSE; }
-
-    int dilation_type;
-    if( dilation_elem == 0 ){ dilation_type = cv::MORPH_RECT; }
-    else if( dilation_elem == 1 ){ dilation_type = cv::MORPH_CROSS; }
-    else if( dilation_elem == 2) { dilation_type = cv::MORPH_ELLIPSE; }
-
-    cv::Mat eroMat;
-    cv::Mat dilMat;
-    cv::Mat eroelement = getStructuringElement( erosion_type,
-                                                cv::Size( 2*erosion_size + 1, 2*erosion_size+1 ),
-                                                cv::Point( erosion_size, erosion_size ) );
-    cv::Mat dilelement = getStructuringElement( dilation_type,
-                                                cv::Size( 2*dilation_size + 1, 2*dilation_size+1 ),
-                                                cv::Point( dilation_size, dilation_size ) );
-    cv::erode(shadow,eroMat,eroelement);
-    cv::dilate(eroMat,dilMat,dilelement);
-    cv::imwrite("shadow.jpg",shadow);
-    cv::imwrite("eroMat.jpg",eroMat);
-    cv::imwrite("dilMat.jpg",dilMat);
-
-
-    MaskResult = dilMat.clone();
-
-    std::vector<cv::Mat> temp;
-    temp.clear();
-    for(int i=0;i<WarpPic.size();i++)
-    {
-        cv::Mat tMat = WarpPic[i].clone();
-        temp.push_back(tMat);
-    }
-
-    cv::Mat tk;
-    tk.create(dilMat.rows,dilMat.cols,CV_MAKETYPE(tk.type(),3));
-    tk = cv::Scalar::all(0);
-
-    int dy0 = -t1.y+RefCorPoint[0].y;
-    int dx0 = -t1.x+RefCorPoint[0].x;
-    int dy1 = -t1.y+RefCorPoint[1].y;
-    int dx1 = -t1.x+RefCorPoint[1].x;
-    int dy2 = -t1.y+RefCorPoint[2].y;
-    int dx2 = -t1.x+RefCorPoint[2].x;
-    int dy3 = -t1.y+RefCorPoint[3].y;
-    int dx3 = -t1.x+RefCorPoint[3].x;
-
-    for(int i=0;i<dilMat.cols;i++)
-    {
-        for(int j=0;j<dilMat.rows;j++)
-        {
-            if(dilMat.at<cv::Vec3b>(j,i)[0] != 255 && j-dy0>=0 && j-dy0<temp[0].rows && i-dx0>=0 && i-dx0<temp[0].cols)
-            {
-                temp[0].at<cv::Vec3b>(j-dy0,i-dx0)[0]=0;
-                temp[0].at<cv::Vec3b>(j-dy0,i-dx0)[1]=0;
-                temp[0].at<cv::Vec3b>(j-dy0,i-dx0)[2]=0;
-            }
-
-            if(dilMat.at<cv::Vec3b>(j,i)[0] != 255 && j-dy1>=0 && j-dy1<temp[1].rows && i-dx1>=0 && i-dx1<temp[1].cols)
-            {
-                temp[1].at<cv::Vec3b>(j-dy1,i-dx1)[0]=0;
-                temp[1].at<cv::Vec3b>(j-dy1,i-dx1)[1]=0;
-                temp[1].at<cv::Vec3b>(j-dy1,i-dx1)[2]=0;
-            }
-            if(dilMat.at<cv::Vec3b>(j,i)[0] != 255 && j-dy2>=0 && j-dy2<temp[2].rows && i-dx2>=0 && i-dx2<temp[2].cols)
-            {
-                temp[2].at<cv::Vec3b>(j-dy2,i-dx2)[0]=0;
-                temp[2].at<cv::Vec3b>(j-dy2,i-dx2)[1]=0;
-                temp[2].at<cv::Vec3b>(j-dy2,i-dx2)[2]=0;
-            }
-            if(dilMat.at<cv::Vec3b>(j,i)[0] != 255 && j-dy3>=0 && j-dy3<temp[3].rows && i-dx3>=0 && i-dx3<temp[3].cols)
-            {
-                temp[3].at<cv::Vec3b>(j-dy3,i-dx3)[0]=0;
-                temp[3].at<cv::Vec3b>(j-dy3,i-dx3)[1]=0;
-                temp[3].at<cv::Vec3b>(j-dy3,i-dx3)[2]=0;
-            }
-        }
-    }
-    for(int i=0;i<temp.size();i++)
-    {
-        cv::imwrite("WhiteCorrection_ROI"+QString::number(i).toStdString()+".jpg",temp[i]);
-    }
-    CutPic.clear();
-    for(int i=0;i<temp.size();i++)//將白校正且把背景去除的圖片加入
-        CutPic.push_back(temp[i]);
 }
 
 void MainWindow::on_LoadRefButton_clicked()
@@ -360,8 +195,6 @@ void MainWindow::on_LoadPicButton_clicked()
             }
         }
     }
-    //=================================
-    //=======================Cut
     std::vector<cv::Mat> showMat;
     showMat.clear();
     Pic.clear();
@@ -391,7 +224,6 @@ void MainWindow::on_LoadPicButton_clicked()
 
         showMat.push_back(m);
         Pic.push_back(m);
-        cv::imwrite(QString::number(n).toStdString()+"_White.jpg",m);
     }
 
     for(int n=0;n<OPic.size();n++)
@@ -403,8 +235,7 @@ void MainWindow::on_LoadPicButton_clicked()
         delete [] f[n];
     }
     delete [] f;
-
-    //======================================
+    //======================================白校正結束
 
     LoadPic(Pic,ui->PicLabel);
     for(int i=0;i<Pic.size();i++)
@@ -426,9 +257,10 @@ void MainWindow::on_spinBoxPic_valueChanged(int arg1)
 
 void MainWindow::on_CutButton_clicked()
 {
-    CutMask(ui->spinBoxT1->value(),ui->spinBoxT2->value(),maskResult);
+    analysisData.setRequest(Refresult,WarpPic,RefCorPoint);
+    analysisData.BuildMaskMat(ui->ThresholdSlider1->value(),ui->ThresholdSlider2->value(),CutPic);
+    maskResult = analysisData.getMaskMat();
     ShowOnLabel(maskResult,ui->CutLabel);
-
     ui->ChooseButton->setEnabled(true);
     ui->NDVIButton->setEnabled(true);
 }
@@ -680,57 +512,6 @@ void MainWindow::on_RGBButtom_clicked()
     ShowOnLabel(CutPic[16],ui->TempLabel);
 }
 
-float MainWindow::NDVI_value(std::vector<cv::Mat> &m,int y, int x)
-{
-    cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-    for(int i=0;i<4;i++)
-    {
-        t1.x = std::min(t1.x,RefCorPoint[i].x);
-        t1.y = std::min(t1.y,RefCorPoint[i].y);
-    }
-
-    int dy0 = -t1.y+RefCorPoint[0].y;
-    int dx0 = -t1.x+RefCorPoint[0].x;
-    int dy1 = -t1.y+RefCorPoint[1].y;
-    int dx1 = -t1.x+RefCorPoint[1].x;
-    int dy2 = -t1.y+RefCorPoint[2].y;
-    int dx2 = -t1.x+RefCorPoint[2].x;
-    int dy3 = -t1.y+RefCorPoint[3].y;
-    int dx3 = -t1.x+RefCorPoint[3].x;
-
-    std::vector<int> result;
-    if(x-dx0>=0 && x-dx0 <m[0].cols && y-dy0 >=0 && y-dy0<m[0].rows)
-    {
-        int n = m[0].at<cv::Vec3b>(y-dy0,x-dx0)[0];
-        result.push_back(n);
-    }
-    if(x-dx1>=0 && x-dx1 <m[1].cols && y-dy1 >=0 && y-dy1<m[1].rows)
-    {
-        int n = m[1].at<cv::Vec3b>(y-dy1,x-dx1)[0];
-        result.push_back(n);
-    }
-    if(x-dx2>=0 && x-dx2 <m[2].cols && y-dy2>=0 && y-dy2<m[2].rows)
-    {
-        int n = m[2].at<cv::Vec3b>(y-dy2,x-dx2)[0];
-        result.push_back(n);
-    }
-    if(x-dx3>=0 && x-dx3<m[3].cols && y-dy3>=0 && y-dy3<m[3].rows)
-    {
-        int n = m[3].at<cv::Vec3b>(y-dy3,x-dx3)[0];
-        result.push_back(n);
-    }
-
-    if(result.size()!=4)
-        return -1.0;
-
-    if(result[2]+result[1] == 0)
-        return -1.0;
-    float ans = (float(result[2])-float(result[1])*20/400)/(float(result[2])+float(result[1])*20/400);
-
-    return ans;
-}
-
-
 void MainWindow::Div_value(std::vector<cv::Mat> &m,int y,int x,std::vector<float> &div)
 {
     cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
@@ -864,35 +645,9 @@ void MainWindow::MinusPixel_value(std::vector<cv::Mat> &m,int y,int x,std::vecto
 
 void MainWindow::on_NDVIButton_clicked()
 {
-    cv::Mat predict;
-    predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
-    predict = cv::Scalar::all(0);
-
-    for(int i=0;i<Refresult.cols;i++)
-    {
-        for(int j=0;j<Refresult.rows;j++)
-        {
-            if(maskResult.at<cv::Vec3b>(j,i)[0] != 0)
-            {
-                float value = NDVI_value(CutPic,j,i);
-
-                if(value < 0.9)
-                {
-                    predict.at<cv::Vec3b>(j,i)[0] = 0;
-                    predict.at<cv::Vec3b>(j,i)[1] = 0;
-                    predict.at<cv::Vec3b>(j,i)[2] = 255;
-                }
-                else
-                {
-                    predict.at<cv::Vec3b>(j,i)[0] = 0;
-                    predict.at<cv::Vec3b>(j,i)[1] = 255;
-                    predict.at<cv::Vec3b>(j,i)[2] = 0;
-                }
-            }
-        }
-    }
-    ShowOnLabel(predict,ui->TempLabel);
-    NDVIMat = predict;//.clone();
+    cv::Mat NDVI_Result=analysisData.NDVI();
+    ShowOnLabel(NDVI_Result,ui->TempLabel);
+    NDVIMat = NDVI_Result;
     ui->Multi_Buttom->setEnabled(true);
     cv::imwrite("NDVI.jpg",NDVIMat);
 }
