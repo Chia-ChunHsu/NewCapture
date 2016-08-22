@@ -5,7 +5,7 @@ Prediction::Prediction()
 
 }
 
-void Prediction::Initial(cv::Mat NDVIMat, std::vector<cv::Point> &CorPoint, std::vector<cv::Mat> &DataMat,,int FeaturesNum)
+void Prediction::Initial(cv::Mat NDVIMat, std::vector<cv::Point> &CorPoint, std::vector<cv::Mat> &DataMat,int FeaturesNum)
 {
     _NDVIMat = NDVIMat;
     _CorPoint.assign(CorPoint.begin(),CorPoint.end());
@@ -25,7 +25,7 @@ cv::Mat Prediction::SVMResult()
         {
             if(_NDVIMat.at<cv::Vec3b>(j,i)[1] == 255)
             {
-                float value = predictresult(j,i);
+                float value = returnSvmAns(j,i);
 
                 if(value == 0)  //if ans = 0 , 健康部分(綠色)
                 {
@@ -126,5 +126,6 @@ float Prediction::returnSvmAns(int y, int x)
 //    svm.load("SVM.txt");
 //    float label = svm.predict(test);
 //    return label;
+    return 0;
 }
 

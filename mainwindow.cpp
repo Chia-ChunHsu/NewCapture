@@ -648,150 +648,158 @@ void MainWindow::on_NDVIButton_clicked()
     cv::Mat NDVI_Result=analysisData.NDVI();
     ShowOnLabel(NDVI_Result,ui->TempLabel);
     NDVIMat = NDVI_Result;
-    ui->Multi_Buttom->setEnabled(true);
+    ui->DataAna_Buttom->setEnabled(true);
     cv::imwrite("NDVI.jpg",NDVIMat);
 }
 
-void MainWindow::on_Multi_Buttom_clicked()
+void MainWindow::on_DataAna_Buttom_clicked()
 {
-    qDebug()<<"Initial Size "<<CutPic.size();
+    DataAnalysis dataAna;
+    dataAna.Initial(CutPic,RefCorPoint,NDVIMat);
+    dataAna.MinusMat();
+    dataAna.DivisionMat();
+    std::vector<cv::Mat> minusMat;
+    std::vector<cv::Mat> divMat;
+    dataAna.GetDataMat(minusMat,divMat);
 
-    std::vector<cv::Mat> MinusMat;//相減結果初始化
-    for(int n=0;n<6;n++)
-    {
-        cv::Mat temp;
-        temp.create(Refresult.rows,Refresult.cols,Refresult.type());
-        temp = cv::Scalar::all(0);
-        MinusMat.push_back(temp);
-    }
+//    qDebug()<<"Initial Size "<<CutPic.size();
 
-    for(int i=0;i<Refresult.cols;i++)
-    {
-        for(int j=0;j<Refresult.rows;j++)
-        {
-            if(NDVIMat.at<cv::Vec3b>(j,i)[1] == 255)
-            {
-                //                std::vector<float>div;
-                std::vector<int> minus_pixel;
-                //                Div_value(CutPic,j,i,div);
-                MinusPixel_value(CutPic,j,i,minus_pixel);
-                for(int n=0;n<6;n++)
-                {
-                    //                    division[n].at<float>(Refresult.cols*j+i)=div[n];
-                    MinusMat[n].at<cv::Vec3b>(j,i)[0]=minus_pixel[n];
-                    MinusMat[n].at<cv::Vec3b>(j,i)[1]=minus_pixel[n];
-                    MinusMat[n].at<cv::Vec3b>(j,i)[2]=minus_pixel[n];
-                }
-            }
-        }
-    }
+//    std::vector<cv::Mat> MinusMat;//相減結果初始化
+//    for(int n=0;n<6;n++)
+//    {
+//        cv::Mat temp;
+//        temp.create(Refresult.rows,Refresult.cols,Refresult.type());
+//        temp = cv::Scalar::all(0);
+//        MinusMat.push_back(temp);
+//    }
 
-    for(int n=0;n<6;n++)
-    {
-        cv::normalize(MinusMat[n],MinusMat[n],0,255,CV_MINMAX);
-        cv::imwrite("MinusMat_"+QString::number(n).toStdString()+".jpg",MinusMat[n]);
-    }
+//    for(int i=0;i<Refresult.cols;i++)
+//    {
+//        for(int j=0;j<Refresult.rows;j++)
+//        {
+//            if(NDVIMat.at<cv::Vec3b>(j,i)[1] == 255)
+//            {
+//                //                std::vector<float>div;
+//                std::vector<int> minus_pixel;
+//                //                Div_value(CutPic,j,i,div);
+//                MinusPixel_value(CutPic,j,i,minus_pixel);
+//                for(int n=0;n<6;n++)
+//                {
+//                    //                    division[n].at<float>(Refresult.cols*j+i)=div[n];
+//                    MinusMat[n].at<cv::Vec3b>(j,i)[0]=minus_pixel[n];
+//                    MinusMat[n].at<cv::Vec3b>(j,i)[1]=minus_pixel[n];
+//                    MinusMat[n].at<cv::Vec3b>(j,i)[2]=minus_pixel[n];
+//                }
+//            }
+//        }
+//    }
 
-    if(CutPic.size()>4)
-    {
-        for(int n=0;n<6;n++)
-            CutPic[n+4]=MinusMat[n];
-    }
-    else
-    {
-        for(int n=0;n<6;n++)
-            CutPic.push_back(MinusMat[n]);
-    }
-    qDebug()<<"After Add Minus size ="<<CutPic.size();
+//    for(int n=0;n<6;n++)
+//    {
+//        cv::normalize(MinusMat[n],MinusMat[n],0,255,CV_MINMAX);
+//        cv::imwrite("MinusMat_"+QString::number(n).toStdString()+".jpg",MinusMat[n]);
+//    }
 
-    std::vector<cv::Mat> OriginalAvgMat;
-    for(int n=0;n<4;n++)
-    {
-        int value[256]={0};
-        int max_count = 0;
-        int max_value=0;
-        for(int i=0;i<CutPic[n].cols;i++)
-        {
-            for(int j=0;j<CutPic[n].rows;j++)
-            {
-                value[CutPic[n].at<cv::Vec3b>(j,i)[0]]++;
-                if(max_count < value[CutPic[n].at<cv::Vec3b>(j,i)[0]] && CutPic[n].at<cv::Vec3b>(j,i)[0]!=0)
-                {
-                    max_count = value[CutPic[n].at<cv::Vec3b>(j,i)[0]];
-                    max_value = CutPic[n].at<cv::Vec3b>(j,i)[0];
-                }
-            }
-        }
-        cv::Mat atmp;// = CutPic[n];
-        atmp.create(CutPic[n].rows,CutPic[n].cols,CutPic[n].type());
-        atmp = cv::Scalar::all(0);
-        for(int i=0;i<CutPic[n].cols;i++)
-        {
-            for(int j=0;j<CutPic[n].rows;j++)
-            {
-                int new_value = CutPic[n].at<cv::Vec3b>(j,i)[0]+(127-max_value);
-                if(new_value > 255)
-                    new_value = 255;
-                else if(new_value <0)
-                    new_value = 0;
-                atmp.at<cv::Vec3b>(j,i)[0] = new_value;
-                atmp.at<cv::Vec3b>(j,i)[1] = new_value;
-                atmp.at<cv::Vec3b>(j,i)[2] = new_value;
-            }
-        }
-        OriginalAvgMat.push_back(atmp);
-        cv::imwrite("normal_avg127_"+QString::number(n).toStdString()+".jpg",atmp);
-    }
-    std::vector<cv::Mat> division_normal;
-    for(int i=0;i<6;i++)
-    {
-        cv::Mat k;
-        k.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(CV_32F,1));
-        k = cv::Scalar::all(0);
-        division_normal.push_back(k);
-    }
-    for(int i=0;i<Refresult.cols;i++)
-    {
-        for(int j=0;j<Refresult.rows;j++)
-        {
-            if(NDVIMat.at<cv::Vec3b>(j,i)[1] == 255)
-            {
-                std::vector<float>div;
+//    if(CutPic.size()>4)
+//    {
+//        for(int n=0;n<6;n++)
+//            CutPic[n+4]=MinusMat[n];
+//    }
+//    else
+//    {
+//        for(int n=0;n<6;n++)
+//            CutPic.push_back(MinusMat[n]);
+//    }
+//    qDebug()<<"After Add Minus size ="<<CutPic.size();
 
-                Div_value(OriginalAvgMat,j,i,div);
+//    std::vector<cv::Mat> OriginalAvgMat;
+//    for(int n=0;n<4;n++)
+//    {
+//        int value[256]={0};
+//        int max_count = 0;
+//        int max_value=0;
+//        for(int i=0;i<CutPic[n].cols;i++)
+//        {
+//            for(int j=0;j<CutPic[n].rows;j++)
+//            {
+//                value[CutPic[n].at<cv::Vec3b>(j,i)[0]]++;
+//                if(max_count < value[CutPic[n].at<cv::Vec3b>(j,i)[0]] && CutPic[n].at<cv::Vec3b>(j,i)[0]!=0)
+//                {
+//                    max_count = value[CutPic[n].at<cv::Vec3b>(j,i)[0]];
+//                    max_value = CutPic[n].at<cv::Vec3b>(j,i)[0];
+//                }
+//            }
+//        }
+//        cv::Mat atmp;// = CutPic[n];
+//        atmp.create(CutPic[n].rows,CutPic[n].cols,CutPic[n].type());
+//        atmp = cv::Scalar::all(0);
+//        for(int i=0;i<CutPic[n].cols;i++)
+//        {
+//            for(int j=0;j<CutPic[n].rows;j++)
+//            {
+//                int new_value = CutPic[n].at<cv::Vec3b>(j,i)[0]+(127-max_value);
+//                if(new_value > 255)
+//                    new_value = 255;
+//                else if(new_value <0)
+//                    new_value = 0;
+//                atmp.at<cv::Vec3b>(j,i)[0] = new_value;
+//                atmp.at<cv::Vec3b>(j,i)[1] = new_value;
+//                atmp.at<cv::Vec3b>(j,i)[2] = new_value;
+//            }
+//        }
+//        OriginalAvgMat.push_back(atmp);
+//        cv::imwrite("normal_avg127_"+QString::number(n).toStdString()+".jpg",atmp);
+//    }
+//    std::vector<cv::Mat> division_normal;
+//    for(int i=0;i<6;i++)
+//    {
+//        cv::Mat k;
+//        k.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(CV_32F,1));
+//        k = cv::Scalar::all(0);
+//        division_normal.push_back(k);
+//    }
+//    for(int i=0;i<Refresult.cols;i++)
+//    {
+//        for(int j=0;j<Refresult.rows;j++)
+//        {
+//            if(NDVIMat.at<cv::Vec3b>(j,i)[1] == 255)
+//            {
+//                std::vector<float>div;
 
-                for(int n=0;n<div.size();n++)
-                {
-                    division_normal[n].at<float>(Refresult.cols*j+i)=div[n];
-                }
-            }
-        }
-    }
-    std::vector<cv::Mat> normalDivMat;
-    for(int n=0;n<division_normal.size();n++)
-    {
-        cv::normalize(division_normal[n],division_normal[n],0,255,CV_MINMAX,CV_8U);//注意這邊還是只有one channel
-        cv::Mat normalbgr;
-        cv::cvtColor(division_normal[n],normalbgr,CV_GRAY2BGR);
-        normalDivMat.push_back(normalbgr);
-        cv::imwrite("division_normal_normalize_"+QString::number(n).toStdString()+".jpg",division_normal[n]);
-    }
+//                Div_value(OriginalAvgMat,j,i,div);
 
-    if(CutPic.size()>10)
-    {
-        for(int n=0;n<normalDivMat.size();n++)
-            CutPic[n+10]=normalDivMat[n];
-    }
-    else
-    {
-        for(int n=0;n<normalDivMat.size();n++)
-            CutPic.push_back(normalDivMat[n]);
-    }
-    qDebug()<<"After Add Division size ="<<CutPic.size();
+//                for(int n=0;n<div.size();n++)
+//                {
+//                    division_normal[n].at<float>(Refresult.cols*j+i)=div[n];
+//                }
+//            }
+//        }
+//    }
+//    std::vector<cv::Mat> normalDivMat;
+//    for(int n=0;n<division_normal.size();n++)
+//    {
+//        cv::normalize(division_normal[n],division_normal[n],0,255,CV_MINMAX,CV_8U);//注意這邊還是只有one channel
+//        cv::Mat normalbgr;
+//        cv::cvtColor(division_normal[n],normalbgr,CV_GRAY2BGR);
+//        normalDivMat.push_back(normalbgr);
+//        cv::imwrite("division_normal_normalize_"+QString::number(n).toStdString()+".jpg",division_normal[n]);
+//    }
 
-    qDebug()<<"Final CutPic Size = "<<CutPic.size();
+//    if(CutPic.size()>10)
+//    {
+//        for(int n=0;n<normalDivMat.size();n++)
+//            CutPic[n+10]=normalDivMat[n];
+//    }
+//    else
+//    {
+//        for(int n=0;n<normalDivMat.size();n++)
+//            CutPic.push_back(normalDivMat[n]);
+//    }
+//    qDebug()<<"After Add Division size ="<<CutPic.size();
 
-    ui->RGBButtom->setEnabled(true);
+//    qDebug()<<"Final CutPic Size = "<<CutPic.size();
+
+//    ui->RGBButtom->setEnabled(true);
 }
 
 void MainWindow::on_TrainingButtom_clicked()

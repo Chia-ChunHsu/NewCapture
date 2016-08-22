@@ -738,7 +738,7 @@
      <string>NDVI</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Multi_Buttom">
+   <widget class="QPushButton" name="DataAna_Buttom">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -902,7 +902,7 @@
      <x>0</x>
      <y>0</y>
      <width>629</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

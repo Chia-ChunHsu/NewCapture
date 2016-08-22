@@ -16,6 +16,7 @@
 #include "svmdata.h"
 #include <QCheckBox>
 #include "MaskAnalysis.h"
+#include "dataanalysis.h"
 
 namespace Ui {
 class MainWindow;
@@ -74,7 +75,7 @@ private slots:
 
     void on_NDVIButton_clicked();
 
-    void on_Multi_Buttom_clicked();
+    void on_DataAna_Buttom_clicked();
 
     void on_TrainingButtom_clicked();
 

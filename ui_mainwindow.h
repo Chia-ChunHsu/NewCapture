@@ -86,7 +86,7 @@ public:
     QPushButton *RGBButtom;
     QLabel *FileName;
     QPushButton *NDVIButton;
-    QPushButton *Multi_Buttom;
+    QPushButton *DataAna_Buttom;
     QDoubleSpinBox *TCutdoubleSpinBox2;
     QDoubleSpinBox *TCutdoubleSpinBox4;
     QLabel *TempLabel;
@@ -306,12 +306,12 @@ public:
         NDVIButton->setEnabled(false);
         NDVIButton->setGeometry(QRect(480, 10, 141, 41));
         NDVIButton->setFont(font1);
-        Multi_Buttom = new QPushButton(centralWidget);
-        Multi_Buttom->setObjectName(QStringLiteral("Multi_Buttom"));
-        Multi_Buttom->setEnabled(false);
-        Multi_Buttom->setGeometry(QRect(480, 50, 141, 41));
-        Multi_Buttom->setFont(font1);
-        Multi_Buttom->setToolTipDuration(6);
+        DataAna_Buttom = new QPushButton(centralWidget);
+        DataAna_Buttom->setObjectName(QStringLiteral("DataAna_Buttom"));
+        DataAna_Buttom->setEnabled(false);
+        DataAna_Buttom->setGeometry(QRect(480, 50, 141, 41));
+        DataAna_Buttom->setFont(font1);
+        DataAna_Buttom->setToolTipDuration(6);
         TCutdoubleSpinBox2 = new QDoubleSpinBox(centralWidget);
         TCutdoubleSpinBox2->setObjectName(QStringLiteral("TCutdoubleSpinBox2"));
         TCutdoubleSpinBox2->setGeometry(QRect(1000, 260, 62, 22));
@@ -351,7 +351,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 629, 21));
+        menuBar->setGeometry(QRect(0, 0, 629, 22));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -412,7 +412,7 @@ public:
         RGBButtom->setText(QApplication::translate("MainWindow", "Open RGB", 0));
         FileName->setText(QApplication::translate("MainWindow", "File", 0));
         NDVIButton->setText(QApplication::translate("MainWindow", "NDVI", 0));
-        Multi_Buttom->setText(QApplication::translate("MainWindow", "Analize Data", 0));
+        DataAna_Buttom->setText(QApplication::translate("MainWindow", "Analize Data", 0));
         TempLabel->setText(QString());
         TrainingButtom->setText(QApplication::translate("MainWindow", "New SVM Training", 0));
         PredictButton->setText(QApplication::translate("MainWindow", "Predict", 0));
