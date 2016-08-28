@@ -551,12 +551,15 @@ void MainWindow::on_TrainingButtom_clicked()
     double C_param = ui->C_spinBox->value();
     SvmData svm(FNum,FNum.size(),C_param);
     svm.initial();
+    ui->TrainingButtom->setEnabled(true);
 }
 
 void MainWindow::on_RecentTrainCheckBox_clicked()
 {
     if(ui->RecentTrainCheckBox->isChecked() == true )
     {
+        ui->groupBox->setEnabled(false);
+        ui->PredictButton->setEnabled(true);
         ui->TrainingButtom->setEnabled(false);
         QFile file("FeatuerChannesl.txt");
         if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -567,6 +570,7 @@ void MainWindow::on_RecentTrainCheckBox_clicked()
         {
             line = in.readLine();
         }
+
         QStringList f = line.split(",");
         for(int i=0;i<f.size();i++)
         {
@@ -604,15 +608,15 @@ void MainWindow::on_RecentTrainCheckBox_clicked()
                 ui->checkBox14->setChecked(true);
             else if(k==15)
                 ui->checkBox15->setChecked(true);
-
         }
-        ui->groupBox->setEnabled(false);
-        ui->PredictButton->setEnabled(true);
+
 
     }
     else
     {
         ui->TrainingButtom->setEnabled(true);
+        ui->groupBox->setEnabled(true);
+        ui->PredictButton->setEnabled(false);
     }
 }
 

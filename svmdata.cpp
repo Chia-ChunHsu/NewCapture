@@ -53,10 +53,11 @@ void SvmData::LoadTraingData(std::vector<float> &featureData, std::vector<float>
     QFile File(ad);
     File.open(QIODevice::WriteOnly);
     QTextStream out(&File);
-    for(int i=0;i<featuresChannel.size();i++)
+    for(int i=0;i<featuresChannel.size()-1;i++)
     {
         out<< featuresChannel[i]<<",";
     }
+    out<< featuresChannel[featuresChannel.size()-1];
     File.close();
 }
 
