@@ -7,10 +7,10 @@
 class MaskAnalysis
 {
 private:
-    cv::Mat _ResultSizeMat;
-    std::vector<cv::Mat> _DataMat;
-    std::vector<cv::Point> _RefCorPoint;
-    cv::Mat _MaskMat;
+    cv::Mat _ResultSizeMat;//接合好後的圖片大小
+    std::vector<cv::Mat> _DataMat;//原本四張圖片
+    std::vector<cv::Point> _RefCorPoint;//相對位置
+    cv::Mat _MaskMat;//我要傳出去的葉片遮罩
 public:
     MaskAnalysis();
     ~MaskAnalysis();

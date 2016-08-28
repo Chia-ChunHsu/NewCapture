@@ -49,6 +49,15 @@ void SvmData::LoadTraingData(std::vector<float> &featureData, std::vector<float>
         qDebug()<<"Features Size is not Match!";
         return;
     }
+    QString ad = "FeatuerChannesl.txt";
+    QFile File(ad);
+    File.open(QIODevice::WriteOnly);
+    QTextStream out(&File);
+    for(int i=0;i<featuresChannel.size();i++)
+    {
+        out<< featuresChannel[i]<<",";
+    }
+    File.close();
 }
 
 void SvmData::Training(std::vector<float> &featureData, std::vector<float> &labels)
@@ -76,4 +85,5 @@ void SvmData::Training(std::vector<float> &featureData, std::vector<float> &labe
     svm.train(trainingData,label,cv::Mat(),cv::Mat(),params);
     svm.save("SVM.txt");
     qDebug()<<"SVM Save";
+
 }

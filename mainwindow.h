@@ -17,6 +17,7 @@
 #include <QCheckBox>
 #include "MaskAnalysis.h"
 #include "dataanalysis.h"
+#include "prediction.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,10 +35,10 @@ public:
     void LoadPic(std::vector<cv::Mat> &Ref,QLabel *k);
     void StitchMethod(std::vector<cv::Mat> &Ref,std::vector<cv::Mat> &WRef, std::vector<cv::Mat> &mask, cv::Mat &RefResult,std::vector<cv::Point> &CorPoint);
     int TransferWarp(std::vector<cv::Mat> &Pic,std::vector<cv::Mat> &WarpPic);
-    float predictresult(int y,int x);
+//    float predictresult(int y,int x);
     void Div_value(std::vector<cv::Mat> &m,int y,int x,std::vector<float> &div);
     void MinusPixel_value(std::vector<cv::Mat> &m,int y,int x,std::vector<int> &pixel);
-
+    void Features(std::vector<int> &Fnum);
 private slots:
     void on_LoadRefButton_clicked();
 
@@ -80,6 +81,8 @@ private slots:
     void on_TrainingButtom_clicked();
 
     void on_RecentTrainCheckBox_clicked();
+
+    void on_RGBorNotcheckBox_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -128,6 +131,8 @@ private:
     std::vector<int> Fnumber;
     Time t;
     MaskAnalysis analysisData;
+
+    int FeatureNum;
 };
 
 #endif // MAINWINDOW_H

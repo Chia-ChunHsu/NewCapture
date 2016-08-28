@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -709,7 +709,7 @@
      <rect>
       <x>10</x>
       <y>280</y>
-      <width>461</width>
+      <width>371</width>
       <height>16</height>
      </rect>
     </property>
@@ -826,6 +826,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="PredictButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>480</x>
@@ -895,6 +898,32 @@
      <string>Use Training Record</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="RGBorNotcheckBox">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>280</y>
+      <width>73</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>With RGB</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>250</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -902,7 +931,7 @@
      <x>0</x>
      <y>0</y>
      <width>629</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

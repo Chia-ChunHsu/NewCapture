@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->start();
     FileAd= "";
     flag =1;
+    FeatureNum  = 16 ;
 }
 
 MainWindow::~MainWindow()
@@ -164,10 +165,10 @@ void MainWindow::on_LoadPicButton_clicked()
 
     for(int n=0;n<OPic.size();n++)
     {
-        DNm.push_back(127);
+        DNm.push_back(127);//直接假設平均灰階直為127
     }
 
-    int ***f;
+    int ***f;//
     f = new int**[OPic.size()];
     for(int n=0;n<OPic.size();n++)
     {
@@ -195,8 +196,9 @@ void MainWindow::on_LoadPicButton_clicked()
             }
         }
     }
-    std::vector<cv::Mat> showMat;
-    showMat.clear();
+    //================
+//    std::vector<cv::Mat> showMat;
+//    showMat.clear();
     Pic.clear();
     for(int n=0;n<OPic.size();n++)
     {
@@ -205,13 +207,13 @@ void MainWindow::on_LoadPicButton_clicked()
         {
             for(int j=0;j<OPic[n].rows;j++)
             {
-                if(OPic[n].at<cv::Vec3b>(j,i)[0]==0)
+                if(OPic[n].at<cv::Vec3b>(j,i)[0]==0)//圖片本來就是黑的
                 {
 
                 }
                 else
                 {
-                    int k = f[n][i][j]+(128-WrefPic[n].at<cv::Vec3b>(j,i)[0]);
+                    int k = f[n][i][j]+(128-WrefPic[n].at<cv::Vec3b>(j,i)[0]);//WrefPic = WhiteReferencePicture 
                     if(k<0)
                         k=0;
 
@@ -222,7 +224,7 @@ void MainWindow::on_LoadPicButton_clicked()
             }
         }
 
-        showMat.push_back(m);
+//        showMat.push_back(m);
         Pic.push_back(m);
     }
 
@@ -244,10 +246,10 @@ void MainWindow::on_LoadPicButton_clicked()
     if(TransferWarp(Pic,WarpPic)!=1)
         return;
 
-    ui->CutButton->setEnabled(true);
+    ui->CutButton->setEnabled(true);//切除背景的按鈕
 
-    ui->ThresholdSlider1->setEnabled(true);
-    ui->ThresholdSlider2->setEnabled(true);
+    ui->ThresholdSlider1->setEnabled(true); //設定背景的區域範圍的bar
+    ui->ThresholdSlider2->setEnabled(true); //
 }
 
 void MainWindow::on_spinBoxPic_valueChanged(int arg1)
@@ -267,115 +269,16 @@ void MainWindow::on_CutButton_clicked()
 
 void MainWindow::on_PredictButton_clicked()
 {
-    cv::Mat predict;
-    predict.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(predict.type(),3));
-    predict = cv::Scalar::all(0);
-
-    for(int i=0;i<Refresult.cols;i++)
-    {
-        for(int j=0;j<Refresult.rows;j++)
-        {
-            if(NDVIMat.at<cv::Vec3b>(j,i)[1] == 255)
-            {
-                float value = predictresult(j,i);
-
-                if(value == 0)//G
-                {
-                    predict.at<cv::Vec3b>(j,i)[0] = 0;
-                    predict.at<cv::Vec3b>(j,i)[1] = 255;
-                    predict.at<cv::Vec3b>(j,i)[2] = 0;
-                }
-                else if(value == 1)
-                {
-                    predict.at<cv::Vec3b>(j,i)[0] = 0;
-                    predict.at<cv::Vec3b>(j,i)[1] = 255;
-                    predict.at<cv::Vec3b>(j,i)[2] = 255;
-                }
-                else if(value == 2)
-                {
-                    predict.at<cv::Vec3b>(j,i)[0] = 0;
-                    predict.at<cv::Vec3b>(j,i)[1] = 0;
-                    predict.at<cv::Vec3b>(j,i)[2] = 255;
-                }
-            }
-        }
-    }
-
+    std::vector<int> Fnum;
+    Features(Fnum);
+    if(Fnum.size()==0)
+        return;
+    ui->FeaturesSpinBox->setValue(Fnum.size());
+    Prediction preResult;
+    preResult.Initial(NDVIMat,RefCorPoint,CutPic,Fnum);
+    cv::Mat predict = preResult.SVMResult();
     ShowOnLabel(predict,ui->FalseColorLabel);
-
     cv::imwrite(FileNameAd.toStdString()+"_pre.jpg",predict);
-}
-
-float MainWindow::predictresult(int y,int x)
-{
-    int features = ui->FeaturesSpinBox->value() ;
-
-    std::vector<cv::Point> Point;
-
-    for(int i=0;i<4;i++)
-    {
-        Point.push_back(RefCorPoint[i]);
-    }
-
-    cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-
-    for(int i=0;i<4;i++)
-    {
-        t1.x = std::min(t1.x,RefCorPoint[i].x);
-        t1.y = std::min(t1.y,RefCorPoint[i].y);
-    }
-
-    for(int n=4;n<16;n++)
-    {
-        Point.push_back(t1);
-    }
-
-    std::vector<int> dx;
-    std::vector<int> dy;
-    for(int n=0;n<16;n++)
-    {
-        dx.push_back(-t1.x+Point[n].x);
-        dy.push_back(-t1.y+Point[n].y);
-    }
-
-    std::vector<int> TResult;
-    TResult.clear();
-
-    std::vector<int> result;
-    result.clear();
-
-
-    for(int n=0;n<16;n++)
-    {
-        if(y-dy[n]>=0 && y-dy[n]<CutPic[n].rows && x-dx[n]>=0 && x-dx[n]<CutPic[n].cols)
-        {
-            int pn;
-            pn = CutPic[n].at<cv::Vec3b>(y-dy[n],x-dx[n])[0];
-            TResult.push_back(pn);
-        }
-    }
-    for(int i=0;i<Fnumber.size();i++)
-    {
-        result.push_back(TResult[Fnumber[i]]);
-    }
-
-    cv::Mat test(1,features,CV_32FC1);
-
-    if(result.size()!=features)
-    {
-        qDebug()<<"Wrong!";
-        return 100;
-    }
-
-    for(int j=0;j<features;j++)
-    {
-        test.at<float>(0,j) = result[j];
-    }
-
-    CvSVM svm;
-    svm.load("SVM.txt");
-    float label = svm.predict(test);
-    return label;
 }
 
 void MainWindow::on_spinBox_valueChanged(int arg1)
@@ -426,7 +329,7 @@ void MainWindow::on_ChooseButton_clicked()
 {
     if(!CutPic.empty())
     {
-        picdialog.initial(CutPic,RefCorPoint,ui->FileName->text());
+        picdialog.initial(CutPic,RefCorPoint,ui->FileName->text(),FeatureNum);
     }
     return;
 }
@@ -512,135 +415,74 @@ void MainWindow::on_RGBButtom_clicked()
     ShowOnLabel(CutPic[16],ui->TempLabel);
 }
 
-void MainWindow::Div_value(std::vector<cv::Mat> &m,int y,int x,std::vector<float> &div)
+
+void MainWindow::Features(std::vector<int> &Fnum)
 {
-    cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-    for(int i=0;i<4;i++)
+    Fnum.clear();
+    if(ui->checkBox0->isChecked()==true)
     {
-        t1.x = std::min(t1.x,RefCorPoint[i].x);
-        t1.y = std::min(t1.y,RefCorPoint[i].y);
+        Fnum.push_back(0);
     }
-
-    std::vector<int> dy;
-    std::vector<int> dx;
-
-    for(int i=0;i<4;i++)
+    if(ui->checkBox1->isChecked()==true)
     {
-        dy.push_back(-t1.y+RefCorPoint[i].y);
-        dx.push_back(-t1.x+RefCorPoint[i].x);
+        Fnum.push_back(1);
     }
-
-    std::vector<QString> result;
-
-    for(int i=0;i<4;i++)
+    if(ui->checkBox2->isChecked()==true)
     {
-        if(x-dx[i]>=0 && x-dx[i]<m[i].cols && y-dy[i] >=0 && y-dy[i]<m[i].rows)
-        {
-            int n = m[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
-            result.push_back(QString::number(n));
-        }
+        Fnum.push_back(2);
     }
-
-    float div1,div2,div3,div4,div5,div6;
-    if(result.size()!=4)
+    if(ui->checkBox3->isChecked()==true)
     {
-        div1 = 0;
-        div2 = 0;
-        div3 = 0;
-        div4 = 0;
-        div5 = 0;
-        div6 = 0;
-
-        return;
+        Fnum.push_back(3);
     }
-    //div1=1/0 div2=2/0 div3=3/0 div4=2/1  div5=3/1 div6=3/2
-    if(result[0]== 0)
+    if(ui->checkBox4->isChecked()==true)
     {
-        div1 = 1;
-        div2 = 1;
-        div3 = 1;
+        Fnum.push_back(4);
     }
-    else
+    if(ui->checkBox5->isChecked()==true)
     {
-        div1 = result[1].toFloat()/result[0].toFloat();
-        div2 = result[2].toFloat()/result[0].toFloat();
-        div3 = result[3].toFloat()/result[0].toFloat();
+        Fnum.push_back(5);
     }
-    if(result[1]==0)
+    if(ui->checkBox6->isChecked()==true)
     {
-        div4 = 1;
-        div5 = 1;
+        Fnum.push_back(6);
     }
-    else
+    if(ui->checkBox7->isChecked()==true)
     {
-        div4 = result[2].toFloat()/result[1].toFloat();
-        div5 = result[3].toFloat()/result[1].toFloat();
+        Fnum.push_back(7);
     }
-    if(result[2]== 0)
+    if(ui->checkBox8->isChecked()==true)
     {
-        div6 = 1;
+        Fnum.push_back(8);
     }
-    else
+    if(ui->checkBox9->isChecked()==true)
     {
-        div6 = result[3].toFloat()/result[2].toFloat();
+        Fnum.push_back(9);
     }
-    div.push_back(div1);
-    div.push_back(div2);
-    div.push_back(div3);
-    div.push_back(div4);
-    div.push_back(div5);
-    div.push_back(div6);
-}
-
-void MainWindow::MinusPixel_value(std::vector<cv::Mat> &m,int y,int x,std::vector<int> &pixel)
-{
-    pixel.clear();
-    cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-    for(int i=0;i<4;i++)
+    if(ui->checkBox10->isChecked()==true)
     {
-        t1.x = std::min(t1.x,RefCorPoint[i].x);
-        t1.y = std::min(t1.y,RefCorPoint[i].y);
+        Fnum.push_back(10);
     }
-
-    std::vector<int> dy;
-    std::vector<int> dx;
-
-    for(int i=0;i<4;i++)
+    if(ui->checkBox11->isChecked()==true)
     {
-        dy.push_back(-t1.y+RefCorPoint[i].y);
-        dx.push_back(-t1.x+RefCorPoint[i].x);
+        Fnum.push_back(11);
     }
-
-    std::vector<int> result;
-    for(int i=0;i<4;i++)
+    if(ui->checkBox12->isChecked()==true)
     {
-        if(x-dx[i]>=0 && x-dx[i]<m[i].cols && y-dy[i] >=0 && y-dy[i]<m[i].rows)
-        {
-            int n = m[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
-            result.push_back(n);
-        }
+        Fnum.push_back(12);
     }
-
-    if(result.size()!=4 )
+    if(ui->checkBox13->isChecked()==true)
     {
-        for(int n=0;n<6;n++)
-            pixel.push_back(0);
-        return;
+        Fnum.push_back(13);
     }
-
-    int v0 = abs(result[0]-result[1]);
-    int v1 = abs(result[0]-result[2]);
-    int v2 = abs(result[0]-result[3]);
-    int v3 = abs(result[1]-result[2]);
-    int v4 = abs(result[1]-result[3]);
-    int v5 = abs(result[2]-result[3]);
-
-    pixel.push_back(v0);
-    pixel.push_back(v1);
-    pixel.push_back(v2);
-    pixel.push_back(v3);
-    pixel.push_back(v4);
-    pixel.push_back(v5);
+    if(ui->checkBox14->isChecked()==true)
+    {
+        Fnum.push_back(14);
+    }
+    if(ui->checkBox15->isChecked()==true)
+    {
+        Fnum.push_back(15);
+    }
 }
 
 void MainWindow::on_NDVIButton_clicked()
@@ -661,243 +503,131 @@ void MainWindow::on_DataAna_Buttom_clicked()
     std::vector<cv::Mat> minusMat;
     std::vector<cv::Mat> divMat;
     dataAna.GetDataMat(minusMat,divMat);
-
-//    qDebug()<<"Initial Size "<<CutPic.size();
-
-//    std::vector<cv::Mat> MinusMat;//相減結果初始化
-//    for(int n=0;n<6;n++)
-//    {
-//        cv::Mat temp;
-//        temp.create(Refresult.rows,Refresult.cols,Refresult.type());
-//        temp = cv::Scalar::all(0);
-//        MinusMat.push_back(temp);
-//    }
-
-//    for(int i=0;i<Refresult.cols;i++)
-//    {
-//        for(int j=0;j<Refresult.rows;j++)
-//        {
-//            if(NDVIMat.at<cv::Vec3b>(j,i)[1] == 255)
-//            {
-//                //                std::vector<float>div;
-//                std::vector<int> minus_pixel;
-//                //                Div_value(CutPic,j,i,div);
-//                MinusPixel_value(CutPic,j,i,minus_pixel);
-//                for(int n=0;n<6;n++)
-//                {
-//                    //                    division[n].at<float>(Refresult.cols*j+i)=div[n];
-//                    MinusMat[n].at<cv::Vec3b>(j,i)[0]=minus_pixel[n];
-//                    MinusMat[n].at<cv::Vec3b>(j,i)[1]=minus_pixel[n];
-//                    MinusMat[n].at<cv::Vec3b>(j,i)[2]=minus_pixel[n];
-//                }
-//            }
-//        }
-//    }
-
-//    for(int n=0;n<6;n++)
-//    {
-//        cv::normalize(MinusMat[n],MinusMat[n],0,255,CV_MINMAX);
-//        cv::imwrite("MinusMat_"+QString::number(n).toStdString()+".jpg",MinusMat[n]);
-//    }
-
-//    if(CutPic.size()>4)
-//    {
-//        for(int n=0;n<6;n++)
-//            CutPic[n+4]=MinusMat[n];
-//    }
-//    else
-//    {
-//        for(int n=0;n<6;n++)
-//            CutPic.push_back(MinusMat[n]);
-//    }
-//    qDebug()<<"After Add Minus size ="<<CutPic.size();
-
-//    std::vector<cv::Mat> OriginalAvgMat;
-//    for(int n=0;n<4;n++)
-//    {
-//        int value[256]={0};
-//        int max_count = 0;
-//        int max_value=0;
-//        for(int i=0;i<CutPic[n].cols;i++)
-//        {
-//            for(int j=0;j<CutPic[n].rows;j++)
-//            {
-//                value[CutPic[n].at<cv::Vec3b>(j,i)[0]]++;
-//                if(max_count < value[CutPic[n].at<cv::Vec3b>(j,i)[0]] && CutPic[n].at<cv::Vec3b>(j,i)[0]!=0)
-//                {
-//                    max_count = value[CutPic[n].at<cv::Vec3b>(j,i)[0]];
-//                    max_value = CutPic[n].at<cv::Vec3b>(j,i)[0];
-//                }
-//            }
-//        }
-//        cv::Mat atmp;// = CutPic[n];
-//        atmp.create(CutPic[n].rows,CutPic[n].cols,CutPic[n].type());
-//        atmp = cv::Scalar::all(0);
-//        for(int i=0;i<CutPic[n].cols;i++)
-//        {
-//            for(int j=0;j<CutPic[n].rows;j++)
-//            {
-//                int new_value = CutPic[n].at<cv::Vec3b>(j,i)[0]+(127-max_value);
-//                if(new_value > 255)
-//                    new_value = 255;
-//                else if(new_value <0)
-//                    new_value = 0;
-//                atmp.at<cv::Vec3b>(j,i)[0] = new_value;
-//                atmp.at<cv::Vec3b>(j,i)[1] = new_value;
-//                atmp.at<cv::Vec3b>(j,i)[2] = new_value;
-//            }
-//        }
-//        OriginalAvgMat.push_back(atmp);
-//        cv::imwrite("normal_avg127_"+QString::number(n).toStdString()+".jpg",atmp);
-//    }
-//    std::vector<cv::Mat> division_normal;
-//    for(int i=0;i<6;i++)
-//    {
-//        cv::Mat k;
-//        k.create(Refresult.rows,Refresult.cols,CV_MAKETYPE(CV_32F,1));
-//        k = cv::Scalar::all(0);
-//        division_normal.push_back(k);
-//    }
-//    for(int i=0;i<Refresult.cols;i++)
-//    {
-//        for(int j=0;j<Refresult.rows;j++)
-//        {
-//            if(NDVIMat.at<cv::Vec3b>(j,i)[1] == 255)
-//            {
-//                std::vector<float>div;
-
-//                Div_value(OriginalAvgMat,j,i,div);
-
-//                for(int n=0;n<div.size();n++)
-//                {
-//                    division_normal[n].at<float>(Refresult.cols*j+i)=div[n];
-//                }
-//            }
-//        }
-//    }
-//    std::vector<cv::Mat> normalDivMat;
-//    for(int n=0;n<division_normal.size();n++)
-//    {
-//        cv::normalize(division_normal[n],division_normal[n],0,255,CV_MINMAX,CV_8U);//注意這邊還是只有one channel
-//        cv::Mat normalbgr;
-//        cv::cvtColor(division_normal[n],normalbgr,CV_GRAY2BGR);
-//        normalDivMat.push_back(normalbgr);
-//        cv::imwrite("division_normal_normalize_"+QString::number(n).toStdString()+".jpg",division_normal[n]);
-//    }
-
-//    if(CutPic.size()>10)
-//    {
-//        for(int n=0;n<normalDivMat.size();n++)
-//            CutPic[n+10]=normalDivMat[n];
-//    }
-//    else
-//    {
-//        for(int n=0;n<normalDivMat.size();n++)
-//            CutPic.push_back(normalDivMat[n]);
-//    }
-//    qDebug()<<"After Add Division size ="<<CutPic.size();
-
-//    qDebug()<<"Final CutPic Size = "<<CutPic.size();
-
+    std::vector<cv::Mat> TempData;
+    TempData.clear();
+    for(int i=0;i<4;i++)
+    {
+        TempData.push_back(CutPic[i]);
+    }
+    CutPic.clear();
+    for(int i=0;i<TempData.size();i++)
+    {
+        CutPic.push_back(TempData[i]);
+    }
+    for(int i=0;i<minusMat.size();i++)
+    {
+        CutPic.push_back(minusMat[i]);
+    }
+    for(int i=0;i<divMat.size();i++)
+    {
+        CutPic.push_back(divMat[i]);
+    }
+    qDebug()<<"CutPic Size without RGB = "<<CutPic.size();
 //    ui->RGBButtom->setEnabled(true);
+
+    if(ui->RGBorNotcheckBox->isChecked()==true)
+    {
+        ui->RGBButtom->setEnabled(true);
+        FeatureNum  = 17 ;
+    }
+    else
+    {
+        ui->RGBButtom->setEnabled(false);
+        FeatureNum  = 16 ;
+        ui->ChooseButton->setEnabled(true);
+    }
+
+    ui->PredictButton->setEnabled(true);
 }
 
 void MainWindow::on_TrainingButtom_clicked()
 {
-    int features =0;
-    Fnumber.clear();
-    if(ui->checkBox0->isChecked()==true)
-    {
-        Fnumber.push_back(0);
-        features++;
-    }
-    if(ui->checkBox1->isChecked()==true)
-    {
-        Fnumber.push_back(1);
-        features++;
-    }
-    if(ui->checkBox2->isChecked()==true)
-    {
-        Fnumber.push_back(2);
-        features++;
-    }
-    if(ui->checkBox3->isChecked()==true)
-    {
-        Fnumber.push_back(3);
-        features++;
-    }
-    if(ui->checkBox4->isChecked()==true)
-    {
-        Fnumber.push_back(4);
-        features++;
-    }
-    if(ui->checkBox5->isChecked()==true)
-    {
-        Fnumber.push_back(5);
-        features++;
-    }
-    if(ui->checkBox6->isChecked()==true)
-    {
-        Fnumber.push_back(6);
-        features++;
-    }
-    if(ui->checkBox7->isChecked()==true)
-    {
-        Fnumber.push_back(7);
-        features++;
-    }
-    if(ui->checkBox8->isChecked()==true)
-    {
-        Fnumber.push_back(8);
-        features++;
-    }
-    if(ui->checkBox9->isChecked()==true)
-    {
-        Fnumber.push_back(9);
-        features++;
-    }
-    if(ui->checkBox10->isChecked()==true)
-    {
-        Fnumber.push_back(10);
-        features++;
-    }
-    if(ui->checkBox11->isChecked()==true)
-    {
-        Fnumber.push_back(11);
-        features++;
-    }
-    if(ui->checkBox12->isChecked()==true)
-    {
-        Fnumber.push_back(12);
-        features++;
-    }
-    if(ui->checkBox13->isChecked()==true)
-    {
-        Fnumber.push_back(13);
-        features++;
-    }
-    if(ui->checkBox14->isChecked()==true)
-    {
-        Fnumber.push_back(14);
-        features++;
-    }
-    if(ui->checkBox15->isChecked()==true)
-    {
-        Fnumber.push_back(15);
-        features++;
-    }
-    if(features==0)
+    std::vector<int> FNum;
+    Features(FNum);
+
+    if(FNum.size()==0)
         return;
-    ui->FeaturesSpinBox->setValue(features);
+    ui->FeaturesSpinBox->setValue(FNum.size());
     double C_param = ui->C_spinBox->value();
-    SvmData svm(Fnumber,features,C_param);
+    SvmData svm(FNum,FNum.size(),C_param);
     svm.initial();
 }
 
 void MainWindow::on_RecentTrainCheckBox_clicked()
 {
     if(ui->RecentTrainCheckBox->isChecked() == true )
+    {
         ui->TrainingButtom->setEnabled(false);
+        QFile file("FeatuerChannesl.txt");
+        if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            return;
+        QTextStream in(&file);
+        QString line;
+        while(!in.atEnd())
+        {
+            line = in.readLine();
+        }
+        QStringList f = line.split(",");
+        for(int i=0;i<f.size();i++)
+        {
+            qDebug()<<f[i];
+            float k = f[i].toFloat();
+            if(k==0)
+                ui->checkBox0->setChecked(true);
+            else if(k==1)
+                ui->checkBox1->setChecked(true);
+            else if(k==2)
+                ui->checkBox2->setChecked(true);
+            else if(k==3)
+                ui->checkBox3->setChecked(true);
+            else if(k==4)
+                ui->checkBox4->setChecked(true);
+            else if(k==5)
+                ui->checkBox5->setChecked(true);
+            else if(k==6)
+                ui->checkBox6->setChecked(true);
+            else if(k==7)
+                ui->checkBox7->setChecked(true);
+            else if(k==8)
+                ui->checkBox8->setChecked(true);
+            else if(k==9)
+                ui->checkBox9->setChecked(true);
+            else if(k==10)
+                ui->checkBox10->setChecked(true);
+            else if(k==11)
+                ui->checkBox11->setChecked(true);
+            else if(k==12)
+                ui->checkBox12->setChecked(true);
+            else if(k==13)
+                ui->checkBox13->setChecked(true);
+            else if(k==14)
+                ui->checkBox14->setChecked(true);
+            else if(k==15)
+                ui->checkBox15->setChecked(true);
+
+        }
+        ui->groupBox->setEnabled(false);
+        ui->PredictButton->setEnabled(true);
+
+    }
     else
+    {
         ui->TrainingButtom->setEnabled(true);
+    }
 }
+
+void MainWindow::on_RGBorNotcheckBox_clicked()
+{
+    if(ui->RGBorNotcheckBox->isChecked()==true)
+    {
+        ui->RGBButtom->setEnabled(true);
+        FeatureNum  = 17 ;
+    }
+    else
+    {
+        ui->RGBButtom->setEnabled(false);
+        FeatureNum  = 16 ;
+        ui->ChooseButton->setEnabled(true);
+    }
+}
+

@@ -19,11 +19,12 @@ class Dialog : public QDialog
 public:
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
-    void initial(std::vector<cv::Mat> cutPic,std::vector<cv::Point> RefCorPoint, QString File);
+    void initial(std::vector<cv::Mat> cutPic,std::vector<cv::Point> RefCorPoint, QString File, int number);
 
 
 private slots:
     bool eventFilter(QObject *obj,QEvent *event);//事件偵測(滑鼠)
+
     void on_spinBox_valueChanged(int arg1);
 
     void on_saveButton_clicked();
@@ -46,6 +47,10 @@ private:
     //std::vector<cv::Mat> labelmat;
     cv::Mat res;
     QString dataName;
+    int _Num;
+
+//    std::vector<int> _dx;
+//    std::vector<int> _dy;
 };
 
 #endif // DIALOG_H

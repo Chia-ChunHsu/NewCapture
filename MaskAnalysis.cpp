@@ -33,14 +33,14 @@ cv::Mat MaskAnalysis::NDVI()
 
                 if(value < 0.9)
                 {
-                    predict.at<cv::Vec3b>(j,i)[0] = 0;
-                    predict.at<cv::Vec3b>(j,i)[1] = 0;
-                    predict.at<cv::Vec3b>(j,i)[2] = 255;
+                    predict.at<cv::Vec3b>(j,i)[0] = 0; //B
+                    predict.at<cv::Vec3b>(j,i)[1] = 0; //G
+                    predict.at<cv::Vec3b>(j,i)[2] = 255;//R
                 }
-                else
+                else//葉子
                 {
                     predict.at<cv::Vec3b>(j,i)[0] = 0;
-                    predict.at<cv::Vec3b>(j,i)[1] = 255;
+                    predict.at<cv::Vec3b>(j,i)[1] = 255;//G
                     predict.at<cv::Vec3b>(j,i)[2] = 0;
                 }
             }
@@ -77,7 +77,7 @@ float MaskAnalysis::NDVIValue(int y, int x)
     }
     if(result.size()!=4)
         return -1.0;
-    if(result[2]+result[1] == 0)
+    if(result[2]+result[1] == 0)// NDVI 公式 分母不可為0
         return -1.0;
     float ans = (float(result[2])-float(result[1])*20/400)/(float(result[2])+float(result[1])*20/400);
     return ans;

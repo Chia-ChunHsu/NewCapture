@@ -16,6 +16,8 @@ void DataAnalysis::Initial(std::vector<cv::Mat> &DataMat, std::vector<cv::Point>
         t1.x = std::min(t1.x,_CorPoint[i].x);
         t1.y = std::min(t1.y,_CorPoint[i].y);
     }
+//    std::vector<int> dx;
+//    std::vector<int> dy;
 
     _dx.clear();
     _dy.clear();
@@ -99,7 +101,7 @@ void DataAnalysis::DivisionMat()
         cv::normalize(division_normal[n],division_normal[n],0,255,CV_MINMAX,CV_8U);//注意這邊還是只有one channel
         cv::Mat normalbgr;
         cv::cvtColor(division_normal[n],normalbgr,CV_GRAY2BGR);
-        normalDivMat.push_back(normalbgr);
+        _DivisionMat.push_back(normalbgr);
         cv::imwrite("division_normal_normalize_"+QString::number(n).toStdString()+".jpg",division_normal[n]);
     }
 }

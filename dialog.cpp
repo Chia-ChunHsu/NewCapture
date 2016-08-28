@@ -14,7 +14,7 @@ Dialog::~Dialog()
     delete ui;
 }
 
-void Dialog::initial(std::vector<cv::Mat> cutPic, std::vector<cv::Point> RefCorPoint, QString File)
+void Dialog::initial(std::vector<cv::Mat> cutPic, std::vector<cv::Point> RefCorPoint, QString File, int number)
 {
     this->open();
     ui->labelall->setGeometry(ui->labelall->x(),ui->labelall->y(),cutPic[0].cols,cutPic[0].rows);
@@ -29,23 +29,31 @@ void Dialog::initial(std::vector<cv::Mat> cutPic, std::vector<cv::Point> RefCorP
     Yposition.clear();
     temp.assign(cutPic.begin(),cutPic.end());
     Omat.assign(cutPic.begin(),cutPic.end());
+    _Num = number;
 
-    for(int i=0;i<cutPic.size()-13;i++)
+    if(_Num==16)
     {
-        CorPoint.push_back(RefCorPoint[i]);
+        for(int i=0;i<cutPic.size()-12;i++)
+        {
+            CorPoint.push_back(RefCorPoint[i]);
+        }
     }
-    //cv::Point p(RefCorPoint[0].x,RefCorPoint[0].y);
+    else
+    {
+        for(int i=0;i<cutPic.size()-13;i++)
+        {
+            CorPoint.push_back(RefCorPoint[i]);
+        }
+    }
     for(int n=0;n<12;n++)
     {
         CorPoint.push_back(RefCorPoint[0]);
     }
-    CorPoint.push_back(RefCorPoint[0]);
+    if(_Num==17)
+        CorPoint.push_back(RefCorPoint[0]);
     qApp->installEventFilter(this);
-    //qDebug()<<"0 "<<cutPic[4].cols<<" "<<cutPic[4].rows<<" "<<cutPic[0].cols;
-    for(int i=0;i<CorPoint.size();i++)
-    {
-        qDebug()<<i<<" "<<temp[i].cols<<" "<<temp[i].rows<<" "<<CorPoint[i].x<<" "<<CorPoint[i].y;
-    }
+    ui->spinBox->setMaximum(number);
+
 }
 
 void Dialog::ShowOnLabel(cv::Mat mat, QLabel *k)
@@ -115,9 +123,8 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
     }
 
     for(int n=4;n<16;n++)
-    {
         CorPoint[n]=t1;
-    }
+
 
     std::vector<int> dy;
     std::vector<int> dx;
@@ -125,10 +132,12 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
     for(int i=0;i<m.size();i++)
     {
         for(int spin=1;spin<=ui->spinBox->maximum();spin++)
+        {
         if(ui->spinBox->value()==spin)
         {
             dy.push_back((-t1.y+CorPoint[i].y)-(CorPoint[spin-1].y-CorPoint[0].y));
             dx.push_back((-t1.x+CorPoint[i].x)-(CorPoint[spin-1].x-CorPoint[0].x));
+        }
         }
     }
 
@@ -144,16 +153,9 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
             int n = m[i].at<cv::Vec3b>(y-dy[i],x-dx[i])[0];
             tempdata.push_back(n);
         }
-        for(int i=0;i<3;i++)
-        {
-            int color = m[16].at<cv::Vec3b>(y-dy[16],x-dx[16])[i];
-            t.push_back(color);
-        }
         cv::Point p(x-dx[i],y-dy[i]);
-        cv::circle(m[i],p,1,cv::Scalar(0,0,255),-1,8);
-        cv::Mat t;
-        cv::cvtColor(m[i],t,CV_BGR2RGB);
-        cv::imwrite(QString::number(i).toStdString()+"point.jpg",m[i]);
+        if(i<_Num)
+            cv::circle(m[i],p,1,cv::Scalar(0,0,255),-1,8);
     }
     ui->PositionX->setText(QString::number(x));
     ui->PositionY->setText(QString::number(y));
@@ -164,7 +166,6 @@ void Dialog::draw(std::vector<cv::Mat> &m, int x, int y, QLabel *k)
     data.push_back(tempdata);
     ui->DataNumber->setText(QString::number(data.size()));
 
-//    ui->label->setText(QString::number(t[2]));
     RGBData.push_back(t);
     ShowOnLabel(temp[ui->spinBox->value()-1],k);
 }
@@ -218,8 +219,8 @@ void Dialog::show(std::vector<cv::Mat> &mat, int x, int y, QLabel *k)
     for(int n=0;n<mat.size();n++)
     {
         cv::Mat kt = mat[n]; //複製一張原圖
-        //範圍設定 r
-        cv::Rect r = cv::Rect(x-gap-dx[n],y-gap-dy[n],2*gap,2*gap);
+
+        cv::Rect r = cv::Rect(x-gap-dx[n],y-gap-dy[n],2*gap,2*gap);//範圍設定 r
 
         cv::Mat troi = kt(r);
 

@@ -10,6 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = NewMicro
 TEMPLATE = app
+RC_ICONS = Multi.ico
 
 target.path = /tmp
 INSTALLS += target
@@ -69,3 +70,7 @@ LIBS+= $$OPENCVLIB/opencv_core249.lib\
 }
 
 DEFINES += HAVE_OPENCV
+
+
+RESOURCES += \
+    pic.qrc

@@ -95,6 +95,8 @@ public:
     QDoubleSpinBox *C_spinBox;
     QLabel *label;
     QCheckBox *RecentTrainCheckBox;
+    QCheckBox *RGBorNotcheckBox;
+    QPushButton *pushButton;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -300,7 +302,7 @@ public:
         RGBButtom->setFont(font1);
         FileName = new QLabel(centralWidget);
         FileName->setObjectName(QStringLiteral("FileName"));
-        FileName->setGeometry(QRect(10, 280, 461, 16));
+        FileName->setGeometry(QRect(10, 280, 371, 16));
         NDVIButton = new QPushButton(centralWidget);
         NDVIButton->setObjectName(QStringLiteral("NDVIButton"));
         NDVIButton->setEnabled(false);
@@ -331,6 +333,7 @@ public:
         TrainingButtom->setFont(font1);
         PredictButton = new QPushButton(centralWidget);
         PredictButton->setObjectName(QStringLiteral("PredictButton"));
+        PredictButton->setEnabled(false);
         PredictButton->setGeometry(QRect(480, 200, 141, 41));
         PredictButton->setFont(font1);
         C_spinBox = new QDoubleSpinBox(centralWidget);
@@ -348,10 +351,16 @@ public:
         RecentTrainCheckBox = new QCheckBox(centralWidget);
         RecentTrainCheckBox->setObjectName(QStringLiteral("RecentTrainCheckBox"));
         RecentTrainCheckBox->setGeometry(QRect(490, 140, 131, 16));
+        RGBorNotcheckBox = new QCheckBox(centralWidget);
+        RGBorNotcheckBox->setObjectName(QStringLiteral("RGBorNotcheckBox"));
+        RGBorNotcheckBox->setGeometry(QRect(390, 280, 73, 16));
+        pushButton = new QPushButton(centralWidget);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButton->setGeometry(QRect(480, 250, 75, 23));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 629, 22));
+        menuBar->setGeometry(QRect(0, 0, 629, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -362,7 +371,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -418,6 +427,8 @@ public:
         PredictButton->setText(QApplication::translate("MainWindow", "Predict", 0));
         label->setText(QApplication::translate("MainWindow", "  C", 0));
         RecentTrainCheckBox->setText(QApplication::translate("MainWindow", "Use Training Record", 0));
+        RGBorNotcheckBox->setText(QApplication::translate("MainWindow", "With RGB", 0));
+        pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0));
     } // retranslateUi
 
 };

@@ -77,7 +77,7 @@ public:
         font.setPointSize(20);
         spinBox->setFont(font);
         spinBox->setMinimum(1);
-        spinBox->setMaximum(17);
+        spinBox->setMaximum(16);
         saveButton = new QPushButton(Dialog);
         saveButton->setObjectName(QStringLiteral("saveButton"));
         saveButton->setGeometry(QRect(720, 350, 171, 71));

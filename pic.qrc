@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/Pic">
+        <file>Pic/Multi.ico</file>
+    </qresource>
+</RCC>
