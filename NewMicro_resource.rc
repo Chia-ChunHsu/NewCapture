@@ -4,7 +4,7 @@
 #  include <windows.h>
 # endif
 
-IDI_ICON1	ICON	DISCARDABLE	"D:\\Code\\NewCapture\\Multi.ico"
+IDI_ICON1	ICON	DISCARDABLE	"D:\\r03631014\\sen4\\NewCapture\\Multi.ico"
 
 VS_VERSION_INFO VERSIONINFO
 	FILEVERSION 0,0,0,0
