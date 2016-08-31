@@ -143,6 +143,7 @@ void MaskAnalysis::BuildMaskMat(int threshold1, int threshold2,std::vector<cv::M
             }
         }
     }
+
     int erosion_elem = 0;
     int erosion_size = 4;
     int dilation_elem = 0;

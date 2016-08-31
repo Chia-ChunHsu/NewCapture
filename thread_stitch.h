@@ -1,5 +1,6 @@
 #ifndef THREAD_STITCH_H
 #define THREAD_STITCH_H
+#include <QThread>
 #include "opencv.hpp"
 #include "features2d/features2d.hpp"
 #include "core/core.hpp"
@@ -16,11 +17,11 @@
 #include <QProgressBar>
 #include "stitch.h"
 
-class NStitch
+class Thread_Stitch :public QThread
 {
 public:
-    NStitch();
-    ~NStitch();
+    Thread_Stitch();
+    ~Thread_Stitch();
     int Warp(std::vector<cv::Mat> &CalMat,std::vector<cv::Mat> &CalWarp ,std::vector<cv::Mat> &nodilate_warp,cv::Mat &Result,std::vector<cv::Point> &ConrnerPoint);
     int StLike(std::vector<cv::Mat> &CalMat,std::vector<cv::Mat> &CapMat,std::vector<cv::Mat> &img_warp_result,std::vector<cv::Mat> &Ks_,std::vector<cv::detail::CameraParams> &cameras_s_);
     std::vector<cv::Mat> getK();
@@ -32,6 +33,10 @@ private:
     std::vector<cv::Mat> dilate_mask;
     std::vector<cv::Mat> Ks;
     std::vector<cv::detail::CameraParams> cameras_s;
+
+
+    //std::vector<cv::Mat> nodilate_warp;
+
 };
 
 #endif // THREAD_STITCH_H

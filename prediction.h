@@ -1,9 +1,8 @@
 #ifndef PREDICTION_H
 #define PREDICTION_H
-#include <QCoreApplication>
 #include "opencv.hpp"
 #include <QDebug>
-//SVM 預測結果，輸出的結果為整張圖的預測結果
+
 class Prediction
 {
 private:
@@ -18,4 +17,5 @@ public:
     cv::Mat SVMResult();
     float returnSvmAns(int y, int x);
 };
+
 #endif // PREDICTION_H

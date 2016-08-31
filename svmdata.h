@@ -6,7 +6,7 @@
 #include <QTextStream>
 #include <QString>
 #include <QDebug>
-//這個Class 是用來進行SVM 訓練建立Model用的
+
 
 class SvmData :public QWidget
 {
@@ -14,6 +14,7 @@ private:
     std::vector<int> featuresChannel;
     int featuresNum;
     double C;
+    //std::vector<int> &featuresChannel,int featuresNum,double C
 public:
     SvmData(std::vector<int> &featuresChannel,int featuresNum,double C);
     ~SvmData();

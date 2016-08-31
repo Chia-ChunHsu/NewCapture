@@ -18,23 +18,23 @@ INSTALLS += target
 SOURCES += main.cpp\
         mainwindow.cpp\
     stitch.cpp\
+    thread_stitch.cpp\
     dialog.cpp \
     time.cpp \
     svmdata.cpp \
     prediction.cpp \
     MaskAnalysis.cpp \
-    dataanalysis.cpp \
-    NewStitch.cpp
+    dataanalysis.cpp
 
 HEADERS  += mainwindow.h\
     stitch. \
+    thread_stitch.h\
     dialog.h \
     time.h \
     svmdata.h \
     prediction.h \
     MaskAnalysis.h \
-    dataanalysis.h \
-    NewStitch.h
+    dataanalysis.h
 
 FORMS    += mainwindow.ui\
     dialog.ui
@@ -68,7 +68,7 @@ LIBS+= $$OPENCVLIB/opencv_core249.lib\
        $$OPENCVLIB/opencv_ml249.lib\
 
 }
-CONFIG += thread
+
 DEFINES += HAVE_OPENCV
 
 

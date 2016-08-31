@@ -5,7 +5,7 @@
 #include <QLabel>
 #include <QFileDialog>
 #include "opencv.hpp"
-#include "NewStitch.h"
+#include "thread_stitch.h"
 #include <QTime>
 #include <string>
 #include <QTimer>
@@ -35,6 +35,7 @@ public:
     void LoadPic(std::vector<cv::Mat> &Ref,QLabel *k);
     void StitchMethod(std::vector<cv::Mat> &Ref,std::vector<cv::Mat> &WRef, std::vector<cv::Mat> &mask, cv::Mat &RefResult,std::vector<cv::Point> &CorPoint);
     int TransferWarp(std::vector<cv::Mat> &Pic,std::vector<cv::Mat> &WarpPic);
+//    float predictresult(int y,int x);
     void Div_value(std::vector<cv::Mat> &m,int y,int x,std::vector<float> &div);
     void MinusPixel_value(std::vector<cv::Mat> &m,int y,int x,std::vector<int> &pixel);
     void Features(std::vector<int> &Fnum);
@@ -51,9 +52,9 @@ private slots:
 
     void on_PredictButton_clicked();
 
-    void on_spinBox0_valueChanged(int arg1);
+    void on_spinBox_valueChanged(int arg1);
 
-    void on_spinBox1_valueChanged(int arg1);
+    void on_spinBox_2_valueChanged(int arg1);
 
     void on_ThresholdSlider1_sliderMoved(int position);
 
@@ -87,15 +88,21 @@ private:
     Ui::MainWindow *ui;
     std::vector<cv::Mat> refPic;
     std::vector<cv::Mat> WrefPic;
+    //std::vector<cv::Mat> WarpWPic;
     std::vector<cv::Mat> Pic;
     std::vector<cv::Mat> OPic;
     std::vector<cv::Mat> WRefMask;
     cv::Mat Refresult;
     std::vector<cv::Mat> WarpPic;
     std::vector<cv::Mat> CutPic;
-    NStitch TS;
+    Thread_Stitch TS;
     std::vector<cv::Point> RefCorPoint;
     cv::Mat maskResult;
+
+    CvSVM svm;
+    QDateTime Dtime;
+    QTime currentTime;
+    int time;
 
     QString currentFile;
     QString FirstFile;
@@ -108,6 +115,17 @@ private:
     QString FileNameAd;
 
     cv::Mat NDVIMat;
+
+    cv::Mat s;
+
+    cv::Mat gk2;
+
+    cv::Mat gdiv1;
+    cv::Mat gdiv2;
+    cv::Mat gdiv3;
+    cv::Mat gdiv4;
+    cv::Mat gdiv5;
+    cv::Mat gdiv6;
 
     int flag;
     std::vector<int> Fnumber;

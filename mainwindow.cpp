@@ -96,8 +96,8 @@ void MainWindow::StitchMethod(std::vector<cv::Mat> &Ref, std::vector<cv::Mat> &W
 
 int MainWindow::TransferWarp(std::vector<cv::Mat> &Pic, std::vector<cv::Mat> &WarpPic)
 {
-    NStitch TSPic;
-    if(TSPic.StLike(refPic,Pic,WarpPic,TS.getK(),TS.getCam())!=1)//套用原本的Warping Mask + 相對位置
+    Thread_Stitch TSPic;
+    if(TSPic.StLike(refPic,Pic,WarpPic,TS.getK(),TS.getCam())!=1)
         return 0;
     for(int i=0;i<4;i++)
     {
@@ -110,7 +110,7 @@ int MainWindow::TransferWarp(std::vector<cv::Mat> &Pic, std::vector<cv::Mat> &Wa
         {
             for(int j=0;j<WarpPic[n].rows;j++)
             {
-                if(WRefMask[n].at<uchar>(j,i)!=255) //如果不是Warping原本的區塊，則扔掉不用
+                if(WRefMask[n].at<uchar>(j,i)!=255)
                 {
                     WarpPic[n].at<cv::Vec3b>(j,i)[0]=0;
                     WarpPic[n].at<cv::Vec3b>(j,i)[1]=0;
@@ -140,8 +140,9 @@ void MainWindow::on_LoadRefButton_clicked()
     StitchMethod(refPic,WRef,WRefMask,Refresult,RefCorPoint);
 
     for(int i=0;i<WRef.size();i++)
+    {
         cv::imwrite(QString::number(i).toStdString()+"_warp.jpg",WRef[i]);
-
+    }
 }
 
 void MainWindow::on_spinBoxRef_valueChanged(int arg1)
@@ -177,6 +178,7 @@ void MainWindow::on_LoadPicButton_clicked()
             f[n][i] = new int[OPic[n].rows];
         }
     }
+
     for(int n=0;n<OPic.size();n++)
     {
         for(int i=0;i<OPic[n].cols;i++)
@@ -205,8 +207,9 @@ void MainWindow::on_LoadPicButton_clicked()
         {
             for(int j=0;j<OPic[n].rows;j++)
             {
-                if(OPic[n].at<cv::Vec3b>(j,i)[0]==0)//圖片本來就是黑的，不用做計算
+                if(OPic[n].at<cv::Vec3b>(j,i)[0]==0)//圖片本來就是黑的
                 {
+
                 }
                 else
                 {
@@ -220,6 +223,8 @@ void MainWindow::on_LoadPicButton_clicked()
                 }
             }
         }
+
+//        showMat.push_back(m);
         Pic.push_back(m);
     }
 
@@ -245,8 +250,6 @@ void MainWindow::on_LoadPicButton_clicked()
 
     ui->ThresholdSlider1->setEnabled(true); //設定背景的區域範圍的bar
     ui->ThresholdSlider2->setEnabled(true); //
-    ui->spinBox0->setEnabled(true);
-    ui->spinBox1->setEnabled(true);
 }
 
 void MainWindow::on_spinBoxPic_valueChanged(int arg1)
@@ -254,7 +257,7 @@ void MainWindow::on_spinBoxPic_valueChanged(int arg1)
     ShowOnLabel(Pic[arg1],ui->PicLabel);
 }
 
-void MainWindow::on_CutButton_clicked() //將葉片區塊切出來
+void MainWindow::on_CutButton_clicked()
 {
     analysisData.setRequest(Refresult,WarpPic,RefCorPoint);
     analysisData.BuildMaskMat(ui->ThresholdSlider1->value(),ui->ThresholdSlider2->value(),CutPic);
@@ -264,13 +267,13 @@ void MainWindow::on_CutButton_clicked() //將葉片區塊切出來
     ui->NDVIButton->setEnabled(true);
 }
 
-void MainWindow::on_PredictButton_clicked() //預測按鈕，後面會call prediction.cpp的程式
+void MainWindow::on_PredictButton_clicked()
 {
     std::vector<int> Fnum;
     Features(Fnum);
     if(Fnum.size()==0)
         return;
-    ui->FeaturesSpinBox->setValue(Fnum.size()); //顯示到底現在用了多少個Features 訓練
+    ui->FeaturesSpinBox->setValue(Fnum.size());
     Prediction preResult;
     preResult.Initial(NDVIMat,RefCorPoint,CutPic,Fnum);
     cv::Mat predict = preResult.SVMResult();
@@ -278,27 +281,27 @@ void MainWindow::on_PredictButton_clicked() //預測按鈕，後面會call predi
     cv::imwrite(FileNameAd.toStdString()+"_pre.jpg",predict);
 }
 
-void MainWindow::on_spinBox0_valueChanged(int arg1)
+void MainWindow::on_spinBox_valueChanged(int arg1)
 {
     ui->ThresholdSlider1->setValue(arg1);
 }
 
-void MainWindow::on_spinBox1_valueChanged(int arg1)
+void MainWindow::on_spinBox_2_valueChanged(int arg1)
 {
     ui->ThresholdSlider2->setValue(arg1);
 }
 
 void MainWindow::on_ThresholdSlider1_sliderMoved(int position)
 {
-    ui->spinBox0->setValue(position);
+    ui->spinBox->setValue(position);
 }
 
 void MainWindow::on_ThresholdSlider2_sliderMoved(int position)
 {
-    ui->spinBox1->setValue(position);
+    ui->spinBox_2->setValue(position);
 }
 
-void MainWindow::on_ApplyButton_clicked()   //將時間改正到對的時間點
+void MainWindow::on_ApplyButton_clicked()
 {
     QDateTime ctime = ui->dateTimeEdit->dateTime();
     t.setTime(ctime);
@@ -306,7 +309,7 @@ void MainWindow::on_ApplyButton_clicked()   //將時間改正到對的時間點
     ui->Timelabel->setText(t.getTimeString());
 }
 
-void MainWindow::update()   //時間update
+void MainWindow::update()
 {
     t.updateTime(1);
     ui->Timelabel->setText(t.getTimeString());
@@ -342,29 +345,29 @@ void MainWindow::on_LoadWRefButton_clicked()
     ui->LoadRefButton->setEnabled(true);
 }
 
-void MainWindow::on_RGBButtom_clicked() //Load RGB 圖片
+void MainWindow::on_RGBButtom_clicked()
 {
-    QString Rgbname = QFileDialog::getOpenFileName(this, tr("Open RGB File"),
+    QString Rgbname = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                    FileAd,
-                                                   tr("Images (*.jpg)"));
+                                                   tr("Images (*.png *.xpm *.jpg)"));
     if(Rgbname.isEmpty())
         return;
     RGB = cv::imread(Rgbname.toStdString());
 
-    NStitch Ts;
+    Thread_Stitch Ts;
     std::vector<cv::Mat> change;
     for(int i=0;i<Pic.size();i++)
     {
         if(i==0)
-            change.push_back(RGB);          //因為原本是四張圖片一起Warping，現在只有一張跟568nm一樣視角的RGB圖，假設成一張RGB圖跟另外三張多光譜圖一起Warping
+            change.push_back(RGB);
         else
             change.push_back(Pic[i]);
     }
     std::vector<cv::Mat> warptemp;
-    if(Ts.StLike(refPic,change,warptemp,TS.getK(),TS.getCam())!=1)  //RGB圖也要跟著Warping
+    if(Ts.StLike(refPic,change,warptemp,TS.getK(),TS.getCam())!=1)
         return;
 
-    cv::Size s = WRefMask[0].size();        //我們只需要RGB的Warping就好了
+    cv::Size s = WRefMask[0].size();
     cv::resize(warptemp[0],warptemp[0],s);
 
     for(int i=0;i<warptemp[0].cols;i++)
@@ -380,10 +383,10 @@ void MainWindow::on_RGBButtom_clicked() //Load RGB 圖片
         }
     }
 
-    if(CutPic.size() == 17)     //如果已經有RGB圖片了
-        CutPic.pop_back();      //刪掉原本的
+    if(CutPic.size() == 17)
+        CutPic.pop_back();
     CutPic.push_back(warptemp[0]);
-//    qDebug()<<CutPic.size();
+    qDebug()<<CutPic.size();
     cv::Point t1(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
     cv::Point m1(std::numeric_limits<int>::min(), std::numeric_limits<int>::min());
     for(int i=0;i<RefCorPoint.size();i++)
@@ -396,7 +399,7 @@ void MainWindow::on_RGBButtom_clicked() //Load RGB 圖片
     int dy0 = -t1.y+RefCorPoint[0].y;
     int dx0 = -t1.x+RefCorPoint[0].x;
 
-    for(int i=0;i<maskResult.cols;i++)  //RGB加入扣除葉片區塊的遮罩
+    for(int i=0;i<maskResult.cols;i++)
     {
         for(int j=0;j<maskResult.rows;j++)
         {
@@ -413,44 +416,76 @@ void MainWindow::on_RGBButtom_clicked() //Load RGB 圖片
 }
 
 
-void MainWindow::Features(std::vector<int> &Fnum)  //這邊是在確定到底使用者勾了哪幾個Features 要拿來訓練跟預測
+void MainWindow::Features(std::vector<int> &Fnum)
 {
     Fnum.clear();
     if(ui->checkBox0->isChecked()==true)
+    {
         Fnum.push_back(0);
+    }
     if(ui->checkBox1->isChecked()==true)
+    {
         Fnum.push_back(1);
+    }
     if(ui->checkBox2->isChecked()==true)
+    {
         Fnum.push_back(2);
+    }
     if(ui->checkBox3->isChecked()==true)
+    {
         Fnum.push_back(3);
+    }
     if(ui->checkBox4->isChecked()==true)
+    {
         Fnum.push_back(4);
+    }
     if(ui->checkBox5->isChecked()==true)
+    {
         Fnum.push_back(5);
+    }
     if(ui->checkBox6->isChecked()==true)
+    {
         Fnum.push_back(6);
+    }
     if(ui->checkBox7->isChecked()==true)
+    {
         Fnum.push_back(7);
+    }
     if(ui->checkBox8->isChecked()==true)
+    {
         Fnum.push_back(8);
+    }
     if(ui->checkBox9->isChecked()==true)
+    {
         Fnum.push_back(9);
+    }
     if(ui->checkBox10->isChecked()==true)
+    {
         Fnum.push_back(10);
+    }
     if(ui->checkBox11->isChecked()==true)
+    {
         Fnum.push_back(11);
+    }
     if(ui->checkBox12->isChecked()==true)
+    {
         Fnum.push_back(12);
+    }
     if(ui->checkBox13->isChecked()==true)
+    {
         Fnum.push_back(13);
+    }
     if(ui->checkBox14->isChecked()==true)
+    {
         Fnum.push_back(14);
+    }
     if(ui->checkBox15->isChecked()==true)
+    {
         Fnum.push_back(15);
+    }
 }
 
-void MainWindow::on_NDVIButton_clicked()    //找出NDVI的區塊，如此一來可以避免掉預測更多多於的葉片部分
+void MainWindow::on_NDVIButton_clicked()
 {
     cv::Mat NDVI_Result=analysisData.NDVI();
     ShowOnLabel(NDVI_Result,ui->TempLabel);
@@ -459,7 +494,7 @@ void MainWindow::on_NDVIButton_clicked()    //找出NDVI的區塊，如此一來
     cv::imwrite("NDVI.jpg",NDVIMat);
 }
 
-void MainWindow::on_DataAna_Buttom_clicked()    //分析數據，分析減法+除法的圖片M1~M6+D1~D6
+void MainWindow::on_DataAna_Buttom_clicked()
 {
     DataAnalysis dataAna;
     dataAna.Initial(CutPic,RefCorPoint,NDVIMat);
@@ -468,23 +503,29 @@ void MainWindow::on_DataAna_Buttom_clicked()    //分析數據，分析減法+�
     std::vector<cv::Mat> minusMat;
     std::vector<cv::Mat> divMat;
     dataAna.GetDataMat(minusMat,divMat);
-    std::vector<cv::Mat> TempData;      //暫存空間，要放置原圖影像
+    std::vector<cv::Mat> TempData;
     TempData.clear();
     for(int i=0;i<4;i++)
     {
-        TempData.push_back(CutPic[i]);  //先把原始影像加入
+        TempData.push_back(CutPic[i]);
     }
-    CutPic.clear();                     //為了確保接下來分析圖片CutPic裡面的圖片順序是對的，先全部清空
+    CutPic.clear();
     for(int i=0;i<TempData.size();i++)
-        CutPic.push_back(TempData[i]);  //加入原圖
+    {
+        CutPic.push_back(TempData[i]);
+    }
     for(int i=0;i<minusMat.size();i++)
-        CutPic.push_back(minusMat[i]);  //加入M1~M6
+    {
+        CutPic.push_back(minusMat[i]);
+    }
     for(int i=0;i<divMat.size();i++)
-        CutPic.push_back(divMat[i]);    //加入D1~D6
-
+    {
+        CutPic.push_back(divMat[i]);
+    }
     qDebug()<<"CutPic Size without RGB = "<<CutPic.size();
+//    ui->RGBButtom->setEnabled(true);
 
-    if(ui->RGBorNotcheckBox->isChecked()==true) //決定要不要把RGB圖片放進來
+    if(ui->RGBorNotcheckBox->isChecked()==true)
     {
         ui->RGBButtom->setEnabled(true);
         FeatureNum  = 17 ;
@@ -495,6 +536,7 @@ void MainWindow::on_DataAna_Buttom_clicked()    //分析數據，分析減法+�
         FeatureNum  = 16 ;
         ui->ChooseButton->setEnabled(true);
     }
+
     ui->PredictButton->setEnabled(true);
 }
 
@@ -511,12 +553,12 @@ void MainWindow::on_TrainingButtom_clicked()
     svm.initial();
 }
 
-void MainWindow::on_RecentTrainCheckBox_clicked()   //拿以前的training 好的model來用
+void MainWindow::on_RecentTrainCheckBox_clicked()
 {
-    if(ui->RecentTrainCheckBox->isChecked() == true ) //如果要拿以前的training model
+    if(ui->RecentTrainCheckBox->isChecked() == true )
     {
         ui->TrainingButtom->setEnabled(false);
-        QFile file("FeatuerChannesl.txt");  //這邊是Load到底之前用了哪些features
+        QFile file("FeatuerChannesl.txt");
         if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
             return;
         QTextStream in(&file);
@@ -528,6 +570,7 @@ void MainWindow::on_RecentTrainCheckBox_clicked()   //拿以前的training 好�
         QStringList f = line.split(",");
         for(int i=0;i<f.size();i++)
         {
+            qDebug()<<f[i];
             float k = f[i].toFloat();
             if(k==0)
                 ui->checkBox0->setChecked(true);
@@ -567,14 +610,13 @@ void MainWindow::on_RecentTrainCheckBox_clicked()   //拿以前的training 好�
         ui->PredictButton->setEnabled(true);
 
     }
-    else    //如果不要拿以前的，要重新training
+    else
     {
-        ui->groupBox->setEnabled(true);
         ui->TrainingButtom->setEnabled(true);
     }
 }
 
-void MainWindow::on_RGBorNotcheckBox_clicked()  //RGB CheckBox 偵測
+void MainWindow::on_RGBorNotcheckBox_clicked()
 {
     if(ui->RGBorNotcheckBox->isChecked()==true)
     {

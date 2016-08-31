@@ -16,6 +16,8 @@ void DataAnalysis::Initial(std::vector<cv::Mat> &DataMat, std::vector<cv::Point>
         t1.x = std::min(t1.x,_CorPoint[i].x);
         t1.y = std::min(t1.y,_CorPoint[i].y);
     }
+//    std::vector<int> dx;
+//    std::vector<int> dy;
 
     _dx.clear();
     _dy.clear();
@@ -106,6 +108,7 @@ void DataAnalysis::DivisionMat()
 
 void DataAnalysis::MinusMat()
 {
+    //std::vector<cv::Mat> MinusMat;
     _MinusMat.clear();
     for(int n=0;n<6;n++)
     {
@@ -145,6 +148,7 @@ void DataAnalysis::DivisionValue(std::vector<cv::Mat> &DataMat, int y, int x, st
 {
     std::vector<int> result;
     //集合四張圖片的數據值
+
     for(int i=0;i<4;i++)
     {
         if(x-_dx[i]>=0 && x-_dx[i]<DataMat[i].cols && y-_dy[i] >=0 && y-_dy[i]<DataMat[i].rows)
