@@ -132,16 +132,9 @@ Stitch::Status Stitch::composePanorama2(InputArray images ,OutputArray pano, std
         K(1,2) *= (float)seam_work_aspect_;
 
         corners[i] = w->warp(seam_est_imgs_[i], K, cameras_[i].R, INTER_LINEAR, BORDER_REFLECT, images_warped[i]);
-        //qDebug()<<"0000"<<images_warped[i].cols;
-        //cv::Mat temp =images_warped[i].clone();
 
         cv::waitKey(0);
         sizes[i] = images_warped[i].size();
-        //qDebug()<<"Sizes cor "<<sizes[i].width;
-
-        //    cv::Point  p = cv::Point(corners[i].x,corners[i].y);
-        //    corners_.push_back(p);
-
         w->warp(masks[i], K, cameras_[i].R, INTER_NEAREST, BORDER_CONSTANT, masks_warped[i]);
     }
 
@@ -220,7 +213,6 @@ Stitch::Status Stitch::composePanorama2(InputArray images ,OutputArray pano, std
                 Mat K;
                 cameras_[i].K().convertTo(K, CV_32F);
                 Rect roi = w->warpRoi(sz, K, cameras_[i].R);
-                //qDebug()<<"ROI w = "<<roi.width;
                 corners[i] = roi.tl();
                 sizes[i] = roi.size();
             }
@@ -277,8 +269,6 @@ Stitch::Status Stitch::composePanorama2(InputArray images ,OutputArray pano, std
         }
         // Blend the current image
         blender_->feed(img_warped_s, mask_warpeds, corners[img_idx]);
-        //dilate_mask.push_back(mask_warpeds);
-
     }
 
     Mat result, result_mask;
@@ -291,7 +281,7 @@ Stitch::Status Stitch::composePanorama2(InputArray images ,OutputArray pano, std
     // Preliminary result is in CV_16SC3 format, but all values are in [0,255] range,
     // so convert it to avoid user confusing
     result.convertTo(pano_, CV_8U);
-    //qDebug()<<"pano_ "<<pano_.cols<<pano_.rows;
+
     for(int i=0;i<4;i++)
     {
         int xscal = result.cols/sizes[i].width;
@@ -301,8 +291,6 @@ Stitch::Status Stitch::composePanorama2(InputArray images ,OutputArray pano, std
         cv::Point p = cv::Point(x,y);
         corners_.push_back(p);
     }
-//    cv::Point  p = cv::Point(corners[i].x,corners[i].y);
-//    corners_.push_back(p);
 
     return OK;
 }
@@ -352,7 +340,6 @@ Stitch::Status Stitch::composePanorama3(InputArray images,InputArray otherimages
 #if ENABLE_LOG
     int64 t = getTickCount();
 #endif
-    qDebug()<<"003";
     vector<Point> corners(imgs_.size());
     vector<Mat> masks_warped(imgs_.size());
     vector<Mat> images_warped(imgs_.size());
@@ -487,8 +474,6 @@ Stitch::Status Stitch::matchImages()
 #if ENABLE_LOG
     t = getTickCount();
 #endif
-    qDebug()<<"0011";
-    qDebug()<<features_.size()<<pairwise_matches_.size();//<<matching_mask_.size();
     while(pairwise_matches_.size()==0)
     {
         (*features_matcher_)(features_, pairwise_matches_, matching_mask_);

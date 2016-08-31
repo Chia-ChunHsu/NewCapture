@@ -12,7 +12,7 @@ SvmData::~SvmData()
 
 }
 
-void SvmData::initial()
+void SvmData::initial()//Call完這個Function SVM就訓練完了
 {
     std::vector<float> featureData;
     std::vector<float> labels;
@@ -29,6 +29,7 @@ void SvmData::LoadTraingData(std::vector<float> &featureData, std::vector<float>
     featureData.clear();
     labels.clear();
 
+    //讀取先前存好的SVM Model 所要訓練的特徵資料類
     QFile file1(TraingDatafile);
     file1.open(QIODevice::ReadOnly);
     QTextStream in1(&file1);
@@ -62,6 +63,7 @@ void SvmData::LoadTraingData(std::vector<float> &featureData, std::vector<float>
 
 void SvmData::Training(std::vector<float> &featureData, std::vector<float> &labels)
 {
+    //建立SVM訓練資料，分為兩筆，一筆為特徵資料，一筆是特徵資料對應到的類型
     cv::Mat trainingData(labels.size(),featuresChannel.size(),CV_32FC1);
     cv::Mat label(labels.size(),1,CV_32FC1);
     for(int i=0;i<featureData.size();i++)
@@ -73,17 +75,15 @@ void SvmData::Training(std::vector<float> &featureData, std::vector<float> &labe
         label.at<float>(i,0)=labels[i];
     }
 
+    //SVM 參數設定
     CvSVMParams params;
     params.svm_type = CvSVM::C_SVC;
-
     params.kernel_type =CvSVM::LINEAR;
     params.term_crit = cv::TermCriteria(CV_TERMCRIT_EPS, 100, 1e-6);
-
     params.C = C;
 
     CvSVM svm;
     svm.train(trainingData,label,cv::Mat(),cv::Mat(),params);
     svm.save("SVM.txt");
-    qDebug()<<"SVM Save";
-
+    qDebug()<<"SVM Model is Saved";
 }

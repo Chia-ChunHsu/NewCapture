@@ -26,6 +26,7 @@ cv::Mat Prediction::SVMResult()
             if(_NDVIMat.at<cv::Vec3b>(j,i)[1] == 255)
             {
                 float value = returnSvmAns(j,i);
+                QCoreApplication::processEvents();
 
                 if(value == 0)  //if ans = 0 , 健康部分(綠色)
                 {
@@ -49,17 +50,10 @@ cv::Mat Prediction::SVMResult()
         }
     }
     return predict;
-
-//    ShowOnLabel(predict,ui->FalseColorLabel);
-
-    //    cv::imwrite(FileNameAd.toStdString()+"_pre.jpg",predict);
 }
 
 float Prediction::returnSvmAns(int y, int x)
 {
-
-//    int features = ui->FeaturesSpinBox->value() ;
-
     std::vector<cv::Point> Point;
 
     for(int i=0;i<4;i++)
